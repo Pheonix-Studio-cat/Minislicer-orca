@@ -6,7 +6,7 @@
 //   {if expr} ... {elsif expr} ... {else} ... {endif}
 //
 // Expressions support numbers, "strings", true/false, variables, vector indexing, + - * / %,
-// comparisons, ! not && and || or, parentheses, and min/max/int/round/abs.
+// comparisons, ! not && and || or, cond ? a : b, parentheses, and min/max/int/round/abs.
 // A vector used without an index yields its first element (single extruder).
 // An unknown variable throws, so a template that needs a value we do not supply fails loudly.
 
@@ -14,7 +14,7 @@ export class TemplateError extends Error {}
 
 function tokenize(src) {
   const tokens = [];
-  const re = /\s*(?:(\d+\.\d*|\.\d+|\d+)|("(?:[^"\\]|\\.)*")|([A-Za-z_][A-Za-z_0-9]*)|(==|!=|<=|>=|&&|\|\||[-+*/%<>!()[\],]))/y;
+  const re = /\s*(?:(\d+\.\d*|\.\d+|\d+)|("(?:[^"\\]|\\.)*")|([A-Za-z_][A-Za-z_0-9]*)|(==|!=|<=|>=|&&|\|\||[-+*/%<>!()[\],?:]))/y;
   let pos = 0;
   while (pos < src.length) {
     if (/^\s*$/.test(src.slice(pos))) break;
@@ -45,6 +45,7 @@ function scalar(v) {
 export function evaluate(src, vars) {
   const tokens = tokenize(src);
   let i = 0;
+  let skip = 0; // > 0 while parsing a branch that is not taken: parse it, but look nothing up
   const peek = () => tokens[i];
   const isOp = (v) => tokens[i] && tokens[i].t === 'op' && tokens[i].v === v;
   const isWord = (v) => tokens[i] && tokens[i].t === 'id' && tokens[i].v === v;
@@ -57,23 +58,27 @@ export function evaluate(src, vars) {
     const tok = peek();
     if (!tok) throw new TemplateError(`unexpected end of "${src}"`);
     if (tok.t === 'num' || tok.t === 'str') { i++; return tok.v; }
-    if (isOp('(')) { i++; const v = orExpr(); expect(')'); return v; }
+    if (isOp('(')) { i++; const v = ternary(); expect(')'); return v; }
     if (tok.t === 'id') {
       i++;
       if (tok.v === 'true') return true;
       if (tok.v === 'false') return false;
       if (FUNCTIONS[tok.v] && isOp('(')) {
         i++;
-        const args = [orExpr()];
-        while (isOp(',')) { i++; args.push(orExpr()); }
+        const args = [ternary()];
+        while (isOp(',')) { i++; args.push(ternary()); }
         expect(')');
-        return FUNCTIONS[tok.v](...args.map(scalar));
+        return skip ? 0 : FUNCTIONS[tok.v](...args.map(scalar));
+      }
+      if (skip) {
+        if (isOp('[')) { i++; ternary(); expect(']'); }
+        return 0;
       }
       if (!(tok.v in vars)) throw new TemplateError(`unknown variable "${tok.v}" in "${src}"`);
       let v = vars[tok.v];
       if (isOp('[')) {
         i++;
-        const idx = scalar(orExpr());
+        const idx = scalar(ternary());
         expect(']');
         if (!Array.isArray(v)) throw new TemplateError(`"${tok.v}" is not a vector`);
         if (idx < 0 || idx >= v.length) throw new TemplateError(`index ${idx} out of range for "${tok.v}"`);
@@ -122,16 +127,46 @@ export function evaluate(src, vars) {
   }
   function andExpr() {
     let v = cmp();
-    while (isOp('&&') || isWord('and')) { i++; const r = cmp(); v = Boolean(scalar(v)) && Boolean(scalar(r)); }
+    while (isOp('&&') || isWord('and')) {
+      i++;
+      const lhs = Boolean(scalar(v));
+      if (!lhs) skip++;
+      const r = cmp();
+      if (!lhs) skip--;
+      v = lhs && Boolean(scalar(r));
+    }
     return v;
   }
   function orExpr() {
     let v = andExpr();
-    while (isOp('||') || isWord('or')) { i++; const r = andExpr(); v = Boolean(scalar(v)) || Boolean(scalar(r)); }
+    while (isOp('||') || isWord('or')) {
+      i++;
+      const lhs = Boolean(scalar(v));
+      if (lhs) skip++;
+      const r = andExpr();
+      if (lhs) skip--;
+      v = lhs || Boolean(scalar(r));
+    }
     return v;
   }
 
-  const result = orExpr();
+  // cond ? a : b (right-associative), the lowest-precedence operator.
+  function ternary() {
+    const cond = orExpr();
+    if (!isOp('?')) return cond;
+    i++;
+    const take = Boolean(scalar(cond));
+    if (!take) skip++;
+    const a = ternary();
+    if (!take) skip--;
+    expect(':');
+    if (take) skip++;
+    const b = ternary();
+    if (take) skip--;
+    return take ? a : b;
+  }
+
+  const result = ternary();
   if (i !== tokens.length) throw new TemplateError(`trailing input in "${src}"`);
   return result;
 }
@@ -164,7 +199,7 @@ export function render(template, vars) {
       continue;
     }
     const body = part.slice(1, -1).trim();
-    const ctl = /^(if|elsif)\s+(.*)$/s.exec(body);
+    const ctl = /^(if|elsif)\b\s*(.*)$/s.exec(body); // "{if x}" and "{if(x)}" both occur
     if (ctl && ctl[1] === 'if') {
       const parentOn = emitting();
       const cond = parentOn ? Boolean(scalar(evaluate(ctl[2], vars))) : false;

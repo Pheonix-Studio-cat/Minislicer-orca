@@ -58,10 +58,47 @@ come from `StateColor.cpp`, `GLCanvas3D.cpp` and `3DBed.cpp`, line-type colours 
 setting keys edited in the Process page are OrcaSlicer's: `resolveSettings` merges them over the
 preset like an edited value in OrcaSlicer's process tab.
 
+The button colour is a CSS variable (`--accent`, with a darker `--accent-dark` for dark mode) from
+which hover, focus and checked shades are mixed, so one preference recolours every control.
+
+## User presets (`js/presets.js`)
+
+A user preset is stored as OrcaSlicer stores one: its name, the system preset it `inherits`, and the
+changed values under OrcaSlicer's option keys. Resolving one merges those values over the system
+preset, so a user preset follows profile updates of its base and is offered for every printer whose
+system presets include that base. Name checks follow OrcaSlicer's save dialog. Presets live in the
+browser's `localStorage` — there is no server to keep them — and export/import as JSON in OrcaSlicer's
+user-preset shape, which also lets a single OrcaSlicer user preset be imported.
+
+## Translations
+
+English is the source language. `mobile/tools/build_i18n.py` collects the UI strings (`data-i18n*`
+attributes and the string patterns in the scripts) and writes `mobile/web/i18n/<lang>.json`. For each
+string it takes OrcaSlicer's translation from `localization/i18n` when OrcaSlicer has the same English
+text, so terms match the desktop slicer; where OrcaSlicer translates a word per sense (`msgctxt`) the
+script names the sense it needs. Everything else comes from `mobile/tools/i18n_extra.json` and is
+listed as machine-translated in the catalog's `_meta`. The extras also replace an OrcaSlicer
+translation that has the wrong sense for the mobile UI (the print button's verb where a catalog has
+the noun). Languages without an OrcaSlicer catalog come entirely from the extras. The build fails when
+a string has no translation, and CI fails when the committed catalogs are stale.
+
 ## Profiles
 
 `mobile/tools/build_profiles.py` resolves the supported BBL machine, process and filament presets
-(inheritance and `include`s) into `mobile/web/profiles.json`, keeping the first extruder variant of
-per-variant lists, and copies the icons, printer pictures and bed models the UI uses into
+(inheritance and `include`s) into `mobile/web/profiles.json`, and copies the icons, printer pictures and bed models the UI uses into
 `mobile/web/assets/`. CI rebuilds it and fails when the committed file differs, so profile changes in
 `resources/profiles/BBL` reach the mobile slicer on purpose.
+
+Every system process and filament preset compatible with a printer is kept. Per-variant lists are
+reduced to the one variant the mobile slicer prints with: the "Direct Drive Standard" variant of the
+printer's master extruder.
+
+## Dual-nozzle printers
+
+The H2D, H2D Pro and H2C have two nozzles. With one filament OrcaSlicer prints on the master extruder
+(`master_extruder_id`, the right nozzle) and the mobile slicer does the same: the filament is mapped to
+that extruder (`filament_map`), the template variables are filled as OrcaSlicer fills them for that
+case (physical extruder through `physical_extruder_map`, hotend indices left at -1 so the firmware
+picks the nozzle itself), and placement is checked against that extruder's reachable area, which the
+plate view shades. `slice_info.config` records the nozzle the plate uses. Printing on the left nozzle
+or with two filaments is not supported.

@@ -8,14 +8,15 @@ import { render, evaluate } from '../web/js/template.js';
 import { crc32, md5Hex, writeZip, readZip } from '../web/js/zip.js';
 import { parseSTL, parse3MF, placeOnBed, bounds, volumeMM3 } from '../web/js/mesh.js';
 import { slice, SCALE } from '../web/js/slicer.js';
-import { resolveSettings, generateGcode, checkPlacement } from '../web/js/gcode.js';
+import { resolveSettings, generateGcode, checkPlacement as checkPlacementRaw, formatMessage, yAccelerationLimit } from '../web/js/gcode.js';
+const checkPlacement = (s, b) => checkPlacementRaw(s, b).map((m) => formatMessage(m));
 import { buildGcode3mf } from '../web/js/gcode3mf.js';
 import { box, tube, join, flip, binarySTL, overhangRamp } from './shapes.mjs';
 
 const web = new URL('../web/', import.meta.url);
 const profiles = JSON.parse(fs.readFileSync(new URL('profiles.json', web), 'utf8'));
 const printer = (name) => profiles.printers.find((p) => p.name === name);
-const standard = (p) => p.processes.find((x) => x.name.startsWith('0.20mm'));
+const standard = (p) => p.processes.find((x) => x.name.startsWith('0.20mm Standard'));
 const settingsFor = (name, o = {}) => { const p = printer(name); return resolveSettings(p, standard(p), p.filaments[0], o); };
 
 // ---------- template ----------
@@ -266,4 +267,45 @@ test('process values edited in the UI override the preset by OrcaSlicer key', ()
   assert.equal(s.support.angle, 45);
   assert.equal(s.speed['Inner wall'], base.speed['Inner wall'], 'untouched keys keep the preset value');
   assert.equal(standard(p).wall_loops, '2', 'the preset itself is not modified');
+});
+
+test('H2 series and A2L are offered with their own profiles', () => {
+  for (const name of ['Bambu Lab A2L', 'Bambu Lab H2S', 'Bambu Lab H2D', 'Bambu Lab H2D Pro', 'Bambu Lab H2C']) {
+    const p = printer(name);
+    assert.ok(p, `${name} missing`);
+    assert.ok(standard(p), `${name} has no 0.20mm Standard process`);
+    assert.ok(p.filaments.some((f) => f.name.startsWith('Bambu PLA Basic')), `${name} has no Bambu PLA Basic`);
+    assert.ok(p.bed_model && p.cover, `${name} lacks its bed model or picture`);
+  }
+});
+
+test('dual-nozzle H2D prints with the right (master) nozzle, as OrcaSlicer does for one filament', async () => {
+  const s = settingsFor('Bambu Lab H2D');
+  assert.deepEqual(s.area, { minX: 25, minY: 0, maxX: 350, maxY: 320 }, 'reachable area of the right nozzle');
+  assert.equal(s.maxHeight, 325);
+  // A part in the strip only the left nozzle reaches is refused.
+  assert.match(checkPlacement(s, bounds(box(2, 100, 0, 22, 120, 10))).join(' '), /right nozzle/);
+  const { gcode, stats } = generateGcode(slice(box(180, 150, 0, 200, 170, 4), s), s);
+  assert.match(gcode, /^M104 S220 T0 ; rise temp in advance$/m, 'filament_map 2 -> physical T0');
+  assert.match(gcode, /^T0 H-1$/m, 'no hotend index without a dynamic nozzle map (OrcaSlicer test_multifilament)');
+  const files = readZip(await buildGcode3mf({ gcode, stats, settings: s, title: 'cube' }));
+  const info = new TextDecoder().decode(await files.get('Metadata/slice_info.config')());
+  assert.match(info, /key="filament_maps" value="2"/);
+  assert.match(info, /key="nozzle_diameters" value="0.4,0.4"/);
+  assert.match(info, /key="extruder_type" value="0 0"/);
+  assert.match(info, /<nozzle id="1" extruder_id="2"/);
+});
+
+test('A2L limits Y acceleration by the printed mass, like OrcaSlicer', () => {
+  const s = settingsFor('Bambu Lab A2L', { infillDensity: 1 });
+  const { gcode } = generateGcode(slice(box(140, 140, 0, 190, 190, 30), s), s);
+  const limits = [...gcode.matchAll(/^M201 N1 Y(\d+(?:\.\d+)?)$/gm)].map((m) => +m[1]);
+  assert.ok(limits.length > 100, 'one limit per layer');
+  assert.equal(limits[0], 8000, 'nothing printed yet: the machine limit');
+  // 29 N / (2700 g bed + printed mass) only drops below the 8000 mm/s² machine limit past ~925 g,
+  // so check the formula itself with heavier prints (machine_max_force_Y, machine_bed_mass_Y).
+  assert.equal(yAccelerationLimit(s, 100), 8000);
+  assert.ok(Math.abs(yAccelerationLimit(s, 1000) - 29e6 / 3700) < 1e-6);
+  assert.equal(yAccelerationLimit(settingsFor('Bambu Lab A1'), 1000), 12000, 'printers without a mass limit keep theirs');
+  for (let i = 1; i < limits.length; i++) assert.ok(limits[i] <= limits[i - 1] + 1e-9, 'never rises while printing');
 });

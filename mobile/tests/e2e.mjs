@@ -91,7 +91,7 @@ try {
   check(await page.$eval('#tab-preview', (el) => el.classList.contains('active')), 'switched to Preview after slicing');
   check(await page.evaluate(() => window.__ms.result.settings.wallLoops === 3 && window.__ms.result.settings.brimWidth > 0), 'slice used the edited settings');
   const stats = await page.textContent('#legend');
-  check(/Line Type/.test(stats) && /Model printing time\*\d+(h\d+m|m\d+s)/.test(stats) && /\d+\.\d+ g/.test(stats), `sliced: ${stats.replace(/\s+/g, ' ').trim().slice(0, 120)}`);
+  check(/Line Type/.test(stats) && /Model printing time\d+(h\d+m|m\d+s)/.test(stats) && /\d+\.\d+ g/.test(stats), `sliced: ${stats.replace(/\s+/g, ' ').trim().slice(0, 120)}`);
   check(await page.isVisible('#vslider') && await page.isVisible('#hslider'), 'layer and move sliders shown');
   await page.fill('#layer', '40');
   await page.dispatchEvent('#layer', 'input');
@@ -131,6 +131,83 @@ try {
   check((await p2.textContent('#runnertext')).includes('pair'), 'unpaired phone is told to pair');
   const status = await p2.evaluate(async () => (await fetch('api/print', { method: 'POST', body: 'x' })).status);
   check(status === 401, 'runner rejects prints without the token');
+
+  // 6. Preferences, user presets and the H2D on a tablet.
+  const tab = await browser.newContext({ ...devices['iPad Pro 11 landscape'] });
+  const t2 = await tab.newPage();
+  t2.on('pageerror', (e) => errors.push(e.message));
+  t2.on('dialog', (d) => d.accept());
+  await t2.goto(`http://127.0.0.1:${port}/`);
+  await t2.waitForFunction(() => document.getElementById('printer').options.length > 0);
+  check(await t2.textContent('#slice .lbl-long') === 'Slice plate', 'English is the default language');
+  await t2.click('#prefs');
+  check(await t2.$$eval('#lang option', (o) => o.length) === 19, 'language list offers English and 18 translations');
+  await t2.selectOption('#lang', 'de');
+  await t2.waitForFunction(() => document.querySelector('#slice .lbl-long').textContent === 'Aktuelle Platte slicen');
+  check(true, 'German UI uses OrcaSlicer\'s wording ("Aktuelle Platte slicen")');
+  await t2.click('.accent[data-color="#1F8EEA"]');
+  const accent = await t2.evaluate(() => getComputedStyle(document.querySelector('#dlg-prefs .btn.primary')).backgroundColor);
+  check(accent === 'rgb(31, 142, 234)', `button colour follows the preference (${accent})`);
+  if (shots) await t2.screenshot({ path: path.join(shots, 'tablet-prefs-de.png') });
+  await t2.click('#dlg-prefs .dlg-actions .btn.primary');
+  await t2.reload();
+  await t2.waitForFunction(() => document.querySelector('#slice .lbl-long').textContent === 'Aktuelle Platte slicen');
+  check(await t2.evaluate(() => getComputedStyle(document.querySelector('#dlg-prefs .btn.primary')).backgroundColor) === 'rgb(31, 142, 234)', 'language and colour survive a reload');
+
+  // Long translations still fit the top bar of a 320 px phone: short labels, nothing cut off.
+  const small = await browser.newContext({ ...devices['iPhone SE'] });
+  await small.addInitScript(() => localStorage.setItem('ms.lang', JSON.stringify('ru')));
+  const sp = await small.newPage();
+  sp.on('pageerror', (e) => errors.push(e.message));
+  await sp.goto(`http://127.0.0.1:${port}/`);
+  await sp.waitForFunction(() => document.querySelector('#slice .lbl-short').textContent === 'Нарезать');
+  const fit = await sp.evaluate(() => [...document.querySelectorAll('#slice, #print, #printmenu')].map((b) => {
+    const label = b.id === 'printmenu' ? b : b.querySelector('.lbl-short');
+    const r = document.createRange();
+    r.selectNodeContents(label);
+    const w = r.getBoundingClientRect().width;
+    const cs = getComputedStyle(b);
+    const room = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const longHidden = !b.querySelector('.lbl-long') || getComputedStyle(b.querySelector('.lbl-long')).display === 'none';
+    return longHidden && w > 0 && w <= room + 0.5 && b.getBoundingClientRect().right <= innerWidth;
+  }));
+  check(fit.every(Boolean), `Russian top bar fits a 320 px phone (${fit})`);
+  await small.close();
+
+  await t2.selectOption('#printer', 'Bambu Lab H2D');
+  await t2.setInputFiles('#file', model);
+  await t2.waitForFunction(() => !document.getElementById('slice').disabled, null, { timeout: 10000 });
+  // Save a process preset with three walls.
+  await t2.click('.ptab[data-ptab="strength"]');
+  await t2.fill('#p-wall_loops', '3');
+  await t2.dispatchEvent('#p-wall_loops', 'change');
+  await t2.click('#psave');
+  await t2.fill('#savename', 'My strong process');
+  await t2.click('#saveok');
+  await t2.waitForFunction(() => document.getElementById('process').value === 'My strong process');
+  check(await t2.$eval('#process', (el) => el.selectedOptions[0].parentElement.label) === 'Benutzerdefinierte Profile', 'saved process preset listed under user presets');
+  check(await t2.isVisible('#pdel'), 'user preset can be deleted');
+  // Create a filament preset with another nozzle temperature.
+  await t2.click('#fedit');
+  await t2.fill('#p-nozzle_temperature', '231');
+  await t2.dispatchEvent('#p-nozzle_temperature', 'change');
+  await t2.click('#fsave');
+  await t2.fill('#savename', 'My PLA 231');
+  await t2.click('#saveok');
+  await t2.waitForFunction(() => document.getElementById('filament').value === 'My PLA 231');
+  if (shots) await t2.screenshot({ path: path.join(shots, 'tablet-presets.png') });
+  await t2.click('#slice');
+  await t2.waitForSelector('#legend:not([hidden])', { timeout: 120000 });
+  const used = await t2.evaluate(() => ({ walls: window.__ms.result.settings.wallLoops, temp: window.__ms.result.settings.filament.nozzleTemp, area: window.__ms.result.settings.area }));
+  check(used.walls === 3 && used.temp === 231, `slice used both user presets (walls ${used.walls}, nozzle ${used.temp} °C)`);
+  check(used.area.minX === 25 && used.area.maxX === 350, 'H2D slices inside the right nozzle\'s area');
+  check(/M104 S231/.test(await t2.evaluate(() => window.__ms.result.gcode)), 'G-code heats the nozzle to the user preset temperature');
+  if (shots) await t2.screenshot({ path: path.join(shots, 'tablet-h2d-preview.png') });
+  // Export the presets.
+  await t2.click('#prefs');
+  const [pdl] = await Promise.all([t2.waitForEvent('download'), t2.click('#pexport')]);
+  const exported = JSON.parse(fs.readFileSync(await pdl.path(), 'utf8'));
+  check(exported.presets.length === 2 && exported.presets.some((p) => p.inherits === 'Bambu PLA Basic @BBL H2D' && p.nozzle_temperature[0] === '231'), 'exported presets keep inherits and the changed values');
 
   check(errors.length === 0, `no page errors${errors.length ? ': ' + errors.join(' | ') : ''}`);
   await browser.close();

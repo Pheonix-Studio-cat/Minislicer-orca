@@ -24,13 +24,18 @@ ICONS = ["printer", "filament", "process", "settings", "edit", "add_filament", "
          "tab_3d_active", "tab_preview_active", "tab_monitor_active", "toolbar_open", "toolbar_arrange",
          "toolbar_rotate", "toolbar_scale", "toolbar_open_dark", "toolbar_arrange_dark",
          "toolbar_rotate_dark", "toolbar_scale_dark", "custom-gcode_quality", "custom-gcode_strength",
-         "custom-gcode_speed", "custom-gcode_support", "custom-gcode_other", "plate_settings"]
+         "custom-gcode_speed", "custom-gcode_support", "custom-gcode_other", "plate_settings",
+         "save", "delete", "undo", "custom-gcode_filament", "custom-gcode_cooling_fan",
+         "param_information", "param_extruder_temp", "param_bed_temp", "param_volumetric_speed",
+         "param_cooling_specific_layer", "param_cooling_part_fan", "param_layer_height", "param_wall",
+         "param_shell", "param_infill", "param_speed_first", "param_speed", "param_travel_speed",
+         "param_support", "param_adhension"]
 # Our filament_id -> Bambu's catalog id. A Bambu printer reads tray_info_idx in slice_info.config
 # and only knows its own catalog (see docs/HLSD/filament_id.md, "The Bambu catalog map").
 BAMBU_IDS = os.path.join(ROOT, "resources", "printers", "bambu_filament_ids.json")
 
-PRINTERS = ["Bambu Lab A1 mini", "Bambu Lab A1", "Bambu Lab P1P", "Bambu Lab P1S", "Bambu Lab X1 Carbon"]
-PROCESSES = ["0.12mm Fine", "0.16mm Optimal", "0.20mm Standard", "0.24mm Draft", "0.28mm Extra Draft"]
+PRINTERS = ["Bambu Lab A1 mini", "Bambu Lab A1", "Bambu Lab A2L", "Bambu Lab P1P", "Bambu Lab P1S",
+            "Bambu Lab X1 Carbon", "Bambu Lab H2S", "Bambu Lab H2D", "Bambu Lab H2D Pro", "Bambu Lab H2C"]
 # The P1P bundle ships few filament presets of its own; the P1S ones fit the same toolhead.
 FILAMENT_FALLBACK = {"Bambu Lab P1P": "Bambu Lab P1S 0.4 nozzle"}
 FILAMENTS = ["Bambu PLA Basic", "Bambu PLA Matte", "Bambu PETG HF", "Bambu ABS", "Bambu TPU 95A HF",
@@ -40,7 +45,9 @@ MACHINE_KEYS = ["printer_model", "printable_area", "printable_height", "nozzle_d
                 "retraction_speed", "deretraction_speed", "z_hop", "retract_before_wipe", "printer_structure",
                 "bed_exclude_area", "scan_first_layer", "machine_max_acceleration_extruding",
                 "machine_max_speed_x", "extruder_type", "nozzle_volume_type", "nozzle_type",
-                "retraction_minimum_travel", "retract_lift_below", "z_offset"]
+                "retraction_minimum_travel", "retract_lift_below", "z_offset", "cooling_filter_enabled",
+                "machine_max_force_Y", "machine_bed_mass_Y", "machine_max_acceleration_y",
+                "long_retractions_when_cut", "retraction_distances_when_cut"]
 GCODE_KEYS = ["machine_start_gcode", "machine_end_gcode", "layer_change_gcode"]
 PROCESS_KEYS = ["layer_height", "initial_layer_print_height", "wall_loops", "top_shell_layers",
                 "bottom_shell_layers", "sparse_infill_density", "outer_wall_speed", "inner_wall_speed",
@@ -61,7 +68,9 @@ FILAMENT_KEYS = ["filament_type", "filament_vendor", "filament_id", "nozzle_temp
                  "filament_diameter", "filament_density", "fan_max_speed", "fan_min_speed",
                  "close_fan_the_first_x_layers", "filament_flush_temp", "filament_flush_volumetric_speed",
                  "slow_down_layer_time", "slow_down_min_speed", "default_filament_colour",
-                 "filament_retraction_length", "temperature_vitrification"]
+                 "filament_retraction_length", "temperature_vitrification", "chamber_temperatures",
+                 "long_retractions_when_ec", "retraction_distances_when_ec",
+                 "filament_long_retractions_when_cut", "filament_retraction_distances_when_cut"]
 
 
 def load(kind, name, cache={}):
@@ -79,12 +88,64 @@ def load(kind, name, cache={}):
 
 # Lists that are geometry, not one value per extruder variant.
 WHOLE_LISTS = {"printable_area", "bed_exclude_area"}
+STANDARD = "Direct Drive Standard"
 
 
-def subset(preset, keys):
-    """Single-extruder slicer: keep the first extruder variant of each per-variant list."""
-    return {k: preset[k] if k in WHOLE_LISTS or not isinstance(preset[k], list) else preset[k][:1]
-            for k in keys if k in preset}
+def variant_index(preset, variant_key, id_key=None, extruder=1):
+    """Index of the "Direct Drive Standard" variant on `extruder` (1-based) in a per-variant preset.
+
+    Printers with several extruders or nozzle types store most values once per variant
+    (printer_extruder_variant / print_extruder_variant / filament_extruder_variant), the way
+    OrcaSlicer's extruder-variant presets do. The mobile slicer prints with one standard nozzle.
+    """
+    variants = preset.get(variant_key)
+    if not isinstance(variants, list) or not variants:
+        return 0, 1
+    ids = preset.get(id_key) if id_key else None
+    for i, v in enumerate(variants):
+        if v == STANDARD and (not ids or ids[i] == str(extruder)):
+            return i, len(variants)
+    for i in range(len(variants)):
+        if not ids or ids[i] == str(extruder):
+            return i, len(variants)
+    return 0, len(variants)
+
+
+def subset(preset, keys, vi=0, nv=1, ext=0, n_ext=1):
+    """Keeps, for each key, the value of variant `vi` (of `nv`) or of extruder `ext` (of `n_ext`)."""
+    out = {}
+    for k in keys:
+        if k not in preset:
+            continue
+        v = preset[k]
+        if k in WHOLE_LISTS or not isinstance(v, list) or not v:
+            out[k] = v
+        elif len(v) == nv:
+            out[k] = [v[vi]]
+        elif len(v) == 2 * nv:  # machine limits: normal and silent mode per variant
+            out[k] = [v[2 * vi]]
+        elif len(v) == n_ext:
+            out[k] = [v[ext]]
+        else:
+            out[k] = v[:1]
+    return out
+
+
+def area_bounds(spec):
+    """'0x0,325x0,325x320,0x320' or ['0x0', ...] -> [minX, minY, maxX, maxY]."""
+    pts = [tuple(float(c) for c in p.split("x")) for p in (spec.split(",") if isinstance(spec, str) else spec)]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    return [min(xs), min(ys), max(xs), max(ys)]
+
+
+def compatible(kind, printer):
+    """All instantiated system presets of `kind` whose compatible_printers lists `printer`."""
+    for fn in sorted(os.listdir(os.path.join(BBL, kind))):
+        if not fn.endswith(".json"):
+            continue
+        p = load(kind, fn[:-5])
+        if p.get("instantiation") == "true" and printer in p.get("compatible_printers", []):
+            yield fn[:-5], p
 
 
 def pick(kind, base, printer):
@@ -106,23 +167,38 @@ def main():
         variant = model + " 0.4 nozzle"
         m = load("machine", variant)
         model_json = load("machine", model)
+        # Several extruders (H2D, H2D Pro, H2C): print with OrcaSlicer's default one for a single
+        # filament, the master extruder (master_extruder_id is 1-based; FilamentGroup.cpp).
+        n_ext = len(m["nozzle_diameter"])
+        master = int(m.get("master_extruder_id", "1")) - 1 if n_ext > 1 else 0
+        vi, nv = variant_index(m, "printer_extruder_variant", "printer_extruder_id", master + 1)
+        extruders = {"count": n_ext, "master": master,
+                     "physical_map": [int(x) for x in m.get("physical_extruder_map", ["0"])],
+                     "nozzle_diameters": [float(x) for x in m["nozzle_diameter"]],
+                     "max_nozzle_count": [int(x) for x in m.get("extruder_max_nozzle_count", ["1"] * n_ext)]}
+        if m.get("extruder_printable_area"):
+            extruders["printable_area"] = area_bounds(m["extruder_printable_area"][master])
+            extruders["printable_height"] = float(m["extruder_printable_height"][master])
         printer = {"name": model, "preset": variant, "model_id": model_json["model_id"],
                    "default_bed_type": model_json.get("default_bed_type", "Textured PEI Plate"),
-                   "machine": subset(m, MACHINE_KEYS),
+                   "machine": subset(m, MACHINE_KEYS, vi, nv, master, n_ext),
+                   "extruders": extruders,
                    "gcode": {k: m[k] for k in GCODE_KEYS},
                    "processes": [], "filaments": []}
-        for base in PROCESSES:
-            name, p = pick("process", base, variant)
+        # Every system process preset OrcaSlicer offers for this printer, thinnest layers first.
+        for name, p in compatible("process", variant):
             if p:
-                printer["processes"].append({"name": name, **subset(p, PROCESS_KEYS)})
+                pvi, pnv = variant_index(p, "print_extruder_variant", "print_extruder_id", master + 1)
+                printer["processes"].append({"name": name, **subset(p, PROCESS_KEYS, pvi, pnv, master, n_ext)})
         for base in FILAMENTS:
             name, f = pick("filament", base, variant)
             if not f and model in FILAMENT_FALLBACK:
                 name, f = pick("filament", base, FILAMENT_FALLBACK[model])
             if f:
                 row = bambu_ids.get(f.get("filament_id"), {})
+                fvi, fnv = variant_index(f, "filament_extruder_variant")
                 printer["filaments"].append({"name": name, "tray_info_idx": row.get("bambu_id", f.get("filament_id", "")),
-                                             **subset(f, FILAMENT_KEYS)})
+                                             **subset(f, FILAMENT_KEYS, fvi, fnv)})
         if not printer["processes"] or not printer["filaments"]:
             sys.exit(f"no process or filament preset found for {variant}")
         out["printers"].append(printer)

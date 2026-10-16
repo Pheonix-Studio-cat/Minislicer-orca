@@ -49,9 +49,19 @@ printer and confirm, so the runner never starts a print by itself.
 
 Slicing runs in a module worker so the UI stays responsive on a phone.
 
+## User interface
+
+`mobile/web/index.html` and `js/app.js` mirror OrcaSlicer's main window (Prepare/Preview tabs, Slice
+plate/Print plate, sidebar with Printer, Filament and Process pages, plate toolbar, preview legend and
+sliders) so users of OrcaSlicer or Bambu Studio find their way without learning a new layout. Colours
+come from `StateColor.cpp`, `GLCanvas3D.cpp` and `3DBed.cpp`, line-type colours from libvgcode, and the
+setting keys edited in the Process page are OrcaSlicer's: `resolveSettings` merges them over the
+preset like an edited value in OrcaSlicer's process tab.
+
 ## Profiles
 
 `mobile/tools/build_profiles.py` resolves the supported BBL machine, process and filament presets
 (inheritance and `include`s) into `mobile/web/profiles.json`, keeping the first extruder variant of
-per-variant lists. CI rebuilds it and fails when the committed file differs, so profile changes in
+per-variant lists, and copies the icons, printer pictures and bed models the UI uses into
+`mobile/web/assets/`. CI rebuilds it and fails when the committed file differs, so profile changes in
 `resources/profiles/BBL` reach the mobile slicer on purpose.

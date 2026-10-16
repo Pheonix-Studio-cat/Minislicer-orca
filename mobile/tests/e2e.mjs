@@ -70,33 +70,42 @@ try {
   await page.goto(`http://127.0.0.1:${port}/?token=${token}`);
   await page.waitForFunction(() => document.getElementById('runner').classList.contains('ok'), null, { timeout: 5000 });
   check(!page.url().includes('token='), 'token removed from the address bar');
-  check((await page.textContent('#runner')).startsWith('Runner on'), 'phone is paired with the runner');
+  check((await page.textContent('#runnertext')).startsWith('Runner on'), 'phone is paired with the runner');
   if (shots) await page.screenshot({ path: path.join(shots, 'phone-empty.png') });
 
   await page.setInputFiles('#file', model);
   await page.waitForFunction(() => !document.getElementById('slice').disabled, null, { timeout: 10000 });
   check(/mm/.test(await page.textContent('#modelsize')), 'model loaded and measured');
   await page.selectOption('#printer', 'Bambu Lab A1');
-  await page.check('#brim');
+  // Brim lives on the Others page of the process settings, as in OrcaSlicer.
+  await page.click('.ptab[data-ptab="others"]');
+  await page.selectOption('#p-brim_type', 'outer_only');
+  check(await page.$eval('#p-brim_type', (el) => el.closest('.prow').classList.contains('changed')), 'edited setting is marked as changed');
+  await page.click('.ptab[data-ptab="strength"]');
+  await page.fill('#p-wall_loops', '3');
+  await page.dispatchEvent('#p-wall_loops', 'change');
+  check(await page.evaluate(() => window.__ms.overrides.wall_loops === '3'), 'wall loops override recorded');
   if (shots) await page.screenshot({ path: path.join(shots, 'phone-model.png') });
   await page.click('#slice');
-  await page.waitForSelector('#result:not([hidden])', { timeout: 120000 });
-  const stats = await page.textContent('#stats');
-  check(/min/.test(stats) && /g/.test(stats), `sliced: ${stats.replace(/\s+/g, ' ').trim()}`);
-  check(await page.isVisible('#layerbar'), 'layer preview shown');
+  await page.waitForSelector('#legend:not([hidden])', { timeout: 120000 });
+  check(await page.$eval('#tab-preview', (el) => el.classList.contains('active')), 'switched to Preview after slicing');
+  check(await page.evaluate(() => window.__ms.result.settings.wallLoops === 3 && window.__ms.result.settings.brimWidth > 0), 'slice used the edited settings');
+  const stats = await page.textContent('#legend');
+  check(/Line Type/.test(stats) && /Model printing time\*\d+(h\d+m|m\d+s)/.test(stats) && /\d+\.\d+ g/.test(stats), `sliced: ${stats.replace(/\s+/g, ' ').trim().slice(0, 120)}`);
+  check(await page.isVisible('#vslider') && await page.isVisible('#hslider'), 'layer and move sliders shown');
   await page.fill('#layer', '40');
   await page.dispatchEvent('#layer', 'input');
   if (shots) await page.screenshot({ path: path.join(shots, 'phone-preview.png') });
 
   // 3. Download works.
+  await page.click('#printmenu');
   const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#dl3mf')]);
   const dlPath = path.join(tmp, dl.suggestedFilename());
   await dl.saveAs(dlPath);
   check(dl.suggestedFilename().endsWith('.gcode.3mf'), `download named ${dl.suggestedFilename()}`);
 
   // 4. Send to the runner -> Bambu Connect link.
-  check(await page.isVisible('#send'), 'print button visible when paired');
-  await page.click('#send');
+  await page.click('#print');
   await page.waitForFunction(() => /Bambu Connect|Could not/.test(document.getElementById('sendmsg').textContent), null, { timeout: 15000 });
   const msg = await page.textContent('#sendmsg');
   check(msg.startsWith('Opened in Bambu Connect'), `send result: ${msg}`);
@@ -118,9 +127,8 @@ try {
   const anon = await browser.newContext({ ...devices['Pixel 7'] });
   const p2 = await anon.newPage();
   await p2.goto(`http://127.0.0.1:${port}/`);
-  await p2.waitForFunction(() => !document.getElementById('runner').textContent.startsWith('Checking'), null, { timeout: 5000 });
-  check((await p2.textContent('#runner')).includes('pair'), 'unpaired phone is told to pair');
-  check(!(await p2.isVisible('#send')), 'no print button without pairing');
+  await p2.waitForFunction(() => !document.getElementById('runnertext').textContent.startsWith('Checking'), null, { timeout: 5000 });
+  check((await p2.textContent('#runnertext')).includes('pair'), 'unpaired phone is told to pair');
   const status = await p2.evaluate(async () => (await fetch('api/print', { method: 'POST', body: 'x' })).status);
   check(status === 401, 'runner rejects prints without the token');
 

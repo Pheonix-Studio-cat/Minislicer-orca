@@ -32,8 +32,13 @@ export function parseArea(area) {
   return { minX: Math.min(...xs), minY: Math.min(...ys), maxX: Math.max(...xs), maxY: Math.max(...ys) };
 }
 
-/** Turns the profile strings into numbers; `o` holds the user's overrides from the UI. */
+/**
+ * Turns the profile strings into numbers; `o` holds the user's overrides from the UI.
+ * `o.process` overrides process settings by their OrcaSlicer key (e.g. { wall_loops: '3' }),
+ * the way an edited value in OrcaSlicer's process tab does.
+ */
 export function resolveSettings(printer, process, filament, o = {}) {
+  if (o.process) process = { ...process, ...o.process };
   const m = printer.machine;
   const bedType = o.bedType || printer.default_bed_type;
   const bedKey = (BED_TYPES.find((b) => b.name === bedType) || BED_TYPES[0]).key;
@@ -231,6 +236,7 @@ export function generateGcode(sliced, s, { modelName = 'model', date = new Date(
   const body = [];
   let x = 0, y = 0, z = 0, retracted = false, accelNow = 0, fanNow = -1;
   let time = 0, extruded = 0, firstLayerTime = 0;
+  const featureTime = {}; // seconds per feature, for the preview legend
   const layerTimes = [];
   const emitAccel = (a) => {
     a = Math.min(a, s.accel.max || a);
@@ -319,7 +325,9 @@ export function generateGcode(sliced, s, { modelName = 'model', date = new Date(
         body.push(`G1 X${f3(nx)} Y${f3(ny)} E${f5(e)}${fSet ? '' : ` F${Math.round(v * 60)}`}`);
         fSet = true;
         extruded += e;
-        time += moveTime(len, v, accelNow);
+        const dt = moveTime(len, v, accelNow);
+        time += dt;
+        featureTime[p.feature] = (featureTime[p.feature] || 0) + dt;
         x = nx; y = ny;
       }
     });
@@ -398,6 +406,7 @@ export function generateGcode(sliced, s, { modelName = 'model', date = new Date(
     stats: {
       time: totalTime,
       firstLayerTime,
+      featureTime,
       layers: total,
       filamentMM: usedMM,
       weight,

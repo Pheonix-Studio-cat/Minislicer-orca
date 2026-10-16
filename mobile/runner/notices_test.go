@@ -15,7 +15,7 @@ func TestEmbeddedLicenceNotices(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{sourceURL, "three.js", "Boost Software License", "Tom Wu", "Kazuhiko Arase", "The Go Authors"} {
+	for _, want := range []string{sourceURL, "three.js", "Boost Software License", "Tom Wu", "Kazuhiko Arase", "The Go Authors", "resources/images"} {
 		if !strings.Contains(string(notices), want) {
 			t.Errorf("THIRD-PARTY-NOTICES.txt lacks %q", want)
 		}

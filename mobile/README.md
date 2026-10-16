@@ -36,6 +36,17 @@ its own; the runner is the bridge.
 
 Without the runner the page still slices and offers the `.gcode.3mf` as a download.
 
+## The user interface
+
+It follows OrcaSlicer's main window so it feels familiar: a dark top bar with **Prepare** and
+**Preview** and the **Slice plate** / **Print plate** buttons (the arrow next to Print plate exports
+the plate sliced file or the G-code), a sidebar with **Printer** (with the printer picture and plate
+type), **Filament** and **Process** (Quality, Strength, Speed, Support, Others, with OrcaSlicer's
+setting names; edited values turn teal), and the 3D plate with the printer's bed model and a toolbar
+(add, arrange, rotate, scale). The preview shows OrcaSlicer's line-type colours, a "Line Type" legend
+with time per feature, a vertical layer slider and a horizontal move slider. Colours, icons, printer
+pictures and bed models are OrcaSlicer's own. On a phone the plate sits above the sidebar.
+
 ## What the slicer does
 
 - Printers: A1 mini, A1, P1P, P1S, X1 Carbon, 0.4 mm nozzle. Bed size, start/end G-code, speeds,
@@ -56,7 +67,7 @@ object skipping on the printer.
 ## Development
 
 ```bash
-python3 mobile/tools/build_profiles.py        # after changes in resources/profiles/BBL
+python3 mobile/tools/build_profiles.py        # after changes in resources/profiles/BBL or resources/images
 cd mobile
 node --test tests/*.test.mjs                  # slicer, G-code, 3MF (note: the glob, not "tests/")
 go test ./...                                 # runner

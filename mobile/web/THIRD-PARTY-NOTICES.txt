@@ -10,6 +10,11 @@ The mobile slicer and the runner live in the folder "mobile/".
 
 The printer, process and filament settings in profiles.json are generated from
 OrcaSlicer's Bambu Lab profiles (resources/profiles/BBL in the same repository).
+The icons in assets/icons are OrcaSlicer's (resources/images), and the printer
+pictures and bed models in assets/printers and assets/beds are the ones OrcaSlicer
+ships in resources/profiles/BBL. They are copied unchanged by
+mobile/tools/build_profiles.py and fall under the same AGPL-3.0 licence as the
+rest of the repository.
 
 "Bambu Lab" and "Bambu Connect" are names of Bambu Lab. This project is not made,
 endorsed or supported by Bambu Lab; the names only describe compatibility.

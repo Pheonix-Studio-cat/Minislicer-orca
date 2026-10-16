@@ -1,19 +1,30 @@
 #!/usr/bin/env python3
-"""Build mobile/web/profiles.json from the BBL system profiles in resources/profiles/BBL.
+"""Build mobile/web/profiles.json and mobile/web/assets/ from OrcaSlicer's own resources.
 
 The web slicer cannot read the profile tree directly (inheritance, includes, hundreds of
-files), so this script resolves the presets it supports into one compact JSON file.
-Run it again whenever the BBL profiles change:
+files), so this script resolves the presets it supports into one compact JSON file. It also
+copies the icons, printer pictures and bed models OrcaSlicer's GUI uses, so the mobile UI
+looks like OrcaSlicer's and the runner (which embeds mobile/web) can serve them.
+Run it again whenever the BBL profiles or these resources change:
 
     python3 mobile/tools/build_profiles.py
 """
 import json
 import os
+import shutil
 import sys
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
 BBL = os.path.join(ROOT, "resources", "profiles", "BBL")
 OUT = os.path.join(ROOT, "mobile", "web", "profiles.json")
+ASSETS = os.path.join(ROOT, "mobile", "web", "assets")
+IMAGES = os.path.join(ROOT, "resources", "images")
+# OrcaSlicer GUI icons used by the mobile UI (same names as in Plater.cpp, MainFrame.cpp, Tab.cpp).
+ICONS = ["printer", "filament", "process", "settings", "edit", "add_filament", "delete_filament",
+         "tab_3d_active", "tab_preview_active", "tab_monitor_active", "toolbar_open", "toolbar_arrange",
+         "toolbar_rotate", "toolbar_scale", "toolbar_open_dark", "toolbar_arrange_dark",
+         "toolbar_rotate_dark", "toolbar_scale_dark", "custom-gcode_quality", "custom-gcode_strength",
+         "custom-gcode_speed", "custom-gcode_support", "custom-gcode_other", "plate_settings"]
 # Our filament_id -> Bambu's catalog id. A Bambu printer reads tray_info_idx in slice_info.config
 # and only knows its own catalog (see docs/HLSD/filament_id.md, "The Bambu catalog map").
 BAMBU_IDS = os.path.join(ROOT, "resources", "printers", "bambu_filament_ids.json")
@@ -115,11 +126,32 @@ def main():
         if not printer["processes"] or not printer["filaments"]:
             sys.exit(f"no process or filament preset found for {variant}")
         out["printers"].append(printer)
+    copy_assets(out)
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=1, ensure_ascii=False)
         f.write("\n")
     print(f"wrote {OUT}: " + ", ".join(f"{p['name']} ({len(p['processes'])} processes, {len(p['filaments'])} filaments)"
                                         for p in out["printers"]))
+
+
+def copy_assets(out):
+    """Copies icons, printer covers and bed models; records their paths in `out`."""
+    shutil.rmtree(ASSETS, ignore_errors=True)
+    for sub in ("icons", "printers", "beds"):
+        os.makedirs(os.path.join(ASSETS, sub))
+    for name in ICONS:
+        shutil.copyfile(os.path.join(IMAGES, name + ".svg"), os.path.join(ASSETS, "icons", name + ".svg"))
+    for printer in out["printers"]:
+        model = load("machine", printer["name"])
+        cover = printer["name"] + "_cover.png"
+        if os.path.exists(os.path.join(BBL, cover)):
+            dst = printer["model_id"] + ".png"
+            shutil.copyfile(os.path.join(BBL, cover), os.path.join(ASSETS, "printers", dst))
+            printer["cover"] = "assets/printers/" + dst
+        bed = model.get("bed_model")
+        if bed and os.path.exists(os.path.join(BBL, bed)):
+            shutil.copyfile(os.path.join(BBL, bed), os.path.join(ASSETS, "beds", bed))
+            printer["bed_model"] = "assets/beds/" + bed
 
 
 if __name__ == "__main__":

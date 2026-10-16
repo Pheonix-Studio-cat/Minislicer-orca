@@ -1001,7 +1001,9 @@
       "30"
      ]
     }
-   ]
+   ],
+   "cover": "assets/printers/N1.png",
+   "bed_model": "assets/beds/bbl-3dp-A1M.stl"
   },
   {
    "name": "Bambu Lab A1",
@@ -2086,7 +2088,9 @@
       "30"
      ]
     }
-   ]
+   ],
+   "cover": "assets/printers/N2S.png",
+   "bed_model": "assets/beds/bbl-3dp-X1.stl"
   },
   {
    "name": "Bambu Lab P1P",
@@ -2927,7 +2931,9 @@
       "30"
      ]
     }
-   ]
+   ],
+   "cover": "assets/printers/C11.png",
+   "bed_model": "assets/beds/bbl-3dp-X1.stl"
   },
   {
    "name": "Bambu Lab P1S",
@@ -3768,7 +3774,9 @@
       "30"
      ]
     }
-   ]
+   ],
+   "cover": "assets/printers/C12.png",
+   "bed_model": "assets/beds/bbl-3dp-X1.stl"
   },
   {
    "name": "Bambu Lab X1 Carbon",
@@ -4609,7 +4617,9 @@
       "30"
      ]
     }
-   ]
+   ],
+   "cover": "assets/printers/BL-P001.png",
+   "bed_model": "assets/beds/bbl-3dp-X1.stl"
   }
  ]
 }

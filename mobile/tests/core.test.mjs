@@ -252,3 +252,18 @@ test('.gcode.3mf has the files Bambu Connect reads, with a matching MD5', async 
     execFileSync('python3', ['-I', '-c', 'import sys,xml.dom.minidom as m; m.parseString(sys.stdin.buffer.read())'], { input: await text(f) });
   }
 });
+
+test('process values edited in the UI override the preset by OrcaSlicer key', () => {
+  const p = printer('Bambu Lab A1');
+  const base = resolveSettings(p, standard(p), p.filaments[0]);
+  const s = resolveSettings(p, standard(p), p.filaments[0], {
+    process: { wall_loops: '4', sparse_infill_density: '35%', outer_wall_speed: '123', layer_height: '0.28', support_threshold_angle: '45' },
+  });
+  assert.equal(s.wallLoops, 4);
+  assert.equal(s.infillDensity, 0.35);
+  assert.equal(s.speed['Outer wall'], 123);
+  assert.equal(s.layerHeight, 0.28);
+  assert.equal(s.support.angle, 45);
+  assert.equal(s.speed['Inner wall'], base.speed['Inner wall'], 'untouched keys keep the preset value');
+  assert.equal(standard(p).wall_loops, '2', 'the preset itself is not modified');
+});

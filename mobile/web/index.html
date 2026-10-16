@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3B4446">
+<meta name="description" content="Slice STL, 3MF and OBJ models for Bambu Lab printers on your phone or tablet, and send the print to Bambu Connect.">
+<title>Minislicer Mobile</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+</head>
+<body>
+<!-- Layout and wording follow OrcaSlicer's main window: top bar with Prepare/Preview and
+     Slice plate/Print plate, sidebar with Printer, Filament and Process, 3D canvas. -->
+<header class="topbar">
+  <div class="tb-left">
+    <img src="icon.svg" alt="" width="22" height="22">
+    <span class="tb-title">Minislicer</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button id="tab-prepare" class="tab active" role="tab" aria-selected="true"><img src="assets/icons/tab_3d_active.svg" alt=""><span>Prepare</span></button>
+    <button id="tab-preview" class="tab" role="tab" aria-selected="false"><img src="assets/icons/tab_preview_active.svg" alt=""><span>Preview</span></button>
+  </nav>
+  <div class="tb-right">
+    <span id="runner" class="runner" title="Connection to the Minislicer Runner on your computer"><img src="assets/icons/tab_monitor_active.svg" alt=""><span id="runnertext">Checking…</span></span>
+    <button id="slice" class="tb-btn" disabled>Slice plate</button>
+    <div class="split">
+      <button id="print" class="tb-btn" disabled>Print plate</button>
+      <button id="printmenu" class="tb-btn caret" aria-label="More export options" aria-haspopup="menu" disabled>▾</button>
+      <div id="printdrop" class="drop" role="menu" hidden>
+        <button id="dl3mf" role="menuitem">Export plate sliced file</button>
+        <button id="dlgcode" role="menuitem">Export G-code file</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <section class="canvas" aria-label="3D view">
+    <canvas id="canvas"></canvas>
+    <div class="cv-toolbar" id="cvtoolbar">
+      <label class="cv-btn" title="Add"><img data-icon="toolbar_open" alt="Add"><input id="file" type="file" accept=".stl,.3mf,.obj,model/stl,model/3mf" hidden></label>
+      <button class="cv-btn" id="arrange" title="Arrange" disabled><img data-icon="toolbar_arrange" alt="Arrange"></button>
+      <span class="cv-sep"></span>
+      <button class="cv-btn" id="tool-rotate" title="Rotate" disabled><img data-icon="toolbar_rotate" alt="Rotate"></button>
+      <button class="cv-btn" id="tool-scale" title="Scale" disabled><img data-icon="toolbar_scale" alt="Scale"></button>
+    </div>
+    <div id="gizmo-rotate" class="gizmo" hidden>
+      <div class="gz-title">Rotate</div>
+      <div class="gz-row"><button data-rot="x">X +90°</button><button data-rot="y">Y +90°</button><button data-rot="z">Z +90°</button></div>
+    </div>
+    <div id="gizmo-scale" class="gizmo" hidden>
+      <div class="gz-title">Scale</div>
+      <div class="gz-row"><input id="scale" type="number" min="1" max="1000" step="1" value="100" inputmode="decimal"><span>%</span></div>
+      <div id="modelsize" class="gz-note"></div>
+    </div>
+    <div class="plate-name">Plate 1</div>
+    <div id="empty" class="empty">
+      <p>Drag and drop or <label class="link">add a model<input id="file2" type="file" accept=".stl,.3mf,.obj" hidden></label> (STL, 3MF, OBJ)</p>
+    </div>
+
+    <div id="legend" class="legend" hidden></div>
+    <div id="vslider" class="vslider" hidden>
+      <div class="vs-label"><b id="vs-layer">1</b><span id="vs-z">0.20</span></div>
+      <input id="layer" type="range" min="1" max="1" value="1" aria-label="Layer" orient="vertical">
+      <div class="vs-label low"><b>1</b><span id="vs-z0">0.20</span></div>
+    </div>
+    <div id="hslider" class="hslider" hidden>
+      <input id="move" type="range" min="0" max="1000" value="1000" aria-label="Moves in the layer">
+    </div>
+
+    <div id="notes" class="notes" aria-live="polite">
+      <div id="progress" class="note" hidden><div class="note-text"></div><div class="note-bar"><div></div></div></div>
+      <div id="problems" class="note warn" role="alert" hidden></div>
+      <div id="sendmsg" class="note" role="status" hidden></div>
+    </div>
+  </section>
+
+  <aside class="sidebar" aria-label="Settings">
+    <section class="sb">
+      <div class="sb-title"><img src="assets/icons/printer.svg" alt=""><span>Printer</span></div>
+      <div class="sb-content">
+        <div class="printer-card">
+          <img id="cover" alt="">
+          <div class="pc-main">
+            <select id="printer" aria-label="Printer"></select>
+            <div class="pc-sub">Nozzle 0.4 mm</div>
+          </div>
+        </div>
+        <div class="kv"><span class="kv-l"><img src="assets/icons/plate_settings.svg" alt="">Plate type</span><select id="bed" aria-label="Plate type"></select></div>
+      </div>
+    </section>
+
+    <section class="sb">
+      <div class="sb-title"><img src="assets/icons/filament.svg" alt=""><span>Filament</span>
+        <span class="sb-acts"><img src="assets/icons/add_filament.svg" alt="" class="dim" title="Multi-material is not supported"></span></div>
+      <div class="sb-content">
+        <div class="fil-row">
+          <label class="swatch" title="Filament colour"><span>1</span><input id="color" type="color" value="#00ae42"></label>
+          <select id="filament" aria-label="Filament"></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="sb">
+      <div class="sb-title"><img src="assets/icons/process.svg" alt=""><span>Process</span>
+        <span class="seg"><button class="on">Global</button><button disabled title="Per-object settings are not supported">Objects</button></span></div>
+      <div class="sb-content">
+        <select id="process" aria-label="Process preset"></select>
+        <div class="ptabs" role="tablist" id="ptabs"></div>
+        <div id="params" class="params"></div>
+      </div>
+    </section>
+
+    <section class="sb">
+      <div class="sb-title"><img src="assets/icons/settings.svg" alt=""><span>About</span></div>
+      <div class="sb-content about">
+        <p>Bambu Connect runs on Windows and macOS only. Start the <b>Minislicer Runner</b> on the computer
+          that has Bambu Connect and scan its QR code; <b>Print plate</b> then hands the sliced file to Bambu
+          Connect, where you pick the printer and confirm. Without the runner, use the arrow next to
+          <b>Print plate</b> to export the file.</p>
+        <p>Minislicer Mobile <span id="version"></span> is free software under the
+          <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">GNU AGPL v3</a>.
+          <a href="https://github.com/Pheonix-Studio-cat/Minislicer-orca" target="_blank" rel="noopener">Source code</a> ·
+          <a href="THIRD-PARTY-NOTICES.txt" target="_blank">Licences and notices</a>.
+          Layout, icons and settings come from OrcaSlicer. Not affiliated with Bambu Lab or OrcaSlicer.</p>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

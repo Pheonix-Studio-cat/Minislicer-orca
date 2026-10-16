@@ -1,0 +1,92 @@
+# Minislicer Mobile: tests the web slicer and the runner, builds the runner for Windows (.exe),
+# macOS (.dmg) and Linux. Uses the Go and Node.js that GitHub's runner images ship.
+name: Mobile slicer and runner
+
+on:
+  push:
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  RUNNER_VERSION: 0.1.0
+
+jobs:
+  test:
+    name: Test, and build the Windows and Linux runner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Tool versions
+        run: go version && node --version
+      - name: Profiles and assets are up to date with resources/
+        run: |
+          python3 mobile/tools/build_profiles.py
+          test -z "$(git status --porcelain -- mobile/web)" || { git status --porcelain -- mobile/web; exit 1; }
+      - name: Web slicer tests
+        working-directory: mobile
+        run: node --test tests/*.test.mjs
+      - name: Runner tests
+        working-directory: mobile
+        run: |
+          test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
+          go vet ./...
+          go test ./...
+      - name: Build runner
+        working-directory: mobile
+        run: |
+          mkdir -p ../dist
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w -X main.version=$RUNNER_VERSION" -o "../dist/Minislicer-Runner-$RUNNER_VERSION-Windows-x64.exe" ./runner
+          CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -trimpath -ldflags "-s -w -X main.version=$RUNNER_VERSION" -o "../dist/Minislicer-Runner-$RUNNER_VERSION-Windows-arm64.exe" ./runner
+          # Licence texts go next to the binaries in every download.
+          cp ../LICENSE.txt web/THIRD-PARTY-NOTICES.txt ../dist/
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-s -w -X main.version=$RUNNER_VERSION" -o "../dist/minislicer-runner-$RUNNER_VERSION-linux-x64" ./runner
+          # The macOS image has no Go: build the Mac binaries here, the macos job packs them.
+          mkdir -p ../dist-mac
+          for arch in arm64 amd64; do
+            CGO_ENABLED=0 GOOS=darwin GOARCH=$arch go build -trimpath -ldflags "-s -w -X main.version=$RUNNER_VERSION" -o "../dist-mac/runner-$arch" ./runner
+          done
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Minislicer-Runner-Windows
+          path: |
+            dist/*.exe
+            dist/LICENSE.txt
+            dist/THIRD-PARTY-NOTICES.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Minislicer-Runner-Linux
+          path: |
+            dist/minislicer-runner-*
+            dist/LICENSE.txt
+            dist/THIRD-PARTY-NOTICES.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: runner-darwin-binaries
+          path: dist-mac/
+          retention-days: 1
+
+  macos:
+    name: Build the macOS runner (.dmg)
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: runner-darwin-binaries
+          path: dist-mac
+      - name: Build .app and .dmg
+        run: mobile/runner/package_macos.sh "$RUNNER_VERSION" dist dist-mac
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Minislicer-Runner-macOS
+          path: dist/*.dmg

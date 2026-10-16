@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pair Minislicer</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: block; }
+  .pair { max-width: 720px; margin: 0 auto; padding: 24px 16px; display: flex; flex-direction: column; gap: 16px; }
+  .codes { display: flex; flex-wrap: wrap; gap: 16px; }
+  .code { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .code svg { width: 220px; height: 220px; background: #fff; border-radius: 8px; }
+  .code a { font-size: 13px; word-break: break-all; color: var(--muted); max-width: 220px; text-align: center; }
+  h1 { margin: 0; font-size: 24px; }
+</style>
+</head>
+<body>
+<div class="pair">
+  <div class="brand"><img src="icon.svg" alt="" width="32" height="32"><h1>Pair your phone or tablet</h1></div>
+  <p>Scan a code with the camera on a device in the same Wi-Fi. The slicer opens and can then send prints to
+    Bambu Connect on this computer.</p>
+  <div id="codes" class="codes"></div>
+  <p id="info" class="muted small"></p>
+  <p class="muted small">Free software under the GNU AGPL v3 ·
+    <a href="https://github.com/Pheonix-Studio-cat/Minislicer-orca">Source code</a> ·
+    <a href="THIRD-PARTY-NOTICES.txt">Licences and notices</a></p>
+  <div class="row">
+    <a class="btn" href="./">Open the slicer here</a>
+    <button id="quit" class="btn">Stop the runner</button>
+  </div>
+</div>
+<script type="module" src="js/pair.js"></script>
+</body>
+</html>

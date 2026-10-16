@@ -1,0 +1,21 @@
+Minislicer Runner for macOS
+===========================
+
+1. Drag "Minislicer Runner" onto "Applications".
+2. Open it from Applications. Because the app is not signed with an Apple
+   Developer ID, macOS blocks the first start:
+   - macOS 15 and later: open System Settings > Privacy & Security, scroll down
+     and click "Open Anyway" next to "Minislicer Runner".
+   - macOS 14 and earlier: right-click (or Control-click) the app, choose Open,
+     then confirm with Open.
+3. If macOS asks whether the runner may accept incoming network connections
+   or access your local network, allow it; otherwise your phone cannot reach it.
+4. A browser tab opens with a QR code. Scan it with your phone or tablet in the
+   same Wi-Fi. The slicer opens on the phone, already paired.
+
+Bambu Connect must be installed on this Mac:
+https://wiki.bambulab.com/en/software/bambu-connect
+
+The runner has no Dock icon. Stop it with "Stop the runner" on the pairing page
+(open http://127.0.0.1:8787/pair.html to get back to it).
+Received prints are kept in the folder "Minislicer Prints" in your home folder.

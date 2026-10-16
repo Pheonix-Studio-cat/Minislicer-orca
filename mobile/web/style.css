@@ -1,0 +1,131 @@
+:root {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --text: #15191e;
+  --muted: #5d6773;
+  --line: #d9dee4;
+  --accent: #00ae42;
+  --accent-text: #ffffff;
+  --warn-bg: #fff4e5;
+  --warn: #8a4b00;
+  --view: #e9edf1;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1013;
+    --panel: #161b20;
+    --text: #e8ecef;
+    --muted: #97a1ab;
+    --line: #2a323a;
+    --accent: #1fc25a;
+    --accent-text: #04140a;
+    --warn-bg: #3a2a12;
+    --warn: #ffcf8a;
+    --view: #1b2128;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1013; --panel: #161b20; --text: #e8ecef; --muted: #97a1ab; --line: #2a323a;
+  --accent: #1fc25a; --accent-text: #04140a; --warn-bg: #3a2a12; --warn: #ffcf8a; --view: #1b2128;
+  color-scheme: dark;
+}
+
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+  background: var(--panel); border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px; }
+.chip {
+  font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line);
+  color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw;
+}
+.chip.ok { color: var(--accent); border-color: var(--accent); }
+
+main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.view { position: relative; background: var(--view); height: 46vh; min-height: 240px; touch-action: none; }
+#canvas { width: 100%; height: 100%; display: block; }
+.empty {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; text-align: center; padding: 16px; color: var(--muted);
+}
+.layerbar {
+  position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; gap: 10px; align-items: center;
+  background: color-mix(in srgb, var(--panel) 88%, transparent); border-radius: 12px; padding: 6px 12px;
+}
+.layerbar input { flex: 1; }
+.layerbar span { font-variant-numeric: tabular-nums; min-width: 6.5em; text-align: right; font-size: 14px; }
+.legend {
+  position: absolute; top: 8px; left: 8px; display: flex; flex-wrap: wrap; gap: 4px 10px; max-width: 70%;
+  font-size: 12px; background: color-mix(in srgb, var(--panel) 85%, transparent); padding: 4px 8px; border-radius: 8px;
+}
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+
+.panel {
+  flex: 1; overflow: auto; background: var(--panel); padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 12px;
+}
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.grow { flex: 1; min-width: 0; }
+.modelname { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.tools .scale { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.tools .scale input { width: 5.5em; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.grid label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+.grid label.wide { grid-column: 1 / -1; }
+.grid label.check { flex-direction: row; align-items: center; gap: 8px; font-size: 15px; color: var(--text); }
+.grid output { color: var(--text); font-weight: 600; }
+select, input[type="number"] {
+  font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px; min-height: 44px; width: 100%; min-width: 0;
+}
+input[type="color"] { width: 100%; height: 44px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); padding: 4px; }
+input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); }
+input[type="range"] { accent-color: var(--accent); width: 100%; min-height: 32px; }
+
+.btn {
+  font: inherit; font-weight: 600; color: var(--text); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 12px; padding: 10px 14px; min-height: 44px; cursor: pointer; display: inline-flex;
+  align-items: center; justify-content: center; text-align: center;
+}
+.btn:disabled { opacity: .5; cursor: default; }
+.btn.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+.btn.big { min-height: 52px; font-size: 17px; }
+.btn.wide { width: 100%; }
+
+.problems { background: var(--warn-bg); color: var(--warn); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.problems p { margin: 0; }
+.progress { position: relative; height: 28px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
+.progress div { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); opacity: .35; transition: width .15s; }
+.progress span { position: relative; display: block; text-align: center; font-size: 13px; line-height: 26px; }
+.result { display: flex; flex-direction: column; gap: 10px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stats div { background: var(--bg); border-radius: 10px; padding: 8px; text-align: center; }
+.stats b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+.stats span { font-size: 12px; color: var(--muted); }
+.help summary { cursor: pointer; color: var(--muted); }
+.help p { margin: 8px 0; font-size: 14px; }
+
+/* Tablets and desktops: view on the left, settings on the right. */
+@media (min-width: 820px) and (min-aspect-ratio: 1/1) {
+  main { flex-direction: row; }
+  .view { height: auto; flex: 1; }
+  .panel { flex: 0 0 380px; border-left: 1px solid var(--line); }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Minislicer Mobile",
+  "short_name": "Minislicer",
+  "description": "Slice models for Bambu Lab printers on a phone or tablet.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101418",
+  "theme_color": "#101418",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -47,6 +47,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 </plist>
 PLIST
 
+cp "$MOBILE/../LICENSE.txt" "$MOBILE/web/THIRD-PARTY-NOTICES.txt" "$APP/Contents/Resources/"
+
 # Ad-hoc signature: required to run on Apple silicon. It is not a Developer ID, so Gatekeeper
 # still asks the user to confirm the first start (see mobile/README.md).
 codesign --force --deep --sign - "$APP"
@@ -54,6 +56,10 @@ codesign --verify --deep --strict "$APP"
 
 ln -s /Applications "$WORK/dmg/Applications"
 cp "$MOBILE/runner/INSTALL-macOS.txt" "$WORK/dmg/Read me first.txt"
+# Licence texts travel with the binary: AGPL for the program, notices for what it bundles.
+cp "$MOBILE/../LICENSE.txt" "$WORK/dmg/LICENSE.txt"
+cp "$MOBILE/web/THIRD-PARTY-NOTICES.txt" "$WORK/dmg/THIRD-PARTY-NOTICES.txt"
+
 hdiutil create -volname "Minislicer Runner" -srcfolder "$WORK/dmg" -ov -format UDZO \
   "$OUT/Minislicer-Runner-$VERSION-macOS.dmg"
 rm -rf "$WORK"

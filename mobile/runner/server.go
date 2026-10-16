@@ -142,6 +142,8 @@ func (s *server) status(w http.ResponseWriter, r *http.Request) {
 	resp := map[string]any{
 		"app":     "minislicer-runner",
 		"version": version,
+		"license": "AGPL-3.0",
+		"source":  sourceURL,
 		"os":      goos,
 		"paired":  s.authorized(r),
 	}

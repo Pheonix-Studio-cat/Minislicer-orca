@@ -46,6 +46,8 @@ jobs:
           mkdir -p ../dist
           CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w -X main.version=$RUNNER_VERSION" -o "../dist/Minislicer-Runner-$RUNNER_VERSION-Windows-x64.exe" ./runner
           CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -trimpath -ldflags "-s -w -X main.version=$RUNNER_VERSION" -o "../dist/Minislicer-Runner-$RUNNER_VERSION-Windows-arm64.exe" ./runner
+          # Licence texts go next to the binaries in every download.
+          cp ../LICENSE.txt web/THIRD-PARTY-NOTICES.txt ../dist/
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-s -w -X main.version=$RUNNER_VERSION" -o "../dist/minislicer-runner-$RUNNER_VERSION-linux-x64" ./runner
           # The macOS image has no Go: build the Mac binaries here, the macos job packs them.
           mkdir -p ../dist-mac
@@ -55,11 +57,17 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: Minislicer-Runner-Windows
-          path: dist/*.exe
+          path: |
+            dist/*.exe
+            dist/LICENSE.txt
+            dist/THIRD-PARTY-NOTICES.txt
       - uses: actions/upload-artifact@v7
         with:
           name: Minislicer-Runner-Linux
-          path: dist/minislicer-runner-*
+          path: |
+            dist/minislicer-runner-*
+            dist/LICENSE.txt
+            dist/THIRD-PARTY-NOTICES.txt
       - uses: actions/upload-artifact@v7
         with:
           name: runner-darwin-binaries

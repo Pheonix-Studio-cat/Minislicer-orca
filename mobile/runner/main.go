@@ -26,6 +26,9 @@ import (
 	"minislicer/mobile"
 )
 
+// sourceURL is where the Corresponding Source is offered (AGPL-3.0, section 13).
+const sourceURL = "https://github.com/Pheonix-Studio-cat/Minislicer-orca"
+
 var (
 	version = "0.1.0"
 	goos    = runtime.GOOS
@@ -65,7 +68,9 @@ func main() {
 	}
 	srv := &http.Server{Handler: s.routes(), ReadHeaderTimeout: 10 * time.Second}
 
-	fmt.Printf("Minislicer Runner %s\n", version)
+	fmt.Printf("Minislicer Runner %s - free software under the GNU AGPL v3\n", version)
+	fmt.Printf("Source code: %s\n", sourceURL)
+	fmt.Printf("Licences and notices: http://127.0.0.1:%d/THIRD-PARTY-NOTICES.txt\n", *port)
 	fmt.Printf("Prints are saved to: %s\n", *prints)
 	fmt.Println("Open one of these on your phone or tablet (same Wi-Fi):")
 	for _, u := range lanURLs(*port, token) {

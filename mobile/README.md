@@ -68,5 +68,24 @@ node tests/e2e.mjs <model.stl> [screenshots]  # browser end-to-end check (Linux,
 generator under `web/vendor/`). The runner embeds `web/` and is a single Go binary per platform;
 `runner/package_macos.sh` builds the universal `.app` and `.dmg` on macOS.
 
-Licences of the vendored files: three.js (MIT), clipper-lib 6.4.2 (Boost Software License 1.0),
-qrcode-generator (MIT). The rest is part of Minislicer-orca (AGPL-3.0).
+## Licences
+
+Minislicer Mobile and the runner are part of Minislicer-orca and licensed under the GNU AGPL v3
+(`LICENSE.txt` in the repository root). Because the runner serves the app to other devices, the app,
+the pairing page and the runner's console link the source code (AGPL section 13).
+
+Bundled third-party code, with full licence texts in `web/vendor/LICENSES/` and collected in
+`web/THIRD-PARTY-NOTICES.txt`:
+
+| Component | Licence |
+| --- | --- |
+| three.js r180 (`three.*.min.js`, `OrbitControls.js`) | MIT |
+| clipper-lib 6.4.2 (`clipper.mjs`), including Tom Wu's JSBN | Boost Software License 1.0; JSBN licence |
+| qrcode-generator 2.0.4 (`qrcode.mjs`) | MIT |
+| Go standard library and runtime (inside the runner binaries) | BSD 3-Clause |
+
+`LICENSE.txt` and `THIRD-PARTY-NOTICES.txt` ship in the `.dmg`, inside the `.app`, and next to the
+Windows and Linux binaries. The runner also serves the notices at `/THIRD-PARTY-NOTICES.txt`.
+A runner test checks that the embedded app carries them.
+
+"Bambu Lab" and "Bambu Connect" are Bambu Lab's names; this project is not affiliated with Bambu Lab.

@@ -63,6 +63,7 @@ main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
   position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 8px; text-align: center; padding: 16px; color: var(--muted);
 }
+.empty p { margin: 0; padding: 6px 12px; border-radius: 10px; background: color-mix(in srgb, var(--panel) 88%, transparent); color: var(--text); }
 .layerbar {
   position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; gap: 10px; align-items: center;
   background: color-mix(in srgb, var(--panel) 88%, transparent); border-radius: 12px; padding: 6px 12px;

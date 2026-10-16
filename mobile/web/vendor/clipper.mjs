@@ -1,4 +1,7 @@
-// clipper-lib 6.4.2 (Boost Software License 1.0), wrapped as an ES module. Source: https://www.npmjs.com/package/clipper-lib
+// clipper-lib 6.4.2, wrapped as an ES module: the first four lines and the last line are added,
+// everything between is clipper.js unchanged.
+// Source: https://www.npmjs.com/package/clipper-lib
+// Licences: Boost Software License 1.0 (LICENSES/clipper-lib-BSL-1.0.txt), JSBN (LICENSES/clipper-lib-JSBN.txt).
 const module = { exports: {} };
 /*******************************************************************************
  *                                                                              *

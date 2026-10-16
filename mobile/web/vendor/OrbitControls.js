@@ -1,3 +1,9 @@
+/**
+ * @license
+ * OrbitControls from three.js r180 (examples/jsm/controls/OrbitControls.js), unmodified.
+ * Copyright 2010-2025 Three.js Authors
+ * SPDX-License-Identifier: MIT (see LICENSES/three.js-MIT.txt)
+ */
 import {
 	Controls,
 	MOUSE,

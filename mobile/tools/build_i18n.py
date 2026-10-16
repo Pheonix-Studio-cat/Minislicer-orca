@@ -46,7 +46,8 @@ IGNORE = {"OrcaSlicer", "Bambu", "computer", "filament", "Cool Plate", "High Tem
 # "Print plate" is the print button (a verb); these catalogs have the noun ("the print plate").
 # "Print" (the short label of the print button) is German "aktuelle Platte drucken" in OrcaSlicer,
 # as long as the full label it replaces on narrow phones.
-PREFER_EXTRA = {"Print plate": {"cs", "hu", "it", "nl"}, "Print": {"de"}}
+# "Rotation" (a joint's rotation angles) is "tilt" in OrcaSlicer's Russian catalog.
+PREFER_EXTRA = {"Print plate": {"cs", "hu", "it", "nl"}, "Print": {"de"}, "Rotation": {"ru"}}
 # Strings OrcaSlicer translates per sense (msgctxt): the sense we use.
 CONTEXT = {"Print": "Verb"}
 

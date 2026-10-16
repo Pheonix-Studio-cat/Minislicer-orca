@@ -49,6 +49,35 @@
       <span class="cv-sep"></span>
       <button class="cv-btn" id="tool-rotate" data-i18n-title="Rotate" disabled><img data-icon="toolbar_rotate" alt=""></button>
       <button class="cv-btn" id="tool-scale" data-i18n-title="Scale" disabled><img data-icon="toolbar_scale" alt=""></button>
+      <span class="cv-sep"></span>
+      <button class="cv-btn" id="tool-paint" data-i18n-title="Support Painting" disabled><img data-icon="toolbar_support" alt=""></button>
+      <button class="cv-btn" id="tool-flexi" data-i18n-title="Flexi cutter" disabled><img data-icon="toolbar_cut" alt=""></button>
+    </div>
+    <div id="gizmo-paint" class="gizmo" hidden>
+      <div class="gz-title" data-i18n="Support Painting">Support Painting</div>
+      <div class="gz-row gz-seg" role="radiogroup">
+        <button type="button" data-tool="1" role="radio"><img src="assets/icons/menu_support_enforcer.svg" alt=""><span data-i18n="Enforce supports">Enforce supports</span></button>
+        <button type="button" data-tool="2" role="radio"><img src="assets/icons/menu_support_blocker.svg" alt=""><span data-i18n="Block supports">Block supports</span></button>
+        <button type="button" data-tool="0" role="radio"><img src="assets/icons/erase_dark.svg" alt=""><span data-i18n="Erase">Erase</span></button>
+      </div>
+      <div class="gz-row"><label for="brush" data-i18n="Brush size">Brush size</label><input id="brush" type="range" min="0.5" max="15" step="0.5" value="3"><span id="brushval" class="gz-val"></span></div>
+      <div id="painthint" class="gz-note"></div>
+      <div id="paintoff" class="gz-note gz-warn" hidden><span data-i18n="Painted supports only take effect when support is enabled.">Painted supports only take effect when support is enabled.</span> <button type="button" id="paintenable" class="gz-link" data-i18n="Enable support">Enable support</button></div>
+      <div class="gz-row"><button type="button" id="paintclear" data-i18n="Erase all">Erase all</button><button type="button" id="paintdone" class="gz-primary" data-i18n="Done">Done</button></div>
+    </div>
+    <div id="gizmo-flexi" class="gizmo" hidden>
+      <div class="gz-title" data-i18n="Flexi cutter">Flexi cutter</div>
+      <div class="gz-note" data-i18n="Add a joint, then tap the model where it goes. The cutter splits the model into parts that print linked and stay movable.">Add a joint, then tap the model where it goes. The cutter splits the model into parts that print linked and stay movable.</div>
+      <div class="gz-row" id="modules"></div>
+      <div class="gz-row gz-chips" id="joints"></div>
+      <div id="jointedit" hidden>
+        <div class="gz-grid"><span data-i18n="Position">Position</span>
+          <label>X<input id="jx" type="number" step="0.5" inputmode="decimal"></label><label>Y<input id="jy" type="number" step="0.5" inputmode="decimal"></label><label>Z<input id="jz" type="number" step="0.5" inputmode="decimal"></label></div>
+        <div class="gz-grid"><span data-i18n="Rotation">Rotation</span>
+          <label>X<input id="jrx" type="number" step="15" inputmode="decimal"></label><label>Y<input id="jry" type="number" step="15" inputmode="decimal"></label><label>Z<input id="jrz" type="number" step="15" inputmode="decimal"></label></div>
+        <div class="gz-row"><label for="jsize" data-i18n="Size">Size</label><input id="jsize" type="number" min="20" max="500" step="5" inputmode="decimal"><span>%</span></div>
+        <div class="gz-row"><button type="button" id="jdel" data-i18n="Delete">Delete</button><button type="button" id="flexidone" class="gz-primary" data-i18n="Done">Done</button></div>
+      </div>
     </div>
     <div id="gizmo-rotate" class="gizmo" hidden>
       <div class="gz-title" data-i18n="Rotate">Rotate</div>

@@ -61,6 +61,27 @@ preset like an edited value in OrcaSlicer's process tab.
 The button colour is a CSS variable (`--accent`, with a darker `--accent-dark` for dark mode) from
 which hover, focus and checked shades are mixed, so one preference recolours every control.
 
+## Support painting and the flexi cutter
+
+Both act on the slicer through `slice(tris, cfg, progress, extra)`:
+
+- `extra.negatives` is a triangle soup sliced at the same heights as the model and subtracted from
+  each layer's outline, as OrcaSlicer subtracts negative parts. The flexi cutter's joint modules
+  (`mobile/web/flexi/`) are such soups: a thin curved slot with a ball, a socket and a pin in a
+  ring, which splits a limb into two parts that print linked and stay movable.
+- `extra.enforcers` and `extra.blockers` are the painted triangles. As in OrcaSlicer
+  (`PrintObject::project_and_append_custom_facets`), only downward-facing ones count, and the part
+  of each between two slice planes is projected up onto the upper plane. Blockers remove the
+  automatic overhang areas under them (with the neighbouring layers, so rounding to a slab cannot
+  slip past them); enforcers add their area to the overhangs whatever its angle. Both act only when
+  support is enabled, as in OrcaSlicer.
+
+In the app, paint is kept per triangle of the loaded model and joints in the model's own
+coordinates, so both follow rotation, scaling and arranging; `modelMatrix()` reproduces
+`placeOnBed`'s transform for that. The brush paints whole triangles within its radius that face the
+viewer. Input follows tablet drawing apps: once a pen has been used, only the pen paints and
+fingers move the view; before that one finger paints and two fingers turn and zoom.
+
 ## User presets (`js/presets.js`)
 
 A user preset is stored as OrcaSlicer stores one: its name, the system preset it `inherits`, and the

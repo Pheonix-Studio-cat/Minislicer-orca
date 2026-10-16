@@ -29,7 +29,8 @@ ICONS = ["printer", "filament", "process", "settings", "edit", "add_filament", "
          "param_information", "param_extruder_temp", "param_bed_temp", "param_volumetric_speed",
          "param_cooling_specific_layer", "param_cooling_part_fan", "param_layer_height", "param_wall",
          "param_shell", "param_infill", "param_speed_first", "param_speed", "param_travel_speed",
-         "param_support", "param_adhension"]
+         "param_support", "param_adhension", "toolbar_support", "toolbar_support_dark", "toolbar_cut",
+         "toolbar_cut_dark", "menu_support_enforcer", "menu_support_blocker", "erase", "erase_dark"]
 # Our filament_id -> Bambu's catalog id. A Bambu printer reads tray_info_idx in slice_info.config
 # and only knows its own catalog (see docs/HLSD/filament_id.md, "The Bambu catalog map").
 BAMBU_IDS = os.path.join(ROOT, "resources", "printers", "bambu_filament_ids.json")

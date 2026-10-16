@@ -62,6 +62,27 @@ The gear in the top bar opens **Preferences**:
 
 Language and colour are remembered by the browser.
 
+### Support painting
+
+The **Support Painting** tool (toolbar, next to Scale) works like OrcaSlicer's: paint faces green to
+**enforce** support under them or red to **block** it, erase, or erase all; the brush size is
+adjustable. With an Apple Pencil (or any pen) the pen paints and fingers turn and zoom the view;
+without a pen one finger paints and two fingers turn and zoom; with a mouse the left button paints
+and the right button turns the view. As in OrcaSlicer, painted support only takes effect when
+support is enabled; the panel says so and has a button for it. Paint stays on the model when it is
+rotated or scaled. Unlike OrcaSlicer, whole triangles are painted (OrcaSlicer splits large triangles
+under the brush), so on models with large flat faces the brush paints coarser.
+
+### Flexi cutter
+
+The **Flexi cutter** turns a model into a flexi toy: its parts print linked and stay movable. Add a
+joint (three modules: two larger ball-and-socket joints and a flat one), tap the model where the
+joint goes - it lands in the middle of the limb under your finger - and adjust position, rotation
+and size. Each joint is removed from the model like an OrcaSlicer negative part: a thin curved slot
+with a ball, a socket and a pin in a ring. The joint's flange must reach past the limb's outline all
+round, or the parts stay connected; the module cuts across a limb that runs along X, so turn it
+(rotation Z) for limbs in other directions. Joints move and turn with the model.
+
 ### Your own presets
 
 As in OrcaSlicer, change process values and press the **save** icon next to the process preset to
@@ -124,6 +145,7 @@ Bundled third-party code, with full licence texts in `web/vendor/LICENSES/` and 
 | clipper-lib 6.4.2 (`clipper.mjs`), including Tom Wu's JSBN | Boost Software License 1.0; JSBN licence |
 | qrcode-generator 2.0.4 (`qrcode.mjs`) | MIT |
 | Go standard library and runtime (inside the runner binaries) | BSD 3-Clause |
+| Flexi cutter modules (`flexi/*.stl`), MakerWorld model 2246181 | CC0 1.0 according to the project owner, not independently verified (`flexi/SOURCE.txt`) |
 
 Printer profiles, icons, printer pictures, bed models and the translations taken from OrcaSlicer's
 catalogs (`localization/i18n`) come from this repository itself and are under its AGPL v3. The

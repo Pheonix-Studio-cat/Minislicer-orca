@@ -2,6 +2,8 @@
 // a sidebar with Printer, Filament and Process (Quality, Strength, Speed, Support, Others),
 // the 3D plate with a toolbar, and the preview with OrcaSlicer's line-type colours and sliders.
 // Preferences (language, button colour) and user presets (process and filament) as in OrcaSlicer.
+// Support painting (OrcaSlicer's "Support Painting") with pen, touch or mouse, and the flexi cutter
+// that turns a model into a print-in-place flexi toy.
 import * as THREE from 'three';
 import { OrbitControls } from '../vendor/OrbitControls.js';
 import { loadModel, placeOnBed, bounds, parseSTL } from './mesh.js';
@@ -23,6 +25,10 @@ const state = {
   rot: { x: 0, y: 0, z: 0 },
   scale: 1,
   placed: null,
+  model: null, // THREE.Matrix4 from the source model to the plate (rotation, scale, placement)
+  paint: null, // Uint8Array per source triangle: 0 none, 1 support enforcer, 2 support blocker
+  cutters: [], // flexi joints: { module, pos: [x,y,z] in source coordinates, rot: [deg x,y,z], size }
+  cutterSel: -1,
   overrides: {}, // edited process values by OrcaSlicer key, on top of the selected process preset
   result: null, // { gcode, stats, settings, bytes3mf, preview }
   runner: null,
@@ -316,14 +322,18 @@ function frame(b) {
   camera.updateProjectionMatrix();
 }
 
-function showModel(tris, color) {
+function showModel(tris) {
   if (modelMesh) { scene.remove(modelMesh); modelMesh.geometry.dispose(); }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(tris, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(tris.length), 3));
   g.computeVertexNormals();
-  modelMesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.05 }));
+  modelMesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.6, metalness: 0.05 }));
   modelMesh.visible = state.tab === 'prepare' || !previewLines;
   scene.add(modelMesh);
+  triInfo = trianglesOf(tris);
+  colorModel();
+  setModelSeeThrough(flexi.on);
 }
 
 function setIcons() {
@@ -410,6 +420,7 @@ function showTab(tab) {
   if (preview && !previewLines) buildPreview();
   if (previewLines) previewLines.visible = Boolean(preview);
   if (modelMesh) modelMesh.visible = !preview;
+  cutterGroup.visible = !preview;
   $('vslider').hidden = $('hslider').hidden = $('legend').hidden = !preview;
   $('canvas').parentElement.classList.toggle('previewing', Boolean(preview));
   $('cvtoolbar').hidden = tab === 'preview';
@@ -427,7 +438,7 @@ async function thumbnail() {
     const s = new THREE.Scene();
     s.add(new THREE.HemisphereLight(0xffffff, 0x445566, 2.4));
     s.add(sun.clone());
-    const m = new THREE.Mesh(modelMesh.geometry, modelMesh.material);
+    const m = new THREE.Mesh(modelMesh.geometry, new THREE.MeshStandardMaterial({ color: sel.color.value, roughness: 0.6, metalness: 0.05 }));
     s.add(m);
     const b = new THREE.Box3().setFromObject(m);
     const center = b.getCenter(new THREE.Vector3());
@@ -444,6 +455,297 @@ async function thumbnail() {
     r.dispose();
     r.forceContextLoss();
   }
+}
+
+// ---------- tools on the model: support painting and the flexi cutter ----------
+
+const rad = (d) => (d * Math.PI) / 180;
+const raycaster = new THREE.Raycaster();
+let triInfo = null; // centroid and normal of every shown triangle (plate coordinates)
+
+function trianglesOf(tris) {
+  const n = tris.length / 9;
+  const centroid = new Float32Array(n * 3), normal = new Float32Array(n * 3);
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  for (let i = 0; i < n; i++) {
+    a.fromArray(tris, i * 9); b.fromArray(tris, i * 9 + 3); c.fromArray(tris, i * 9 + 6);
+    centroid.set([(a.x + b.x + c.x) / 3, (a.y + b.y + c.y) / 3, (a.z + b.z + c.z) / 3], i * 3);
+    b.sub(a); c.sub(a);
+    a.crossVectors(b, c).normalize();
+    normal.set([a.x, a.y, a.z], i * 3);
+  }
+  return { centroid, normal };
+}
+
+// The transform placeOnBed applies (rotate X, then Y, then Z, scale, move onto the plate), so that
+// paint and joints stay on the model when it is rotated, scaled or arranged.
+function modelMatrix() {
+  const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(rad(state.rot.x), rad(state.rot.y), rad(state.rot.z), 'ZYX'));
+  const src = state.source.tris, s = state.scale;
+  const moved = new THREE.Vector3(src[0], src[1], src[2]).multiplyScalar(s).applyQuaternion(q);
+  const offset = new THREE.Vector3(state.placed[0], state.placed[1], state.placed[2]).sub(moved);
+  return new THREE.Matrix4().compose(offset, q, new THREE.Vector3(s, s, s));
+}
+
+function pointerRay(e) {
+  const r = canvas.getBoundingClientRect();
+  raycaster.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
+  return modelMesh ? raycaster.intersectObject(modelMesh, false) : [];
+}
+
+// OrcaSlicer's paint colours (TriangleSelectorGUI::enforcers_color, blockers_color).
+const PAINT_COLORS = { 1: new THREE.Color().setRGB(0.5, 1, 0.5, THREE.SRGBColorSpace), 2: new THREE.Color().setRGB(1, 0.5, 0.5, THREE.SRGBColorSpace) };
+const paint = { on: false, tool: 1, radius: 3, stroke: null, pen: false, touches: new Set() };
+
+function colorModel(only) {
+  if (!modelMesh) return;
+  const attr = modelMesh.geometry.getAttribute('color');
+  const base = new THREE.Color(sel.color.value);
+  const set = (i) => {
+    const c = PAINT_COLORS[state.paint ? state.paint[i] : 0] || base;
+    for (let k = 0; k < 3; k++) attr.setXYZ(i * 3 + k, c.r, c.g, c.b);
+  };
+  if (only) only.forEach(set);
+  else for (let i = 0; i < attr.count / 3; i++) set(i);
+  attr.needsUpdate = true;
+}
+
+// Mouse: left button paints, right button turns the view. Touch: one finger paints and two fingers
+// turn and zoom, until a pen is used: then only the pen paints and fingers move the view, the way
+// drawing apps on a tablet behave.
+function setControls() {
+  const fingerPaints = paint.on && !paint.pen;
+  controls.mouseButtons.LEFT = paint.on ? null : THREE.MOUSE.ROTATE;
+  controls.mouseButtons.RIGHT = paint.on ? THREE.MOUSE.ROTATE : THREE.MOUSE.PAN;
+  controls.touches.ONE = fingerPaints ? null : THREE.TOUCH.ROTATE;
+  controls.touches.TWO = fingerPaints ? THREE.TOUCH.DOLLY_ROTATE : THREE.TOUCH.DOLLY_PAN;
+}
+
+function paintAt(e) {
+  const hit = pointerRay(e)[0];
+  if (!hit || !state.paint) return;
+  const { centroid, normal } = triInfo;
+  const p = hit.point, d = raycaster.ray.direction, r2 = paint.radius ** 2;
+  const changed = [];
+  const mark = (i) => { if (state.paint[i] !== paint.tool) { state.paint[i] = paint.tool; changed.push(i); } };
+  mark(hit.faceIndex);
+  for (let i = 0; i < state.paint.length; i++) {
+    const dx = centroid[i * 3] - p.x, dy = centroid[i * 3 + 1] - p.y, dz = centroid[i * 3 + 2] - p.z;
+    if (dx * dx + dy * dy + dz * dz > r2) continue;
+    if (normal[i * 3] * d.x + normal[i * 3 + 1] * d.y + normal[i * 3 + 2] * d.z >= 0) continue; // faces away
+    mark(i);
+  }
+  if (changed.length) { colorModel(changed); paint.stroke.changed = true; }
+}
+
+function paintedTris(kind) {
+  if (!state.paint || !state.placed || !state.paint.includes(kind)) return new Float32Array(0);
+  const out = [];
+  for (let i = 0; i < state.paint.length; i++) if (state.paint[i] === kind) for (let k = 0; k < 9; k++) out.push(state.placed[i * 9 + k]);
+  return new Float32Array(out);
+}
+
+function renderPaintPanel() {
+  for (const b of document.querySelectorAll('#gizmo-paint [data-tool]')) b.setAttribute('aria-checked', String(+b.dataset.tool === paint.tool));
+  $('brush').value = String(paint.radius);
+  $('brushval').textContent = `${paint.radius} mm`;
+  $('painthint').textContent = paint.pen ? t('Draw with the pen; fingers turn and zoom the view.') : t('Draw with a pen or one finger; two fingers turn and zoom the view.');
+  $('paintoff').hidden = paramValue('enable_support') === '1' || !state.paint || !state.paint.some((v) => v);
+}
+
+// ---------- flexi cutter ----------
+
+// The three joint modules (web/flexi, CC0 per the project owner). Each is a thin curved slot with
+// a ball-and-socket and a pin in a ring; removed from a model like an OrcaSlicer negative part, it
+// leaves two parts that print linked and stay movable. The flange is the plate's cut: it lies in
+// the module's YZ plane, so the joint cuts across a limb that runs along X.
+const MODULES = [
+  { file: 'flexi/Projectcutter_ver1_bigger.stl', label: 'Module %1%' },
+  { file: 'flexi/Projectcutter_ver2_bigger.stl', label: 'Module %1%' },
+  { file: 'flexi/Projectcutter_ver3_flat.stl', label: 'Module %1%' },
+];
+const moduleGeometry = new Map(); // module index -> Promise<BufferGeometry> centred on its bounding box
+const flexi = { on: false, down: null };
+const cutterGroup = new THREE.Group();
+scene.add(cutterGroup);
+
+function loadModule(i) {
+  if (!moduleGeometry.has(i)) {
+    moduleGeometry.set(i, fetch(MODULES[i].file).then((r) => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.arrayBuffer();
+    }).then((buf) => {
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(parseSTL(buf), 3));
+      g.computeBoundingBox();
+      g.center();
+      g.computeVertexNormals();
+      return g;
+    }));
+  }
+  return moduleGeometry.get(i);
+}
+
+// A joint's pose on the plate: it moves and turns with the model; its size is its own.
+function cutterMatrix(c) {
+  const pos = new THREE.Vector3(...c.pos).applyMatrix4(state.model);
+  const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().extractRotation(state.model))
+    .multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rad(c.rot[0]), rad(c.rot[1]), rad(c.rot[2]), 'ZYX')));
+  return new THREE.Matrix4().compose(pos, q, new THREE.Vector3(c.size, c.size, c.size));
+}
+
+const toSource = (world) => new THREE.Vector3(...world).applyMatrix4(state.model.clone().invert()).toArray();
+const worldPos = (c) => new THREE.Vector3(...c.pos).applyMatrix4(state.model);
+
+async function showCutters() {
+  const list = state.cutters;
+  const geoms = await Promise.all(list.map((c) => loadModule(c.module))).catch(() => null);
+  if (list !== state.cutters) return; // superseded
+  cutterGroup.clear();
+  if (!geoms || !state.model) return;
+  list.forEach((c, i) => {
+    // OrcaSlicer draws negative parts grey and see-through (GLVolume::MODEL_NEGTIVE_COL).
+    const selected = i === state.cutterSel && flexi.on;
+    const m = new THREE.Mesh(geoms[i], new THREE.MeshStandardMaterial({
+      color: selected ? new THREE.Color(store.get('accent', ACCENTS[0].light)) : 0x4d4d4d, transparent: true, opacity: selected ? 0.75 : 0.45, depthWrite: false,
+    }));
+    m.matrixAutoUpdate = false;
+    m.matrix.copy(cutterMatrix(c));
+    cutterGroup.add(m);
+  });
+}
+
+async function cutterTris() {
+  const geoms = await Promise.all(state.cutters.map((c) => loadModule(c.module)));
+  const parts = state.cutters.map((c, i) => {
+    const pos = geoms[i].getAttribute('position').array.slice();
+    const v = new THREE.Vector3();
+    const m = cutterMatrix(c);
+    for (let k = 0; k < pos.length; k += 3) { v.fromArray(pos, k).applyMatrix4(m); v.toArray(pos, k); }
+    return pos;
+  });
+  const out = new Float32Array(parts.reduce((n, p) => n + p.length, 0));
+  let o = 0;
+  for (const p of parts) { out.set(p, o); o += p.length; }
+  return out;
+}
+
+function setModelSeeThrough(on) {
+  if (!modelMesh) return;
+  modelMesh.material.transparent = on;
+  modelMesh.material.opacity = on ? 0.45 : 1;
+  modelMesh.material.depthWrite = !on;
+  modelMesh.material.needsUpdate = true;
+  showCutters();
+}
+
+async function addCutter(module) {
+  const b = bounds(state.placed);
+  const centre = [(b.min[0] + b.max[0]) / 2, (b.min[1] + b.max[1]) / 2, b.size[2] / 2];
+  state.cutters = [...state.cutters, { module, pos: toSource(centre), rot: [0, 0, 0], size: 1 }];
+  state.cutterSel = state.cutters.length - 1;
+  await cutterChanged();
+}
+
+async function cutterChanged() {
+  invalidate();
+  renderFlexiPanel();
+  await showCutters();
+}
+
+// A tap on the model puts the selected joint inside it: halfway between where the ray enters the
+// model and where it leaves it again, i.e. in the middle of the limb under the finger.
+function placeCutter(e) {
+  const c = state.cutters[state.cutterSel];
+  if (!c) return;
+  const hits = pointerRay(e);
+  if (!hits.length) return;
+  const exit = hits.find((h) => h.distance > hits[0].distance + 0.01);
+  const p = exit ? hits[0].point.clone().add(exit.point).multiplyScalar(0.5) : hits[0].point;
+  c.pos = toSource(p.toArray());
+  state.cutters = [...state.cutters];
+  cutterChanged();
+}
+
+function renderFlexiPanel() {
+  $('modules').innerHTML = MODULES.map((m, i) => `<button type="button" data-module="${i}">+ ${esc(t(m.label, i + 1))}</button>`).join('');
+  for (const b of $('modules').querySelectorAll('button')) b.onclick = () => addCutter(+b.dataset.module);
+  $('joints').innerHTML = state.cutters.map((c, i) => `<button type="button" role="radio" data-joint="${i}" aria-checked="${i === state.cutterSel}">${esc(t('Joint %1%', i + 1))} · ${c.module + 1}</button>`).join('');
+  for (const b of $('joints').querySelectorAll('button')) b.onclick = () => { state.cutterSel = +b.dataset.joint; renderFlexiPanel(); showCutters(); };
+  const c = state.cutters[state.cutterSel];
+  $('jointedit').hidden = !c;
+  if (!c) return;
+  const w = worldPos(c);
+  [['jx', w.x], ['jy', w.y], ['jz', w.z], ['jrx', c.rot[0]], ['jry', c.rot[1]], ['jrz', c.rot[2]], ['jsize', c.size * 100]]
+    .forEach(([id, v]) => { $(id).value = String(+v.toFixed(2)); });
+}
+
+function editCutter() {
+  const c = state.cutters[state.cutterSel];
+  if (!c) return;
+  const num = (id, d) => (Number.isFinite(parseFloat($(id).value)) ? parseFloat($(id).value) : d);
+  const w = worldPos(c);
+  c.pos = toSource([num('jx', w.x), num('jy', w.y), num('jz', w.z)]);
+  c.rot = [num('jrx', c.rot[0]), num('jry', c.rot[1]), num('jrz', c.rot[2])].map((a) => ((a % 360) + 360) % 360);
+  c.size = Math.min(5, Math.max(0.2, num('jsize', c.size * 100) / 100));
+  state.cutters = [...state.cutters];
+  cutterChanged();
+}
+
+function wireTools() {
+  for (const b of document.querySelectorAll('#gizmo-paint [data-tool]')) b.onclick = () => { paint.tool = +b.dataset.tool; renderPaintPanel(); };
+  $('brush').oninput = () => { paint.radius = +$('brush').value; renderPaintPanel(); };
+  $('paintclear').onclick = () => { if (state.paint) { state.paint.fill(0); colorModel(); invalidate(); renderPaintPanel(); } };
+  $('paintdone').onclick = () => closeGizmos();
+  $('paintenable').onclick = () => {
+    state.overrides.enable_support = '1';
+    store.set('param:enable_support', '1');
+    renderParams();
+    invalidate();
+    renderPaintPanel();
+  };
+  for (const id of ['jx', 'jy', 'jz', 'jrx', 'jry', 'jrz', 'jsize']) $(id).onchange = editCutter;
+  $('jdel').onclick = () => {
+    state.cutters = state.cutters.filter((_, i) => i !== state.cutterSel);
+    state.cutterSel = state.cutters.length - 1;
+    cutterChanged();
+  };
+  $('flexidone').onclick = () => closeGizmos();
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') paint.touches.add(e.pointerId);
+    if (paint.on) {
+      if (e.pointerType === 'pen' && !paint.pen) { paint.pen = true; setControls(); renderPaintPanel(); }
+      const draws = e.pointerType === 'pen' || (e.pointerType === 'mouse' && e.button === 0)
+        || (e.pointerType === 'touch' && !paint.pen && paint.touches.size === 1);
+      if (paint.touches.size > 1) endStroke(); // a second finger: the view moves instead
+      else if (draws) { paint.stroke = { id: e.pointerId, changed: false }; paintAt(e); }
+    } else if (flexi.on) {
+      flexi.down = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() };
+    }
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!paint.stroke || e.pointerId !== paint.stroke.id) return;
+    // Apple Pencil reports more points than are drawn; use them all for a smooth stroke.
+    const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+    for (const ev of events.length ? events.slice(-4) : [e]) paintAt(ev);
+  });
+  const up = (e) => {
+    paint.touches.delete(e.pointerId);
+    if (paint.stroke && e.pointerId === paint.stroke.id) endStroke();
+    const d = flexi.down;
+    flexi.down = null;
+    if (flexi.on && d && d.id === e.pointerId && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 8 && performance.now() - d.t < 600) placeCutter(e);
+  };
+  canvas.addEventListener('pointerup', up);
+  canvas.addEventListener('pointercancel', (e) => { paint.touches.delete(e.pointerId); if (paint.stroke && e.pointerId === paint.stroke.id) endStroke(); flexi.down = null; });
+  canvas.addEventListener('contextmenu', (e) => { if (paint.on) e.preventDefault(); });
+}
+
+function endStroke() {
+  const s = paint.stroke;
+  paint.stroke = null;
+  if (s && s.changed) { invalidate(); renderPaintPanel(); }
 }
 
 // ---------- settings ----------
@@ -750,9 +1052,11 @@ function replace(reframe = false) {
     scale: state.scale, rotX: state.rot.x, rotY: state.rot.y, rotZ: state.rot.z,
     cx: (s.area.minX + s.area.maxX) / 2, cy: (s.area.minY + s.area.maxY) / 2,
   });
+  state.model = modelMatrix();
   const b = bounds(state.placed);
   $('modelsize').textContent = `${b.size[0].toFixed(1)} × ${b.size[1].toFixed(1)} × ${b.size[2].toFixed(1)} mm`;
-  showModel(state.placed, sel.color.value);
+  showModel(state.placed);
+  showCutters();
   if (reframe) frame(b);
   showProblems(checkPlacement(s, b));
 }
@@ -785,6 +1089,7 @@ function invalidate() {
   note(null);
   clearPreview();
   if (modelMesh) modelMesh.visible = true;
+  cutterGroup.visible = true;
   if (state.tab === 'preview') showTab('prepare');
 }
 
@@ -793,7 +1098,7 @@ function updateButtons() {
   $('slice').disabled = !ready;
   $('print').disabled = !ready;
   $('printmenu').disabled = !ready;
-  for (const id of ['arrange', 'tool-rotate', 'tool-scale']) $(id).disabled = !state.placed;
+  for (const id of ['arrange', 'tool-rotate', 'tool-scale', 'tool-paint', 'tool-flexi']) $(id).disabled = !state.placed;
 }
 
 function updateSwatch() {
@@ -812,6 +1117,9 @@ async function openFile(file) {
     state.source = { name: file.name.replace(/\.(stl|3mf|obj)$/i, ''), tris };
     state.rot = { x: 0, y: 0, z: 0 };
     state.scale = 1;
+    state.paint = new Uint8Array(tris.length / 9);
+    state.cutters = [];
+    state.cutterSel = -1;
     sel.scale.value = 100;
     $('empty').hidden = true;
     replace(true);
@@ -821,11 +1129,18 @@ async function openFile(file) {
 }
 
 function closeGizmos(except) {
-  for (const [btn, box] of [['tool-rotate', 'gizmo-rotate'], ['tool-scale', 'gizmo-scale']]) {
+  for (const [btn, box] of [['tool-rotate', 'gizmo-rotate'], ['tool-scale', 'gizmo-scale'], ['tool-paint', 'gizmo-paint'], ['tool-flexi', 'gizmo-flexi']]) {
     const open = btn === except && $(box).hidden;
     $(box).hidden = !open;
     $(btn).classList.toggle('on', open);
   }
+  paint.on = !$('gizmo-paint').hidden;
+  flexi.on = !$('gizmo-flexi').hidden;
+  setControls();
+  setModelSeeThrough(flexi.on);
+  document.body.classList.toggle('tooling', paint.on || flexi.on);
+  if (paint.on) renderPaintPanel();
+  if (flexi.on) renderFlexiPanel();
 }
 
 // ---------- slicing ----------
@@ -869,9 +1184,16 @@ function slice() {
       showTab('preview');
     };
     worker.onerror = (e) => { showProblems([msg('Slicing failed: %1%', e.message || 'worker error')]); finish(false); };
+    const tris = state.placed.slice(); // keep our copy for the view and the thumbnail
+    const job = worker;
+    // The joints' meshes may still be loading; never slice without them.
+    cutterTris().then((negatives) => {
+      if (job !== worker) return;
+      const extra = { negatives, enforcers: paintedTris(1), blockers: paintedTris(2) };
+      worker.postMessage({ tris, settings: s, modelName: state.source.name, extra },
+        [tris.buffer, extra.negatives.buffer, extra.enforcers.buffer, extra.blockers.buffer]);
+    }).catch((err) => { showProblems([msg('Slicing failed: %1%', `flexi cutter: ${err.message}`)]); finish(false); });
   });
-  const tris = state.placed.slice(); // keep our copy for the view and the thumbnail
-  worker.postMessage({ tris, settings: s, modelName: state.source.name }, [tris.buffer]);
   return slicing;
 }
 
@@ -953,7 +1275,7 @@ async function main() {
   };
   sel.filament.onchange = () => { store.set('color', null); applyFilamentColour(); replace(); };
   sel.bed.onchange = () => replace();
-  sel.color.oninput = () => { store.set('color', sel.color.value); updateSwatch(); if (modelMesh) modelMesh.material.color.set(sel.color.value); invalidate(); };
+  sel.color.oninput = () => { store.set('color', sel.color.value); updateSwatch(); colorModel(); invalidate(); };
   sel.scale.onchange = () => {
     const v = Math.min(1000, Math.max(1, +sel.scale.value || 100));
     sel.scale.value = v;
@@ -965,6 +1287,9 @@ async function main() {
   }
   $('tool-rotate').onclick = () => closeGizmos('tool-rotate');
   $('tool-scale').onclick = () => closeGizmos('tool-scale');
+  $('tool-paint').onclick = () => closeGizmos('tool-paint');
+  $('tool-flexi').onclick = () => closeGizmos('tool-flexi');
+  wireTools();
   $('arrange').onclick = () => replace(true);
   $('file').onchange = (e) => openFile(e.target.files[0]);
   $('file2').onchange = (e) => openFile(e.target.files[0]);

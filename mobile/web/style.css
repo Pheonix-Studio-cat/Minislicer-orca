@@ -184,6 +184,29 @@ select:focus, input[type="number"]:focus { outline: none; border-color: var(--or
 .gz-row button { flex: 1; height: 34px; border: 1px solid #5B6466; background: #3B4446; color: #fff; border-radius: 4px; cursor: pointer; }
 .gz-row input { width: 100px; height: 34px; background: #2B3436; color: #fff; border: 1px solid #5B6466; border-radius: 4px; text-align: right; padding: 0 8px; }
 .gz-note { font-size: 12px; color: #C9CDCE; }
+.gz-warn { color: #FFD27F; }
+.gz-link { background: none; border: 0; color: #7fe0d4; text-decoration: underline; padding: 0; cursor: pointer; font-size: 12px; }
+.gz-val { min-width: 48px; text-align: right; font-variant-numeric: tabular-nums; }
+.gz-row input[type=range] { flex: 1; width: auto; height: 34px; padding: 0; accent-color: var(--orca); }
+.gz-row button.gz-primary { background: var(--orca); border-color: var(--orca); }
+.gz-seg button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: auto; min-height: 52px; padding: 4px; font-size: 12px; }
+.gz-seg button img { width: 22px; height: 22px; }
+.gz-seg button[aria-checked=true], .gz-chips button[aria-checked=true] { border-color: var(--orca); background: color-mix(in srgb, var(--orca) 35%, #3B4446); }
+.gz-chips { flex-wrap: wrap; }
+.gz-chips button { flex: 0 0 auto; padding: 0 10px; }
+.gz-grid { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 6px; align-items: center; font-size: 12px; }
+.gz-grid label { display: flex; align-items: center; gap: 3px; }
+.gz-grid input { width: 100%; min-width: 0; height: 34px; background: #2B3436; color: #fff; border: 1px solid #5B6466; border-radius: 4px; text-align: right; padding: 0 4px; }
+/* Painting and the flexi cutter need the model in view: their panels sit at the side, as
+   OrcaSlicer's gizmo panels do, and at the bottom of the 3D view on a phone. */
+#gizmo-paint, #gizmo-flexi { left: 8px; top: 60px; transform: none; width: min(320px, calc(100% - 16px)); max-height: calc(100% - 70px); overflow: auto; }
+@media (max-width: 760px) {
+  #gizmo-paint, #gizmo-flexi { top: auto; bottom: 8px; left: 8px; right: 8px; width: auto; max-height: 52%; padding: 6px 8px; gap: 4px; }
+  #gizmo-paint .gz-seg button { min-height: 44px; }
+  #gizmo-paint, #gizmo-flexi { max-height: 46%; }
+  /* While painting or placing joints the 3D view gets most of the screen. */
+  body.tooling .canvas { height: 76vh; }
+}
 .plate-name { position: absolute; left: 10px; top: 10px; font-size: 12px; color: var(--dim); }
 .empty { position: absolute; left: 0; right: 0; bottom: 18%; display: flex; justify-content: center; pointer-events: none; }
 .empty p { margin: 0; padding: 6px 12px; border-radius: 4px; background: color-mix(in srgb, var(--win) 88%, transparent); pointer-events: auto; }

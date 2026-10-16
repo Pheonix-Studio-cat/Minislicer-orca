@@ -209,6 +209,89 @@ try {
   const exported = JSON.parse(fs.readFileSync(await pdl.path(), 'utf8'));
   check(exported.presets.length === 2 && exported.presets.some((p) => p.inherits === 'Bambu PLA Basic @BBL H2D' && p.nozzle_temperature[0] === '231'), 'exported presets keep inherits and the changed values');
 
+  // 7. Support painting with a pen and the flexi cutter, on an iPad.
+  const pad = await browser.newContext({ ...devices['iPad Pro 11'] });
+  // Record what reaches the slicing worker: painted triangles and joint meshes.
+  await pad.addInitScript(() => {
+    const post = Worker.prototype.postMessage;
+    Worker.prototype.postMessage = function (m, ...rest) {
+      if (m && m.extra) window.__sent = { negatives: m.extra.negatives.length, enforcers: m.extra.enforcers.length, blockers: m.extra.blockers.length };
+      return post.call(this, m, ...rest);
+    };
+  });
+  const ip = await pad.newPage();
+  ip.on('pageerror', (e) => errors.push(e.message));
+  await ip.goto(`http://127.0.0.1:${port}/`);
+  await ip.setInputFiles('#file', model);
+  await ip.waitForFunction(() => !document.getElementById('slice').disabled, null, { timeout: 10000 });
+  const weightOf = async () => {
+    await ip.click('#slice');
+    await ip.waitForFunction(() => window.__ms.result, null, { timeout: 120000 });
+    const r = await ip.evaluate(() => ({ weight: window.__ms.result.stats.weight, sent: window.__sent }));
+    await ip.click('#tab-prepare');
+    return r;
+  };
+  const plain = await weightOf();
+
+  await ip.click('#tool-paint');
+  const cv = await ip.locator('#canvas').boundingBox();
+  // Real pen input (as an Apple Pencil sends it), through Chrome's input pipeline.
+  const cdp = await pad.newCDPSession(ip);
+  const pen = (type, x, y) => cdp.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', buttons: type === 'mouseReleased' ? 0 : 1, clickCount: 1, pointerType: 'pen', force: 0.5 });
+  const [px, py] = [cv.x + cv.width * 0.55, cv.y + cv.height * 0.62];
+  await pen('mousePressed', px - 40, py);
+  for (let k = 1; k <= 8; k++) await pen('mouseMoved', px - 40 + k * 10, py);
+  await pen('mouseReleased', px + 40, py);
+  const painted = await ip.evaluate(() => window.__ms.paint.reduce((n, v) => n + (v === 1), 0));
+  check(painted > 50, `the pen paints support enforcers (${painted} triangles)`);
+  check(await ip.evaluate(() => document.querySelector('#painthint').textContent.startsWith('Draw with the pen;')), 'after a pen stroke, fingers move the view');
+  check(!(await ip.isHidden('#paintoff')), 'painting with support off says it needs support');
+  await ip.click('#paintenable');
+  check(await ip.isHidden('#paintoff'), '"Enable support" switches support on');
+  if (shots) await ip.screenshot({ path: path.join(shots, 'ipad-paint.png') });
+  await ip.click('#paintdone');
+
+  await ip.click('#tool-flexi');
+  await ip.click('#modules button[data-module="1"]');
+  await ip.waitForFunction(() => document.querySelector('#jointedit') && !document.querySelector('#jointedit').hidden);
+  // Tap the hull until the joint moves there (a tap through a window would hit nothing).
+  const before = await ip.evaluate(() => JSON.stringify(window.__ms.cutters[0].pos));
+  for (const fy of [0.62, 0.66, 0.58, 0.7]) {
+    await ip.mouse.click(cv.x + cv.width * 0.6, cv.y + cv.height * fy);
+    if (await ip.evaluate((b) => JSON.stringify(window.__ms.cutters[0].pos) !== b, before)) break;
+  }
+  check(await ip.evaluate((b) => JSON.stringify(window.__ms.cutters[0].pos) !== b, before), 'a tap places the joint in the model');
+  // The joint turns with the model: after Z +90° its offset from the model centre turns by 90°.
+  const offset = () => ip.evaluate(() => {
+    const p = window.__ms.placed;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (let i = 0; i < p.length; i += 3) { x0 = Math.min(x0, p[i]); x1 = Math.max(x1, p[i]); y0 = Math.min(y0, p[i + 1]); y1 = Math.max(y1, p[i + 1]); }
+    return [+document.getElementById('jx').value - (x0 + x1) / 2, +document.getElementById('jy').value - (y0 + y1) / 2];
+  });
+  const o1 = await offset();
+  await ip.click('#tool-rotate');
+  await ip.click('[data-rot="z"]');
+  await ip.click('#tool-flexi');
+  const o2 = await offset();
+  check(Math.abs(o2[0] + o1[1]) < 0.05 && Math.abs(o2[1] - o1[0]) < 0.05 && Math.hypot(...o1) > 0.5,
+    `the joint turns with the model (${o1.map((v) => v.toFixed(2))} -> ${o2.map((v) => v.toFixed(2))})`);
+  if (shots) await ip.screenshot({ path: path.join(shots, 'ipad-flexi.png') });
+  await ip.click('#flexidone');
+  const cutTris = await ip.evaluate(async () => {
+    const r = await fetch('flexi/Projectcutter_ver2_bigger.stl');
+    return new DataView(await r.arrayBuffer()).getUint32(80, true);
+  });
+  const cut = await weightOf();
+  check(cut.sent.negatives === cutTris * 9 && cut.sent.enforcers === painted * 9, `the slicer gets the joint (${cut.sent.negatives / 9} triangles) and the painted triangles (${cut.sent.enforcers / 9})`);
+  check(plain.sent.negatives === 0 && plain.sent.enforcers === 0, 'without tools nothing extra is sent');
+  // Same settings and paint, joint deleted: the joint is what removes material.
+  await ip.click('#tool-flexi');
+  await ip.click('#jdel');
+  await ip.click('#tool-flexi');
+  const whole = await weightOf();
+  check(whole.sent.negatives === 0 && cut.weight < whole.weight - 0.05, `the joint removes material (${whole.weight.toFixed(2)} g -> ${cut.weight.toFixed(2)} g)`);
+  await pad.close();
+
   check(errors.length === 0, `no page errors${errors.length ? ': ' + errors.join(' | ') : ''}`);
   await browser.close();
 } finally {

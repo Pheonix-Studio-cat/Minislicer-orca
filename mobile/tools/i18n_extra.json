@@ -64,6 +64,26 @@
   "fi": "Lisää",
   "nb": "Legg til"
  },
+ "Add a joint, then tap the model where it goes. The cutter splits the model into parts that print linked and stay movable.": {
+  "cs": "Přidejte kloub a potom klepněte na místo na modelu, kam patří. Řezačka rozdělí model na díly, které se tisknou spojené a zůstanou pohyblivé.",
+  "da": "Tilføj et led, og tryk derefter på modellen, hvor det skal sidde. Skæreren deler modellen i dele, der printes forbundet og forbliver bevægelige.",
+  "de": "Füge ein Gelenk hinzu und tippe dann auf die Stelle im Modell, wo es hin soll. Der Cutter teilt das Modell in Teile, die verbunden gedruckt werden und beweglich bleiben.",
+  "es": "Añade una articulación y toca el modelo donde debe ir. El cortador divide el modelo en piezas que se imprimen unidas y siguen siendo móviles.",
+  "fi": "Lisää nivel ja napauta sitten mallia kohdasta, johon se tulee. Leikkuri jakaa mallin osiin, jotka tulostuvat yhdessä ja pysyvät liikkuvina.",
+  "fr": "Ajoutez une articulation, puis touchez le modèle à l'endroit voulu. Le découpeur divise le modèle en pièces imprimées liées qui restent mobiles.",
+  "hu": "Adjon hozzá egy csuklót, majd koppintson a modellen arra a helyre, ahová kerül. A vágó összekapcsolva nyomtatott, mozgatható részekre osztja a modellt.",
+  "it": "Aggiungi uno snodo, poi tocca il modello nel punto in cui va. La taglierina divide il modello in parti stampate collegate che restano mobili.",
+  "ja": "関節を追加し、配置したいモデルの位置をタップしてください。カッターはモデルを、つながったまま印刷されて動かせる部品に分割します。",
+  "nb": "Legg til et ledd, og trykk deretter på modellen der det skal være. Kutteren deler modellen i deler som skrives ut sammenkoblet og forblir bevegelige.",
+  "nl": "Voeg een scharnier toe en tik daarna op het model waar het moet komen. De snijder verdeelt het model in delen die verbonden worden geprint en beweeglijk blijven.",
+  "pl": "Dodaj przegub, a następnie dotknij modelu w miejscu, w którym ma się znaleźć. Przecinak dzieli model na części drukowane razem, które pozostają ruchome.",
+  "pt": "Adicione uma articulação e toque no modelo onde ela deve ficar. O cortador divide o modelo em partes que são impressas unidas e continuam móveis.",
+  "ru": "Добавьте шарнир, затем коснитесь модели там, где он должен быть. Резак делит модель на части, которые печатаются соединёнными и остаются подвижными.",
+  "sv": "Lägg till en led och tryck sedan på modellen där den ska sitta. Skäraren delar modellen i delar som skrivs ut sammankopplade och förblir rörliga.",
+  "uk": "Додайте шарнір, а потім торкніться моделі там, де він має бути. Різак розділяє модель на частини, які друкуються з'єднаними й залишаються рухомими.",
+  "zh_CN": "添加一个关节，然后点击模型上要放置的位置。切割器会把模型分成相互连接打印、并且可以活动的部分。",
+  "zh_TW": "新增一個關節，然後點選模型上要放置的位置。切割器會把模型分成相互連接列印、並且可以活動的部分。"
+ },
  "Add a model": {
   "cs": "Přidat model",
   "da": "Tilføj en model",
@@ -144,6 +164,11 @@
   "fi": "Alustan lämpötila",
   "nb": "Platetemperatur"
  },
+ "Block supports": {
+  "da": "Bloker support",
+  "fi": "Estä tuet",
+  "nb": "Blokker støtte"
+ },
  "Blue": {
   "da": "Blå",
   "fi": "Sininen",
@@ -173,6 +198,11 @@
   "da": "Brim-bredde",
   "fi": "Reunuksen leveys",
   "nb": "Brim-bredde"
+ },
+ "Brush size": {
+  "da": "Penselstørrelse",
+  "fi": "Siveltimen koko",
+  "nb": "Penselstørrelse"
  },
  "Button color": {
   "cs": "Barva tlačítek",
@@ -304,6 +334,11 @@
   "fi": "Mukautettu",
   "nb": "Egendefinert"
  },
+ "Delete": {
+  "da": "Slet",
+  "fi": "Poista",
+  "nb": "Slett"
+ },
  "Delete preset": {
   "da": "Slet forudindstilling",
   "fi": "Poista esiasetus",
@@ -319,6 +354,51 @@
   "fi": "Halkaisija",
   "nb": "Diameter"
  },
+ "Done": {
+  "da": "Færdig",
+  "fi": "Valmis",
+  "nb": "Ferdig"
+ },
+ "Draw with a pen or one finger; two fingers turn and zoom the view.": {
+  "cs": "Kreslete perem nebo jedním prstem; dvěma prsty otáčíte a přibližujete pohled.",
+  "da": "Tegn med en pen eller én finger; to fingre drejer og zoomer visningen.",
+  "de": "Mit Stift oder einem Finger malen; mit zwei Fingern die Ansicht drehen und zoomen.",
+  "es": "Dibuja con un lápiz o un dedo; con dos dedos giras y haces zoom en la vista.",
+  "fi": "Piirrä kynällä tai yhdellä sormella; kahdella sormella käännät ja zoomaat näkymää.",
+  "fr": "Dessinez avec un stylet ou un doigt ; deux doigts font pivoter et zoomer la vue.",
+  "hu": "Rajzoljon tollal vagy egy ujjal; két ujjal forgathatja és nagyíthatja a nézetet.",
+  "it": "Disegna con una penna o con un dito; con due dita ruoti e ingrandisci la vista.",
+  "ja": "ペンまたは指1本で描画し、指2本でビューを回転・ズームします。",
+  "nb": "Tegn med en penn eller én finger; to fingre roterer og zoomer visningen.",
+  "nl": "Teken met een pen of één vinger; met twee vingers draai en zoom je de weergave.",
+  "pl": "Rysuj rysikiem lub jednym palcem; dwoma palcami obracasz i powiększasz widok.",
+  "pt": "Desenhe com uma caneta ou um dedo; dois dedos giram e ampliam a visualização.",
+  "ru": "Рисуйте пером или одним пальцем; двумя пальцами вращайте и масштабируйте вид.",
+  "sv": "Rita med en penna eller ett finger; två fingrar vrider och zoomar vyn.",
+  "uk": "Малюйте пером або одним пальцем; двома пальцями обертайте й масштабуйте вигляд.",
+  "zh_CN": "用触控笔或一根手指绘制；用两根手指旋转和缩放视图。",
+  "zh_TW": "用觸控筆或一根手指繪製；用兩根手指旋轉和縮放視圖。"
+ },
+ "Draw with the pen; fingers turn and zoom the view.": {
+  "cs": "Kreslete perem; prsty otáčíte a přibližujete pohled.",
+  "da": "Tegn med pennen; fingrene drejer og zoomer visningen.",
+  "de": "Mit dem Stift malen; mit den Fingern die Ansicht drehen und zoomen.",
+  "es": "Dibuja con el lápiz; con los dedos giras y haces zoom en la vista.",
+  "fi": "Piirrä kynällä; sormilla käännät ja zoomaat näkymää.",
+  "fr": "Dessinez avec le stylet ; les doigts font pivoter et zoomer la vue.",
+  "hu": "Rajzoljon a tollal; ujjaival forgathatja és nagyíthatja a nézetet.",
+  "it": "Disegna con la penna; con le dita ruoti e ingrandisci la vista.",
+  "ja": "ペンで描画し、指でビューを回転・ズームします。",
+  "nb": "Tegn med pennen; fingrene roterer og zoomer visningen.",
+  "nl": "Teken met de pen; met je vingers draai en zoom je de weergave.",
+  "pl": "Rysuj rysikiem; palcami obracasz i powiększasz widok.",
+  "pt": "Desenhe com a caneta; os dedos giram e ampliam a visualização.",
+  "ru": "Рисуйте пером; пальцами вращайте и масштабируйте вид.",
+  "sv": "Rita med pennan; fingrarna vrider och zoomar vyn.",
+  "uk": "Малюйте пером; пальцями обертайте й масштабуйте вигляд.",
+  "zh_CN": "用触控笔绘制；用手指旋转和缩放视图。",
+  "zh_TW": "用觸控筆繪製；用手指旋轉和縮放視圖。"
+ },
  "Edit preset": {
   "da": "Rediger forudindstilling",
   "fi": "Muokkaa esiasetusta",
@@ -329,10 +409,25 @@
   "fi": "Ota tuki käyttöön",
   "nb": "Aktiver støtte"
  },
+ "Enforce supports": {
+  "da": "Gennemtving support",
+  "fi": "Pakota tuet",
+  "nb": "Tving støtte"
+ },
  "Engineering Plate": {
   "da": "Engineering-plade",
   "fi": "Engineering-alusta",
   "nb": "Engineering-plate"
+ },
+ "Erase": {
+  "da": "Visk ud",
+  "fi": "Pyyhi",
+  "nb": "Visk ut"
+ },
+ "Erase all": {
+  "da": "Visk alt ud",
+  "fi": "Pyyhi kaikki",
+  "nb": "Visk ut alt"
  },
  "Export": {
   "da": "Eksportér",
@@ -394,6 +489,26 @@
   "fi": "Ensimmäisen kerroksen nopeus",
   "nb": "Hastighet første lag"
  },
+ "Flexi cutter": {
+  "cs": "Flexi řezačka",
+  "da": "Flexi-skærer",
+  "de": "Flexi-Cutter",
+  "es": "Cortador flexi",
+  "fi": "Flexi-leikkuri",
+  "fr": "Découpeur flexi",
+  "hu": "Flexi vágó",
+  "it": "Taglierina flexi",
+  "ja": "フレキシカッター",
+  "nb": "Flexi-kutter",
+  "nl": "Flexi-snijder",
+  "pl": "Przecinak flexi",
+  "pt": "Cortador flexi",
+  "ru": "Флекси-резак",
+  "sv": "Flexi-skärare",
+  "uk": "Флексі-різак",
+  "zh_CN": "Flexi 切割器",
+  "zh_TW": "Flexi 切割器"
+ },
  "Flow ratio": {
   "da": "Flowforhold",
   "fi": "Virtaussuhde",
@@ -423,6 +538,26 @@
   "da": "Indre massiv fyldning",
   "fi": "Sisäinen kiinteä täyttö",
   "nb": "Indre massivt fyll"
+ },
+ "Joint %1%": {
+  "cs": "Kloub %1%",
+  "da": "Led %1%",
+  "de": "Gelenk %1%",
+  "es": "Articulación %1%",
+  "fi": "Nivel %1%",
+  "fr": "Articulation %1%",
+  "hu": "%1%. csukló",
+  "it": "Snodo %1%",
+  "ja": "関節 %1%",
+  "nb": "Ledd %1%",
+  "nl": "Scharnier %1%",
+  "pl": "Przegub %1%",
+  "pt": "Articulação %1%",
+  "ru": "Шарнир %1%",
+  "sv": "Led %1%",
+  "uk": "Шарнір %1%",
+  "zh_CN": "关节 %1%",
+  "zh_TW": "關節 %1%"
  },
  "Language": {
   "da": "Sprog",
@@ -563,6 +698,26 @@
   "da": "Printtid for modellen",
   "fi": "Mallin tulostusaika",
   "nb": "Utskriftstid for modellen"
+ },
+ "Module %1%": {
+  "cs": "Modul %1%",
+  "da": "Modul %1%",
+  "de": "Modul %1%",
+  "es": "Módulo %1%",
+  "fi": "Moduuli %1%",
+  "fr": "Module %1%",
+  "hu": "%1%. modul",
+  "it": "Modulo %1%",
+  "ja": "モジュール %1%",
+  "nb": "Modul %1%",
+  "nl": "Module %1%",
+  "pl": "Moduł %1%",
+  "pt": "Módulo %1%",
+  "ru": "Модуль %1%",
+  "sv": "Modul %1%",
+  "uk": "Модуль %1%",
+  "zh_CN": "模块 %1%",
+  "zh_TW": "模組 %1%"
  },
  "Moves": {
   "cs": "Pohyby",
@@ -749,6 +904,26 @@
   "fi": "Ulkoseinä",
   "nb": "Ytre vegg"
  },
+ "Painted supports only take effect when support is enabled.": {
+  "cs": "Namalované podpěry se projeví, jen když jsou podpěry zapnuté.",
+  "da": "Malede supports virker kun, når support er slået til.",
+  "de": "Aufgemalte Stützen wirken nur, wenn Stützen aktiviert sind.",
+  "es": "Los soportes pintados solo se aplican si los soportes están activados.",
+  "fi": "Maalatut tuet vaikuttavat vain, kun tuki on käytössä.",
+  "fr": "Les supports peints ne s'appliquent que si les supports sont activés.",
+  "hu": "A festett támaszok csak akkor érvényesek, ha a támaszok be vannak kapcsolva.",
+  "it": "I supporti dipinti hanno effetto solo se i supporti sono attivati.",
+  "ja": "ペイントしたサポートは、サポートが有効なときだけ反映されます。",
+  "nb": "Malte støtter virker bare når støtte er slått på.",
+  "nl": "Geschilderde ondersteuning werkt alleen als ondersteuning is ingeschakeld.",
+  "pl": "Namalowane podpory działają tylko wtedy, gdy podpory są włączone.",
+  "pt": "Os suportes pintados só têm efeito quando os suportes estão ativados.",
+  "ru": "Нарисованные поддержки действуют, только когда поддержки включены.",
+  "sv": "Målade supporter gäller bara när support är aktiverat.",
+  "uk": "Намальовані підтримки діють лише тоді, коли підтримки ввімкнено.",
+  "zh_CN": "绘制的支撑仅在启用支撑时生效。",
+  "zh_TW": "繪製的支撐僅在啟用支撐時生效。"
+ },
  "Part cooling fan": {
   "da": "Køleblæser for emnet",
   "fi": "Kappaleen jäähdytystuuletin",
@@ -763,6 +938,11 @@
   "da": "Pladetype",
   "fi": "Alustan tyyppi",
   "nb": "Platetype"
+ },
+ "Position": {
+  "da": "Position",
+  "fi": "Sijainti",
+  "nb": "Posisjon"
  },
  "Preferences": {
   "da": "Indstillinger",
@@ -888,6 +1068,12 @@
   "da": "Rotér",
   "fi": "Kierrä",
   "nb": "Roter"
+ },
+ "Rotation": {
+  "da": "Rotation",
+  "fi": "Kierto",
+  "nb": "Rotasjon",
+  "ru": "Поворот"
  },
  "Runner found - scan its QR code to pair": {
   "cs": "Runner nalezen – naskenujte QR kód pro spárování",
@@ -1103,6 +1289,11 @@
   "da": "Support",
   "fi": "Tuki",
   "nb": "Støtte"
+ },
+ "Support Painting": {
+  "da": "Mal support",
+  "fi": "Tukien maalaus",
+  "nb": "Mal støtte"
  },
  "Support interface": {
   "da": "Supportgrænseflade",

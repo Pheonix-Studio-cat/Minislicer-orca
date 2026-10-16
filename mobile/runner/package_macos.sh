@@ -2,11 +2,15 @@
 # Builds "Minislicer Runner.app" (universal: Apple silicon + Intel) and packs it into a .dmg.
 # Runs on macOS only (lipo, codesign, hdiutil).
 #
-#   mobile/runner/package_macos.sh <version> <output-dir>
+#   mobile/runner/package_macos.sh <version> <output-dir> [<dir with runner-arm64 and runner-amd64>]
+#
+# Without the third argument the two binaries are built here with Go. CI passes binaries
+# cross-compiled on Linux, because the macOS runner image has no Go on its PATH.
 set -euo pipefail
 
 VERSION="${1:?version}"
 OUT="${2:?output dir}"
+PREBUILT="${3:-}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 MOBILE="$(dirname "$HERE")"
 WORK="$(mktemp -d)"
@@ -14,8 +18,12 @@ APP="$WORK/dmg/Minislicer Runner.app"
 
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$OUT"
 for arch in arm64 amd64; do
-  (cd "$MOBILE" && CGO_ENABLED=0 GOOS=darwin GOARCH="$arch" go build -trimpath \
-    -ldflags "-s -w -X main.version=$VERSION" -o "$WORK/runner-$arch" ./runner)
+  if [ -n "$PREBUILT" ]; then
+    cp "$PREBUILT/runner-$arch" "$WORK/runner-$arch"
+  else
+    (cd "$MOBILE" && CGO_ENABLED=0 GOOS=darwin GOARCH="$arch" go build -trimpath \
+      -ldflags "-s -w -X main.version=$VERSION" -o "$WORK/runner-$arch" ./runner)
+  fi
 done
 lipo -create -output "$APP/Contents/MacOS/minislicer-runner" "$WORK/runner-arm64" "$WORK/runner-amd64"
 

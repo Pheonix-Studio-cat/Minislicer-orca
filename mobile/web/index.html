@@ -14,25 +14,27 @@
 </head>
 <body>
 <!-- Layout and wording follow OrcaSlicer's main window: top bar with Prepare/Preview and
-     Slice plate/Print plate, sidebar with Printer, Filament and Process, 3D canvas. -->
+     Slice plate/Print plate, sidebar with Printer, Filament and Process, 3D canvas.
+     data-i18n holds the English text, translated by js/i18n.js. -->
 <header class="topbar">
   <div class="tb-left">
     <img src="icon.svg" alt="" width="22" height="22">
     <span class="tb-title">Minislicer</span>
   </div>
   <nav class="tabs" role="tablist">
-    <button id="tab-prepare" class="tab active" role="tab" aria-selected="true"><img src="assets/icons/tab_3d_active.svg" alt=""><span>Prepare</span></button>
-    <button id="tab-preview" class="tab" role="tab" aria-selected="false"><img src="assets/icons/tab_preview_active.svg" alt=""><span>Preview</span></button>
+    <button id="tab-prepare" class="tab active" role="tab" aria-selected="true" data-i18n-aria="Prepare" data-i18n-title="Prepare"><img src="assets/icons/tab_3d_active.svg" alt=""><span data-i18n="Prepare">Prepare</span></button>
+    <button id="tab-preview" class="tab" role="tab" aria-selected="false" data-i18n-aria="Preview" data-i18n-title="Preview"><img src="assets/icons/tab_preview_active.svg" alt=""><span data-i18n="Preview">Preview</span></button>
   </nav>
   <div class="tb-right">
-    <span id="runner" class="runner" title="Connection to the Minislicer Runner on your computer"><img src="assets/icons/tab_monitor_active.svg" alt=""><span id="runnertext">Checking…</span></span>
-    <button id="slice" class="tb-btn" disabled>Slice plate</button>
+    <span id="runner" class="runner"><img src="assets/icons/tab_monitor_active.svg" alt=""><span id="runnertext"></span></span>
+    <button id="prefs" class="tb-icon" data-i18n-title="Preferences" data-i18n-aria="Preferences"><img src="assets/icons/settings.svg" alt=""></button>
+    <button id="slice" class="tb-btn" disabled data-i18n-title="Slice plate"><span class="lbl-long" data-i18n="Slice plate">Slice plate</span><span class="lbl-short" data-i18n="Slice">Slice</span></button>
     <div class="split">
-      <button id="print" class="tb-btn" disabled>Print plate</button>
-      <button id="printmenu" class="tb-btn caret" aria-label="More export options" aria-haspopup="menu" disabled>▾</button>
+      <button id="print" class="tb-btn" disabled data-i18n-title="Print plate"><span class="lbl-long" data-i18n="Print plate">Print plate</span><span class="lbl-short" data-i18n="Print">Print</span></button>
+      <button id="printmenu" class="tb-btn caret" data-i18n-aria="Export" aria-haspopup="menu" disabled>▾</button>
       <div id="printdrop" class="drop" role="menu" hidden>
-        <button id="dl3mf" role="menuitem">Export plate sliced file</button>
-        <button id="dlgcode" role="menuitem">Export G-code file</button>
+        <button id="dl3mf" role="menuitem" data-i18n="Export plate sliced file">Export plate sliced file</button>
+        <button id="dlgcode" role="menuitem" data-i18n="Export G-code file">Export G-code file</button>
       </div>
     </div>
   </div>
@@ -42,34 +44,63 @@
   <section class="canvas" aria-label="3D view">
     <canvas id="canvas"></canvas>
     <div class="cv-toolbar" id="cvtoolbar">
-      <label class="cv-btn" title="Add"><img data-icon="toolbar_open" alt="Add"><input id="file" type="file" accept=".stl,.3mf,.obj,model/stl,model/3mf" hidden></label>
-      <button class="cv-btn" id="arrange" title="Arrange" disabled><img data-icon="toolbar_arrange" alt="Arrange"></button>
+      <label class="cv-btn" data-i18n-title="Add"><img data-icon="toolbar_open" alt=""><input id="file" type="file" accept=".stl,.3mf,.obj,model/stl,model/3mf" hidden></label>
+      <button class="cv-btn" id="arrange" data-i18n-title="Arrange" disabled><img data-icon="toolbar_arrange" alt=""></button>
       <span class="cv-sep"></span>
-      <button class="cv-btn" id="tool-rotate" title="Rotate" disabled><img data-icon="toolbar_rotate" alt="Rotate"></button>
-      <button class="cv-btn" id="tool-scale" title="Scale" disabled><img data-icon="toolbar_scale" alt="Scale"></button>
+      <button class="cv-btn" id="tool-rotate" data-i18n-title="Rotate" disabled><img data-icon="toolbar_rotate" alt=""></button>
+      <button class="cv-btn" id="tool-scale" data-i18n-title="Scale" disabled><img data-icon="toolbar_scale" alt=""></button>
+      <span class="cv-sep"></span>
+      <button class="cv-btn" id="tool-paint" data-i18n-title="Support Painting" disabled><img data-icon="toolbar_support" alt=""></button>
+      <button class="cv-btn" id="tool-flexi" data-i18n-title="Flexi cutter" disabled><img data-icon="toolbar_cut" alt=""></button>
+    </div>
+    <div id="gizmo-paint" class="gizmo" hidden>
+      <div class="gz-title" data-i18n="Support Painting">Support Painting</div>
+      <div class="gz-row gz-seg" role="radiogroup">
+        <button type="button" data-tool="1" role="radio"><img src="assets/icons/menu_support_enforcer.svg" alt=""><span data-i18n="Enforce supports">Enforce supports</span></button>
+        <button type="button" data-tool="2" role="radio"><img src="assets/icons/menu_support_blocker.svg" alt=""><span data-i18n="Block supports">Block supports</span></button>
+        <button type="button" data-tool="0" role="radio"><img src="assets/icons/erase_dark.svg" alt=""><span data-i18n="Erase">Erase</span></button>
+      </div>
+      <div class="gz-row"><label for="brush" data-i18n="Brush size">Brush size</label><input id="brush" type="range" min="0.5" max="15" step="0.5" value="3"><span id="brushval" class="gz-val"></span></div>
+      <div id="painthint" class="gz-note"></div>
+      <div id="paintoff" class="gz-note gz-warn" hidden><span data-i18n="Painted supports only take effect when support is enabled.">Painted supports only take effect when support is enabled.</span> <button type="button" id="paintenable" class="gz-link" data-i18n="Enable support">Enable support</button></div>
+      <div class="gz-row"><button type="button" id="paintclear" data-i18n="Erase all">Erase all</button><button type="button" id="paintdone" class="gz-primary" data-i18n="Done">Done</button></div>
+    </div>
+    <div id="gizmo-flexi" class="gizmo" hidden>
+      <div class="gz-title" data-i18n="Flexi cutter">Flexi cutter</div>
+      <div class="gz-note" data-i18n="Add a joint, then tap the model where it goes. The cutter splits the model into parts that print linked and stay movable.">Add a joint, then tap the model where it goes. The cutter splits the model into parts that print linked and stay movable.</div>
+      <div class="gz-row" id="modules"></div>
+      <div class="gz-row gz-chips" id="joints"></div>
+      <div id="jointedit" hidden>
+        <div class="gz-grid"><span data-i18n="Position">Position</span>
+          <label>X<input id="jx" type="number" step="0.5" inputmode="decimal"></label><label>Y<input id="jy" type="number" step="0.5" inputmode="decimal"></label><label>Z<input id="jz" type="number" step="0.5" inputmode="decimal"></label></div>
+        <div class="gz-grid"><span data-i18n="Rotation">Rotation</span>
+          <label>X<input id="jrx" type="number" step="15" inputmode="decimal"></label><label>Y<input id="jry" type="number" step="15" inputmode="decimal"></label><label>Z<input id="jrz" type="number" step="15" inputmode="decimal"></label></div>
+        <div class="gz-row"><label for="jsize" data-i18n="Size">Size</label><input id="jsize" type="number" min="20" max="500" step="5" inputmode="decimal"><span>%</span></div>
+        <div class="gz-row"><button type="button" id="jdel" data-i18n="Delete">Delete</button><button type="button" id="flexidone" class="gz-primary" data-i18n="Done">Done</button></div>
+      </div>
     </div>
     <div id="gizmo-rotate" class="gizmo" hidden>
-      <div class="gz-title">Rotate</div>
+      <div class="gz-title" data-i18n="Rotate">Rotate</div>
       <div class="gz-row"><button data-rot="x">X +90°</button><button data-rot="y">Y +90°</button><button data-rot="z">Z +90°</button></div>
     </div>
     <div id="gizmo-scale" class="gizmo" hidden>
-      <div class="gz-title">Scale</div>
+      <div class="gz-title" data-i18n="Scale">Scale</div>
       <div class="gz-row"><input id="scale" type="number" min="1" max="1000" step="1" value="100" inputmode="decimal"><span>%</span></div>
-      <div id="modelsize" class="gz-note"></div>
+      <div class="gz-note"><span data-i18n="Size">Size</span>: <span id="modelsize"></span></div>
     </div>
-    <div class="plate-name">Plate 1</div>
+    <div class="plate-name"><span data-i18n="Plate">Plate</span> 1</div>
     <div id="empty" class="empty">
-      <p>Drag and drop or <label class="link">add a model<input id="file2" type="file" accept=".stl,.3mf,.obj" hidden></label> (STL, 3MF, OBJ)</p>
+      <p><label class="link"><span data-i18n="Add a model">Add a model</span><input id="file2" type="file" accept=".stl,.3mf,.obj" hidden></label> (STL, 3MF, OBJ)</p>
     </div>
 
     <div id="legend" class="legend" hidden></div>
     <div id="vslider" class="vslider" hidden>
       <div class="vs-label"><b id="vs-layer">1</b><span id="vs-z">0.20</span></div>
-      <input id="layer" type="range" min="1" max="1" value="1" aria-label="Layer" orient="vertical">
+      <input id="layer" type="range" min="1" max="1" value="1" data-i18n-aria="Layers">
       <div class="vs-label low"><b>1</b><span id="vs-z0">0.20</span></div>
     </div>
     <div id="hslider" class="hslider" hidden>
-      <input id="move" type="range" min="0" max="1000" value="1000" aria-label="Moves in the layer">
+      <input id="move" type="range" min="0" max="1000" value="1000" data-i18n-aria="Moves">
     </div>
 
     <div id="notes" class="notes" aria-live="polite">
@@ -81,56 +112,114 @@
 
   <aside class="sidebar" aria-label="Settings">
     <section class="sb">
-      <div class="sb-title"><img src="assets/icons/printer.svg" alt=""><span>Printer</span></div>
+      <div class="sb-title"><img src="assets/icons/printer.svg" alt=""><span data-i18n="Printer">Printer</span></div>
       <div class="sb-content">
         <div class="printer-card">
           <img id="cover" alt="">
           <div class="pc-main">
-            <select id="printer" aria-label="Printer"></select>
-            <div class="pc-sub">Nozzle 0.4 mm</div>
+            <select id="printer" data-i18n-aria="Printer"></select>
+            <div class="pc-sub" id="nozzleinfo"></div>
           </div>
         </div>
-        <div class="kv"><span class="kv-l"><img src="assets/icons/plate_settings.svg" alt="">Plate type</span><select id="bed" aria-label="Plate type"></select></div>
+        <div class="kv"><span class="kv-l"><img src="assets/icons/plate_settings.svg" alt=""><span data-i18n="Plate Type">Plate Type</span></span><select id="bed" data-i18n-aria="Plate Type"></select></div>
       </div>
     </section>
 
     <section class="sb">
-      <div class="sb-title"><img src="assets/icons/filament.svg" alt=""><span>Filament</span>
-        <span class="sb-acts"><img src="assets/icons/add_filament.svg" alt="" class="dim" title="Multi-material is not supported"></span></div>
+      <div class="sb-title"><img src="assets/icons/filament.svg" alt=""><span data-i18n="Filament">Filament</span>
+        <span class="sb-acts"><img src="assets/icons/add_filament.svg" alt="" class="dim"></span></div>
       <div class="sb-content">
         <div class="fil-row">
-          <label class="swatch" title="Filament colour"><span>1</span><input id="color" type="color" value="#00ae42"></label>
-          <select id="filament" aria-label="Filament"></select>
+          <label class="swatch" data-i18n-title="Color"><span>1</span><input id="color" type="color" value="#00ae42"></label>
+          <select id="filament" data-i18n-aria="Filament"></select>
+          <button id="fedit" class="icon-btn" data-i18n-title="Edit preset" data-i18n-aria="Edit preset"><img src="assets/icons/edit.svg" alt=""></button>
         </div>
       </div>
     </section>
 
     <section class="sb">
-      <div class="sb-title"><img src="assets/icons/process.svg" alt=""><span>Process</span>
-        <span class="seg"><button class="on">Global</button><button disabled title="Per-object settings are not supported">Objects</button></span></div>
+      <div class="sb-title"><img src="assets/icons/process.svg" alt=""><span data-i18n="Process">Process</span>
+        <span class="seg"><button class="on" data-i18n="Global">Global</button><button disabled data-i18n="Objects">Objects</button></span></div>
       <div class="sb-content">
-        <select id="process" aria-label="Process preset"></select>
+        <div class="preset-row">
+          <select id="process" data-i18n-aria="Process"></select>
+          <button id="psave" class="icon-btn" data-i18n-title="Save preset" data-i18n-aria="Save preset"><img src="assets/icons/save.svg" alt=""></button>
+          <button id="pdel" class="icon-btn" data-i18n-title="Delete preset" data-i18n-aria="Delete preset" hidden><img src="assets/icons/delete.svg" alt=""></button>
+        </div>
         <div class="ptabs" role="tablist" id="ptabs"></div>
         <div id="params" class="params"></div>
       </div>
     </section>
 
     <section class="sb">
-      <div class="sb-title"><img src="assets/icons/settings.svg" alt=""><span>About</span></div>
+      <div class="sb-title"><img src="assets/icons/param_information.svg" alt=""><span data-i18n="About">About</span></div>
       <div class="sb-content about">
-        <p>Bambu Connect runs on Windows and macOS only. Start the <b>Minislicer Runner</b> on the computer
-          that has Bambu Connect and scan its QR code; <b>Print plate</b> then hands the sliced file to Bambu
-          Connect, where you pick the printer and confirm. Without the runner, use the arrow next to
-          <b>Print plate</b> to export the file.</p>
-        <p>Minislicer Mobile <span id="version"></span> is free software under the
-          <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">GNU AGPL v3</a>.
-          <a href="https://github.com/Pheonix-Studio-cat/Minislicer-orca" target="_blank" rel="noopener">Source code</a> ·
-          <a href="THIRD-PARTY-NOTICES.txt" target="_blank">Licences and notices</a>.
-          Layout, icons and settings come from OrcaSlicer. Not affiliated with Bambu Lab or OrcaSlicer.</p>
+        <p><span data-i18n="Bambu Connect runs on Windows and macOS only.">Bambu Connect runs on Windows and macOS only.</span>
+          <span data-i18n="Start the Minislicer Runner on the computer that has Bambu Connect and scan its QR code.">Start the Minislicer Runner on the computer that has Bambu Connect and scan its QR code.</span>
+          <span data-i18n="Print plate then hands the sliced file to Bambu Connect, where you pick the printer and confirm.">Print plate then hands the sliced file to Bambu Connect, where you pick the printer and confirm.</span>
+          <span data-i18n="Without the runner, use the arrow next to Print plate to export the file.">Without the runner, use the arrow next to Print plate to export the file.</span></p>
+        <p><span id="licence"></span>
+          <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">GNU AGPL v3</a> ·
+          <a href="https://github.com/Pheonix-Studio-cat/Minislicer-orca" target="_blank" rel="noopener" data-i18n="Source code">Source code</a> ·
+          <a href="THIRD-PARTY-NOTICES.txt" target="_blank" data-i18n="Licences and notices">Licences and notices</a>.
+          <span data-i18n="Layout, icons and settings come from OrcaSlicer. Not affiliated with Bambu Lab or OrcaSlicer.">Layout, icons and settings come from OrcaSlicer. Not affiliated with Bambu Lab or OrcaSlicer.</span></p>
       </div>
     </section>
   </aside>
 </main>
+
+<!-- Preferences: OrcaSlicer's Preferences dialog, reduced to language and button colour. -->
+<dialog id="dlg-prefs" class="dlg">
+  <form method="dialog">
+    <div class="dlg-title"><span data-i18n="Preferences">Preferences</span><button class="dlg-x" value="close" data-i18n-aria="Close">×</button></div>
+    <div class="dlg-body">
+      <div class="pgroup" data-i18n="General">General</div>
+      <div class="prow"><label for="lang" data-i18n="Language">Language</label><span class="pin wide"><select id="lang"></select></span></div>
+      <p id="langnote" class="dlg-note" hidden></p>
+      <div class="pgroup" data-i18n="Button color">Button color</div>
+      <div id="accents" class="accents" role="radiogroup" data-i18n-aria="Button color"></div>
+      <div class="prow"><label for="accentcustom" data-i18n="Custom">Custom</label><span class="pin wide"><input id="accentcustom" type="color" value="#009688"></span></div>
+      <div class="pgroup" data-i18n="User presets">User presets</div>
+      <div class="dlg-actions left">
+        <button type="button" id="pexport" class="btn" data-i18n="Export Presets">Export Presets</button>
+        <label class="btn"><span data-i18n="Import Configs">Import Configs</span><input id="pimport" type="file" accept=".json,application/json" hidden></label>
+      </div>
+      <p id="presetmsg" class="dlg-note" role="status"></p>
+    </div>
+    <div class="dlg-actions"><button class="btn primary" value="close" data-i18n="Close">Close</button></div>
+  </form>
+</dialog>
+
+<!-- Save preset: name input like OrcaSlicer's SavePresetDialog. -->
+<dialog id="dlg-save" class="dlg small">
+  <form method="dialog" id="saveform">
+    <div class="dlg-title"><span id="savetitle" data-i18n="Save preset">Save preset</span><button class="dlg-x" value="cancel" data-i18n-aria="Cancel">×</button></div>
+    <div class="dlg-body">
+      <div class="prow"><label for="savename" data-i18n="Name">Name</label><span class="pin wide"><input id="savename" type="text" maxlength="100" autocomplete="off"></span></div>
+      <p id="saveerr" class="dlg-note warn" role="alert" hidden></p>
+    </div>
+    <div class="dlg-actions">
+      <button class="btn" value="cancel" data-i18n="Cancel">Cancel</button>
+      <button class="btn primary" value="ok" id="saveok" data-i18n="Save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Filament settings: OrcaSlicer's Filament and Cooling pages, reduced to what this slicer uses. -->
+<dialog id="dlg-filament" class="dlg">
+  <form method="dialog">
+    <div class="dlg-title"><span data-i18n="Filament settings">Filament settings</span><button class="dlg-x" value="cancel" data-i18n-aria="Cancel">×</button></div>
+    <div class="dlg-body">
+      <div class="fe-name" id="fename"></div>
+      <div class="ptabs" id="ftabs" role="tablist"></div>
+      <div id="fparams" class="params"></div>
+    </div>
+    <div class="dlg-actions">
+      <button class="btn" value="cancel" data-i18n="Cancel">Cancel</button>
+      <button class="btn primary" value="save" id="fsave" data-i18n="Save as">Save as</button>
+    </div>
+  </form>
+</dialog>
 
 <script type="module" src="js/app.js"></script>
 </body>

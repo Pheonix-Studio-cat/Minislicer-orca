@@ -16,6 +16,16 @@ ships in resources/profiles/BBL. They are copied unchanged by
 mobile/tools/build_profiles.py and fall under the same AGPL-3.0 licence as the
 rest of the repository.
 
+The flexi cutter modules in flexi/ come from MakerWorld model 2246181 and are,
+according to the project owner, dedicated to the public domain under CC0 1.0
+(not independently verified; see flexi/SOURCE.txt).
+
+The translations in i18n/ are taken from OrcaSlicer's translation catalogs
+(localization/i18n in the same repository, AGPL-3.0) where OrcaSlicer has the
+same English text. The remaining strings were machine-translated for this
+project (mobile/tools/i18n_extra.json); each catalog lists them under
+"_meta.machine_translated".
+
 "Bambu Lab" and "Bambu Connect" are names of Bambu Lab. This project is not made,
 endorsed or supported by Bambu Lab; the names only describe compatibility.
 

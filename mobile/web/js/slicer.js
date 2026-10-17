@@ -6,8 +6,9 @@
 //
 // What it does: perimeters (outer + inner loops, aligned rear seam), top/bottom solid shells,
 // rectilinear sparse infill, optional brim, optional "normal" support with denser interface
-// layers. What it does not do (yet): gap fill, bridges detection, arachne variable width,
-// ironing, multi-material.
+// layers, negative volumes (the flexi cutter) and painted support enforcers/blockers.
+// What it does not do (yet): gap fill, bridges detection, arachne variable width, ironing,
+// multi-material.
 
 import ClipperLib from '../vendor/clipper.mjs';
 
@@ -137,6 +138,67 @@ function sliceRegions(loops) {
   return Clipper.CleanPolygons(region, 0.01 * SCALE).filter((p) => p.length >= 3);
 }
 
+// Outline regions of a triangle soup at each of the given slice heights.
+function sliceRegionsAt(tris, centers, progress = () => {}) {
+  const mesh = weld(tris);
+  const nf = mesh.faces.length / 3;
+  // Bucket faces by layer index range to avoid testing every face against every plane.
+  const buckets = centers.map(() => []);
+  for (let f = 0; f < nf; f++) {
+    let lo = Infinity, hi = -Infinity;
+    for (let k = 0; k < 3; k++) {
+      const z = mesh.verts[mesh.faces[f * 3 + k] * 3 + 2];
+      lo = Math.min(lo, z); hi = Math.max(hi, z);
+    }
+    let a = 0, b = centers.length;
+    while (a < b) { const m = (a + b) >> 1; if (centers[m] < lo) a = m + 1; else b = m; }
+    for (let i = a; i < centers.length && centers[i] < hi; i++) buckets[i].push(f);
+  }
+  return centers.map((zc, i) => {
+    if (i % 8 === 0) progress(i / centers.length);
+    return sliceRegions(sliceAt(mesh, buckets[i], zc));
+  });
+}
+
+// Painted support areas, the way OrcaSlicer projects them (PrintObject::project_and_append_custom_facets):
+// the part of each downward-facing painted triangle between two slice planes is projected up onto
+// the upper plane, so layer i gets what lies in (centers[i-1], centers[i]].
+function projectPainted(tris, centers) {
+  const out = centers.map(() => []);
+  if (!tris || !tris.length) return out;
+  const clipZ = (poly, z, keepAbove) => {
+    const res = [];
+    for (let k = 0; k < poly.length; k++) {
+      const a = poly[k], b = poly[(k + 1) % poly.length];
+      const ina = keepAbove ? a[2] >= z : a[2] <= z, inb = keepAbove ? b[2] >= z : b[2] <= z;
+      if (ina) res.push(a);
+      if (ina !== inb) {
+        const t = (z - a[2]) / (b[2] - a[2]);
+        res.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, z]);
+      }
+    }
+    return res;
+  };
+  for (let f = 0; f < tris.length; f += 9) {
+    const p = [[tris[f], tris[f + 1], tris[f + 2]], [tris[f + 3], tris[f + 4], tris[f + 5]], [tris[f + 6], tris[f + 7], tris[f + 8]]];
+    const nz = (p[1][0] - p[0][0]) * (p[2][1] - p[0][1]) - (p[1][1] - p[0][1]) * (p[2][0] - p[0][0]);
+    if (nz >= 0) continue; // only downward-facing triangles carry support
+    const lo = Math.min(p[0][2], p[1][2], p[2][2]), hi = Math.max(p[0][2], p[1][2], p[2][2]);
+    let i = 0;
+    while (i < centers.length && centers[i] < lo) i++;
+    for (; i < centers.length; i++) {
+      const below = i ? centers[i - 1] : -Infinity;
+      if (below >= hi) break;
+      let poly = clipZ(clipZ(p, below, true), centers[i], false);
+      if (poly.length < 3) continue;
+      poly = poly.map(([x, y]) => ({ X: Math.round(x * SCALE), Y: Math.round(y * SCALE) }));
+      if (area(poly) < 0) poly.reverse();
+      out[i].push(poly);
+    }
+  }
+  return out.map((polys) => (polys.length ? union(polys) : []));
+}
+
 // ---------- paths ----------
 
 function islandsOf(region) {
@@ -212,13 +274,16 @@ const spacingOf = (w, h) => w - h * (1 - Math.PI / 4);
  *   support: { enabled, angle, topGap, xyGap, spacing, interfaceSpacing },
  *   brimWidth,
  * }
- * Returns { layers: [{ z, h, paths: [{ feature, width, pts: [{X,Y}], closed }] }], maxZ }.
+ * extra: {
+ *   negatives: triangle soup removed from the model, like OrcaSlicer's negative parts (flexi cutter),
+ *   enforcers, blockers: painted triangles (soups) that add or block support where support is on,
+ * }
+ * Returns { layers: [{ z, h, paths: [{ feature, width, pts: [{X,Y}], closed }] }], maxZ, regions },
+ * regions being the model's outline per layer (Clipper paths).
  */
-export function slice(tris, cfg, progress = () => {}) {
-  const mesh = weld(tris);
-  const nf = mesh.faces.length / 3;
+export function slice(tris, cfg, progress = () => {}, extra = {}) {
   let maxZ = 0;
-  for (let i = 2; i < mesh.verts.length; i += 3) maxZ = Math.max(maxZ, mesh.verts[i]);
+  for (let i = 2; i < tris.length; i += 3) maxZ = Math.max(maxZ, tris[i]);
 
   // Layer heights.
   const zs = [];
@@ -226,24 +291,13 @@ export function slice(tris, cfg, progress = () => {}) {
     zs.push({ z: +z.toFixed(4), h });
   }
 
-  // Bucket faces by layer index range to avoid testing every face against every plane.
-  const buckets = zs.map(() => []);
   const centers = zs.map((l) => l.z - l.h / 2);
-  for (let f = 0; f < nf; f++) {
-    let lo = Infinity, hi = -Infinity;
-    for (let k = 0; k < 3; k++) {
-      const z = mesh.verts[mesh.faces[f * 3 + k] * 3 + 2];
-      lo = Math.min(lo, z); hi = Math.max(hi, z);
+  const regions = sliceRegionsAt(tris, centers, (p) => progress(0.4 * p, 'Slicing'));
+  if (extra.negatives && extra.negatives.length) {
+    const cut = sliceRegionsAt(extra.negatives, centers);
+    for (let i = 0; i < regions.length; i++) {
+      if (cut[i].length) regions[i] = diff(regions[i], cut[i]).filter((p) => Math.abs(area(p)) > 0.0025 * SCALE * SCALE);
     }
-    let a = 0, b = centers.length;
-    while (a < b) { const m = (a + b) >> 1; if (centers[m] < lo) a = m + 1; else b = m; }
-    for (let i = a; i < centers.length && centers[i] < hi; i++) buckets[i].push(f);
-  }
-
-  const regions = [];
-  for (let i = 0; i < zs.length; i++) {
-    regions.push(sliceRegions(sliceAt(mesh, buckets[i], centers[i])));
-    if (i % 8 === 0) progress(0.4 * (i / zs.length), 'Slicing');
   }
   // Trailing empty layers (e.g. a sliver above the last real cut) carry nothing.
   while (zs.length && !regions[regions.length - 1].length) { zs.pop(); regions.pop(); }
@@ -313,6 +367,15 @@ export function slice(tris, cfg, progress = () => {}) {
       return intersect(diff(regions[i], regions[i - 1]), offset(beyond, allowed + 0.05))
         .filter((p) => Math.abs(area(p)) > 0.01 * SCALE * SCALE);
     });
+    // Painted supports: blockers remove the automatic support under them, enforcers add support
+    // under painted faces whatever their angle.
+    const enforcers = projectPainted(extra.enforcers, centers);
+    const blockers = projectPainted(extra.blockers, centers);
+    for (let i = 0; i < n; i++) {
+      const block = union(blockers[i], union(i ? blockers[i - 1] : [], i + 1 < n ? blockers[i + 1] : []));
+      if (block.length && overhang[i].length) overhang[i] = diff(overhang[i], offset(block, w.support));
+      if (enforcers[i].length) overhang[i] = union(overhang[i], enforcers[i]);
+    }
     const gap = Math.max(1, Math.round(s.topGap / cfg.layerHeight));
     let column = [];
     for (let i = n - 1; i >= 0; i--) {
@@ -381,5 +444,5 @@ export function slice(tris, cfg, progress = () => {}) {
     if (i % 8 === 0) progress(0.75 + 0.25 * (i / n), 'Toolpaths');
   }
   progress(1, 'Toolpaths');
-  return { layers, maxZ: zs[zs.length - 1].z };
+  return { layers, maxZ: zs[zs.length - 1].z, regions };
 }

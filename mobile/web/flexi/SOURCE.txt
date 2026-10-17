@@ -1,0 +1,12 @@
+Flexi cutter modules
+====================
+
+Projectcutter_ver1_bigger.stl, Projectcutter_ver2_bigger.stl, Projectcutter_ver3_flat.stl
+
+Source: MakerWorld, model 2246181 (the files' STL header reads "MW 1.0 2246181 US").
+Licence: CC0 1.0 Universal (public domain dedication), as stated by the project owner
+when adding them on 2026-10-16. Not independently verified: MakerWorld was not reachable
+from the environment the files were added in. Check the model page before relying on it.
+
+The files are unchanged. The mobile slicer removes them from a model like OrcaSlicer's
+negative parts, which turns the model into parts that print linked and stay movable.

@@ -31,10 +31,10 @@ function preview(sliced) {
 }
 
 self.onmessage = (ev) => {
-  const { tris, settings, modelName } = ev.data;
+  const { tris, settings, modelName, extra } = ev.data;
   try {
     const t0 = performance.now();
-    const sliced = slice(tris, settings, (p, stage) => self.postMessage({ type: 'progress', p, stage }));
+    const sliced = slice(tris, settings, (p, stage) => self.postMessage({ type: 'progress', p, stage }), extra);
     const { gcode, stats } = generateGcode(sliced, settings, { modelName });
     const pv = preview(sliced);
     stats.sliceMs = performance.now() - t0;

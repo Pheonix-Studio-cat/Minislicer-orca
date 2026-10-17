@@ -10,11 +10,13 @@ import { SCALE } from './slicer.js';
 
 export const VERSION = '0.1.0';
 
+// `name` is the curr_bed_type value the printer templates compare against; `label` is what
+// OrcaSlicer shows for it (PrintConfig.cpp, curr_bed_type enum_labels).
 export const BED_TYPES = [
-  { name: 'Textured PEI Plate', key: 'textured_plate_temp' },
-  { name: 'Cool Plate', key: 'cool_plate_temp' },
-  { name: 'Engineering Plate', key: 'eng_plate_temp' },
-  { name: 'High Temp Plate', key: 'hot_plate_temp' },
+  { name: 'Textured PEI Plate', label: 'Textured PEI Plate', key: 'textured_plate_temp' },
+  { name: 'Cool Plate', label: 'Smooth Cool Plate', key: 'cool_plate_temp' },
+  { name: 'Engineering Plate', label: 'Engineering Plate', key: 'eng_plate_temp' },
+  { name: 'High Temp Plate', label: 'Smooth High Temp Plate', key: 'hot_plate_temp' },
 ];
 
 const num = (v) => {
@@ -50,6 +52,7 @@ export function resolveSettings(printer, process, filament, o = {}) {
     return v > 0 ? v : d;
   };
   const filamentRetract = num(filament.filament_retraction_length);
+  const ext = printer.extruders || { count: 1, master: 0, physical_map: [0], nozzle_diameters: [num(m.nozzle_diameter)], max_nozzle_count: [1] };
   const s = {
     printerName: printer.name,
     printerModel: m.printer_model,
@@ -57,8 +60,17 @@ export function resolveSettings(printer, process, filament, o = {}) {
     processName: process.name,
     filamentName: filament.name,
     bed: parseArea(m.printable_area),
+    // Where the nozzle used here can print. Equals the bed except on printers with two extruders,
+    // whose nozzles each miss a strip at one side (extruder_printable_area).
+    area: ext.printable_area
+      ? { minX: ext.printable_area[0], minY: ext.printable_area[1], maxX: ext.printable_area[2], maxY: ext.printable_area[3] }
+      : parseArea(m.printable_area),
+    extruders: ext,
     bedExclude: m.bed_exclude_area && m.bed_exclude_area.length ? parseArea(m.bed_exclude_area) : null,
-    maxHeight: num(m.printable_height),
+    maxHeight: Math.min(num(m.printable_height), ext.printable_height ?? Infinity),
+    coolingFilter: m.cooling_filter_enabled === '1',
+    massLimit: { forceN: num(m.machine_max_force_Y) || 0, bedMassG: num(m.machine_bed_mass_Y) || 0, maxAccelY: num(m.machine_max_acceleration_y) || 0 },
+    cut: { long: m.long_retractions_when_cut ? m.long_retractions_when_cut[0] === '1' : false, distance: num(m.retraction_distances_when_cut) || 0 },
     nozzle: num(m.nozzle_diameter),
     bedType,
     layerHeight: o.layerHeight ?? num(process.layer_height),
@@ -139,6 +151,13 @@ export function resolveSettings(printer, process, filament, o = {}) {
       flushTemp: num(filament.filament_flush_temp),
       flushVolumetric: num(filament.filament_flush_volumetric_speed),
       vitrification: num(filament.temperature_vitrification),
+      orcaId: filament.filament_id || '',
+      chamberTemp: num(filament.chamber_temperatures) || 0,
+      ecLong: filament.long_retractions_when_ec ? filament.long_retractions_when_ec[0] === '1' : false,
+      ecDistance: num(filament.retraction_distances_when_ec) || 0,
+      cutLong: filament.filament_long_retractions_when_cut && num(filament.filament_long_retractions_when_cut) !== undefined
+        ? filament.filament_long_retractions_when_cut[0] === '1' : undefined,
+      cutDistance: num(filament.filament_retraction_distances_when_cut),
     },
     scanFirstLayer: m.scan_first_layer === '1',
     gcode: printer.gcode,
@@ -147,19 +166,97 @@ export function resolveSettings(printer, process, filament, o = {}) {
   return s;
 }
 
-/** Problems that make a plate unprintable, in plain words. */
+/**
+ * Problems that make a plate unprintable, as { text, args }: an English message with %1%… for
+ * the UI to translate, and its arguments. formatMessage() gives the English sentence.
+ */
 export function checkPlacement(s, b) {
   const problems = [];
   const eps = 0.01;
-  if (b.min[0] < s.bed.minX - eps || b.min[1] < s.bed.minY - eps || b.max[0] > s.bed.maxX + eps || b.max[1] > s.bed.maxY + eps) {
-    problems.push(`The model (${b.size[0].toFixed(1)} x ${b.size[1].toFixed(1)} mm) does not fit on the ${s.bed.maxX - s.bed.minX} x ${s.bed.maxY - s.bed.minY} mm bed.`);
+  const mm = (v) => v.toFixed(1);
+  const a = s.area;
+  if (b.min[0] < a.minX - eps || b.min[1] < a.minY - eps || b.max[0] > a.maxX + eps || b.max[1] > a.maxY + eps) {
+    problems.push(s.extruders.count > 1
+      ? { text: 'The model (%1% x %2% mm) does not fit in the %3% x %4% mm area the right nozzle can reach.', args: [mm(b.size[0]), mm(b.size[1]), a.maxX - a.minX, a.maxY - a.minY] }
+      : { text: 'The model (%1% x %2% mm) does not fit on the %3% x %4% mm bed.', args: [mm(b.size[0]), mm(b.size[1]), a.maxX - a.minX, a.maxY - a.minY] });
   }
-  if (b.max[2] > s.maxHeight + eps) problems.push(`The model is ${b.max[2].toFixed(1)} mm tall; the printer allows ${s.maxHeight} mm.`);
+  if (b.max[2] > s.maxHeight + eps) problems.push({ text: 'The model is %1% mm tall; the printer allows %2% mm.', args: [mm(b.max[2]), s.maxHeight] });
   if (s.bedExclude && b.min[0] < s.bedExclude.maxX && b.min[1] < s.bedExclude.maxY) {
-    problems.push('The model overlaps the excluded corner of the bed (front left).');
+    problems.push({ text: 'The model overlaps the excluded corner of the bed (front left).', args: [] });
   }
-  if (s.filament.bedTemp === 0) problems.push(`${s.filament.type} is not recommended on the ${s.bedType}.`);
+  if (s.filament.bedTemp === 0) {
+    problems.push({ text: '%1% is not recommended on the %2%.', args: [s.filament.type, (BED_TYPES.find((x) => x.name === s.bedType) || {}).label || s.bedType] });
+  }
   return problems;
+}
+
+/** Fills %1%, %2%… of a message; `tr` translates the text first (identity for English). */
+export function formatMessage(m, tr = (x) => x) {
+  let out = tr(m.text);
+  m.args.forEach((v, i) => { out = out.split(`%${i + 1}%`).join(String(v)); });
+  return out;
+}
+
+/**
+ * The placeholders newer Bambu templates (A2L, H2 series) read, set the way OrcaSlicer's
+ * GCode::_do_export does for a print with one filament on the printer's master extruder.
+ */
+function multiExtruderVars(s, sliced, box) {
+  const f = s.filament;
+  const ext = s.extruders;
+  const filament = 0; // the only filament
+  // Logical nozzle ids count the nozzles of extruder 0 first (MultiNozzleUtils::build_nozzle_list);
+  // each extruder is listed with one nozzle of the configured diameter.
+  const nozzleId = ext.master;
+  // first_filaments is per physical extruder (match_physical_extruder_for_each_filament).
+  const perPhysical = Array(ext.count).fill(-1);
+  perPhysical[ext.physical_map[ext.master] ?? 0] = filament;
+  const firstLayerArea = (box.bx1 - box.bx0) * (box.by1 - box.by0);
+  return {
+    filament_map: [ext.master + 1],
+    initial_filament_id: filament,
+    initial_no_support_filament_id: filament,
+    current_filament_id: filament,
+    initial_nozzle_id: nozzleId,
+    current_extruder_id: ext.master,
+    nozzle_diameter_at_nozzle_id: ext.nozzle_diameters.slice(),
+    // Hotend ids are only set when a filament may switch nozzles (dynamic nozzle map); with one
+    // filament OrcaSlicer passes -1 (first_hotend_id_for_gcode_placeholder).
+    initial_no_support_hotend: -1,
+    current_hotend: -1,
+    first_filaments: perPhysical.slice(),
+    first_non_support_filaments: perPhysical.slice(),
+    first_non_support_hotend: Array(ext.count).fill(-1),
+    cooling_filter_enabled: s.coolingFilter,
+    retraction_distance_when_cut: f.cutDistance ?? s.cut.distance,
+    long_retraction_when_cut: f.cutLong ?? s.cut.long,
+    retraction_distances_when_cut: [f.cutDistance ?? s.cut.distance],
+    retraction_distance_when_ec: f.ecDistance,
+    long_retraction_when_ec: f.ecLong,
+    max_print_z: Math.ceil(sliced.maxZ),
+    overall_chamber_temperature: f.chamberTemp,
+    chamber_temperature: [f.chamberTemp],
+    min_vitrification_temperature: f.vitrification,
+    temperature_vitrification: [f.vitrification],
+    has_tpu_in_first_layer: f.type === 'TPU',
+    is_all_bbl_filament: f.vendor === 'Bambu Lab',
+    filament_ids: [f.orcaId],
+    filament_max_volumetric_speed: [f.maxVolumetric],
+    // OrcaSlicer: flat (< 0.3 mm) prints covering more than 40000 mm² keep the chamber warm.
+    hold_chamber_temp_for_flat_print: sliced.maxZ < 0.3 && firstLayerArea > 40000,
+    curr_y_acceleration_limit: yAccelerationLimit(s, 0),
+    wipe_tower_center_pos_valid: false,
+    wipe_tower_center_pos_x: 0,
+    wipe_tower_center_pos_y: 0,
+  };
+}
+
+// OrcaSlicer's GCode::mass_load_limited_machine_acceleration: printers with a known Y force and
+// bed mass (A2L) slow the Y axis down as the printed part gets heavier.
+export function yAccelerationLimit(s, printedGrams) {
+  const { forceN, bedMassG, maxAccelY } = s.massLimit;
+  if (!(forceN > 0 && bedMassG > 0) || !(printedGrams > 0)) return maxAccelY;
+  return Math.min((forceN * 1e6) / (bedMassG + printedGrams), maxAccelY);
 }
 
 function dhms(sec) {
@@ -214,7 +311,7 @@ export function generateGcode(sliced, s, { modelName = 'model', date = new Date(
     filament_type: [f.type],
     nozzle_temperature: [f.nozzleTemp],
     nozzle_temperature_initial_layer: [f.nozzleTempFirst],
-    nozzle_diameter: [s.nozzle],
+    nozzle_diameter: s.extruders.nozzle_diameters.slice(),
     retraction_length: [s.retract.length],
     flush_temperatures: [f.flushTemp || f.nozzleTempHigh],
     flush_volumetric_speeds: [f.flushVolumetric || f.maxVolumetric],
@@ -230,6 +327,7 @@ export function generateGcode(sliced, s, { modelName = 'model', date = new Date(
     timelapse_type: 0,
     layer_num: 0,
     layer_z: 0,
+    ...multiExtruderVars(s, sliced, { bx0, by0, bx1, by1 }),
   };
 
   // ---- body (layers) first, so the header can carry the time estimate ----
@@ -264,7 +362,10 @@ export function generateGcode(sliced, s, { modelName = 'model', date = new Date(
     if (f.slowDownTime > 0 && estimate > 0 && estimate < f.slowDownTime) slow = estimate / f.slowDownTime;
 
     body.push('; CHANGE_LAYER', `; Z_HEIGHT: ${f3(L.z)}`, `; LAYER_HEIGHT: ${f3(L.h)}`);
-    body.push(render(s.gcode.layer_change_gcode, { ...vars, layer_num: li, layer_z: L.z, max_layer_z: L.z }).trimEnd());
+    const printedGrams = (extruded * filArea / 1000) * f.density;
+    body.push(render(s.gcode.layer_change_gcode, {
+      ...vars, layer_num: li, layer_z: L.z, max_layer_z: L.z, curr_y_acceleration_limit: yAccelerationLimit(s, printedGrams),
+    }).trimEnd());
     body.push(`M73 P{{P${li}}} R{{R${li}}}`); // filled in once the total time is known
 
     if (li === 1) {

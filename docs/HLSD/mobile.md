@@ -58,10 +58,68 @@ come from `StateColor.cpp`, `GLCanvas3D.cpp` and `3DBed.cpp`, line-type colours 
 setting keys edited in the Process page are OrcaSlicer's: `resolveSettings` merges them over the
 preset like an edited value in OrcaSlicer's process tab.
 
+The button colour is a CSS variable (`--accent`, with a darker `--accent-dark` for dark mode) from
+which hover, focus and checked shades are mixed, so one preference recolours every control.
+
+## Support painting and the flexi cutter
+
+Both act on the slicer through `slice(tris, cfg, progress, extra)`:
+
+- `extra.negatives` is a triangle soup sliced at the same heights as the model and subtracted from
+  each layer's outline, as OrcaSlicer subtracts negative parts. The flexi cutter's joint modules
+  (`mobile/web/flexi/`) are such soups: a thin curved slot with a ball, a socket and a pin in a
+  ring, which splits a limb into two parts that print linked and stay movable.
+- `extra.enforcers` and `extra.blockers` are the painted triangles. As in OrcaSlicer
+  (`PrintObject::project_and_append_custom_facets`), only downward-facing ones count, and the part
+  of each between two slice planes is projected up onto the upper plane. Blockers remove the
+  automatic overhang areas under them (with the neighbouring layers, so rounding to a slab cannot
+  slip past them); enforcers add their area to the overhangs whatever its angle. Both act only when
+  support is enabled, as in OrcaSlicer.
+
+In the app, paint is kept per triangle of the loaded model and joints in the model's own
+coordinates, so both follow rotation, scaling and arranging; `modelMatrix()` reproduces
+`placeOnBed`'s transform for that. The brush paints whole triangles within its radius that face the
+viewer. Input follows tablet drawing apps: once a pen has been used, only the pen paints and
+fingers move the view; before that one finger paints and two fingers turn and zoom.
+
+## User presets (`js/presets.js`)
+
+A user preset is stored as OrcaSlicer stores one: its name, the system preset it `inherits`, and the
+changed values under OrcaSlicer's option keys. Resolving one merges those values over the system
+preset, so a user preset follows profile updates of its base and is offered for every printer whose
+system presets include that base. Name checks follow OrcaSlicer's save dialog. Presets live in the
+browser's `localStorage` — there is no server to keep them — and export/import as JSON in OrcaSlicer's
+user-preset shape, which also lets a single OrcaSlicer user preset be imported.
+
+## Translations
+
+English is the source language. `mobile/tools/build_i18n.py` collects the UI strings (`data-i18n*`
+attributes and the string patterns in the scripts) and writes `mobile/web/i18n/<lang>.json`. For each
+string it takes OrcaSlicer's translation from `localization/i18n` when OrcaSlicer has the same English
+text, so terms match the desktop slicer; where OrcaSlicer translates a word per sense (`msgctxt`) the
+script names the sense it needs. Everything else comes from `mobile/tools/i18n_extra.json` and is
+listed as machine-translated in the catalog's `_meta`. The extras also replace an OrcaSlicer
+translation that has the wrong sense for the mobile UI (the print button's verb where a catalog has
+the noun). Languages without an OrcaSlicer catalog come entirely from the extras. The build fails when
+a string has no translation, and CI fails when the committed catalogs are stale.
+
 ## Profiles
 
 `mobile/tools/build_profiles.py` resolves the supported BBL machine, process and filament presets
-(inheritance and `include`s) into `mobile/web/profiles.json`, keeping the first extruder variant of
-per-variant lists, and copies the icons, printer pictures and bed models the UI uses into
+(inheritance and `include`s) into `mobile/web/profiles.json`, and copies the icons, printer pictures and bed models the UI uses into
 `mobile/web/assets/`. CI rebuilds it and fails when the committed file differs, so profile changes in
 `resources/profiles/BBL` reach the mobile slicer on purpose.
+
+Every system process and filament preset compatible with a printer is kept. Per-variant lists are
+reduced to the one variant the mobile slicer prints with: the "Direct Drive Standard" variant of the
+printer's master extruder.
+
+## Dual-nozzle printers
+
+The H2D, H2D Pro and H2C have two nozzles. With one filament OrcaSlicer prints on the master extruder
+(`master_extruder_id`, the right nozzle) and the mobile slicer does the same: the filament is mapped to
+that extruder (`filament_map`), the template variables are filled as OrcaSlicer fills them for that
+case (physical extruder through `physical_extruder_map`, hotend indices left at -1 so the firmware
+picks the nozzle itself), and placement is checked against that extruder's reachable area, which the
+plate view shades. `slice_info.config` records the nozzle the plate uses. Printing on the left nozzle
+or with two filaments is not supported.

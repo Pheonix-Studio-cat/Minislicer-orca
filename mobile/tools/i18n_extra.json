@@ -1,0 +1,1568 @@
+{
+ "%1% is not recommended on the %2%.": {
+  "cs": "%1% se nedoporučuje na desce %2%.",
+  "da": "%1% anbefales ikke på %2%.",
+  "de": "%1% wird auf der %2% nicht empfohlen.",
+  "es": "No se recomienda %1% en la %2%.",
+  "fi": "%1% ei ole suositeltava alustalle %2%.",
+  "fr": "%1% n'est pas recommandé sur la %2%.",
+  "hu": "A(z) %1% nem ajánlott a(z) %2% tálcán.",
+  "it": "%1% non è consigliato sul %2%.",
+  "ja": "%1%は%2%での使用は推奨されません。",
+  "nb": "%1% anbefales ikke på %2%.",
+  "nl": "%1% wordt niet aanbevolen op de %2%.",
+  "pl": "%1% nie jest zalecany na płycie %2%.",
+  "pt": "%1% não é recomendado na %2%.",
+  "ru": "%1% не рекомендуется для %2%.",
+  "sv": "%1% rekommenderas inte på %2%.",
+  "uk": "%1% не рекомендується для %2%.",
+  "zh_CN": "不建议在%2%上使用%1%。",
+  "zh_TW": "不建議在%2%上使用%1%。"
+ },
+ "%1% presets imported.": {
+  "cs": "Importováno předvoleb: %1%.",
+  "da": "%1% forudindstillinger importeret.",
+  "de": "%1% Profile importiert.",
+  "es": "Se importaron %1% perfiles.",
+  "fi": "%1% esiasetusta tuotu.",
+  "fr": "%1% préréglages importés.",
+  "hu": "%1% beállítás importálva.",
+  "it": "%1% profili importati.",
+  "ja": "%1% 件のプリセットをインポートしました。",
+  "nb": "%1% forhåndsinnstillinger importert.",
+  "nl": "%1% voorinstellingen geïmporteerd.",
+  "pl": "Zaimportowano profile: %1%.",
+  "pt": "%1% predefinições importadas.",
+  "ru": "Импортировано профилей: %1%.",
+  "sv": "%1% förinställningar importerade.",
+  "uk": "Імпортовано пресетів: %1%.",
+  "zh_CN": "已导入 %1% 个预设。",
+  "zh_TW": "已匯入 %1% 個預設。"
+ },
+ "About": {
+  "cs": "O aplikaci",
+  "da": "Om",
+  "de": "Info",
+  "es": "Acerca de",
+  "fi": "Tietoja",
+  "fr": "À propos",
+  "hu": "Névjegy",
+  "it": "Informazioni",
+  "ja": "このアプリについて",
+  "nb": "Om",
+  "nl": "Over",
+  "pl": "O programie",
+  "pt": "Sobre",
+  "ru": "О программе",
+  "sv": "Om",
+  "uk": "Про програму",
+  "zh_CN": "关于",
+  "zh_TW": "關於"
+ },
+ "Add": {
+  "da": "Tilføj",
+  "fi": "Lisää",
+  "nb": "Legg til"
+ },
+ "Add a joint, then tap the model where it goes. The cutter splits the model into parts that print linked and stay movable.": {
+  "cs": "Přidejte kloub a potom klepněte na místo na modelu, kam patří. Řezačka rozdělí model na díly, které se tisknou spojené a zůstanou pohyblivé.",
+  "da": "Tilføj et led, og tryk derefter på modellen, hvor det skal sidde. Skæreren deler modellen i dele, der printes forbundet og forbliver bevægelige.",
+  "de": "Füge ein Gelenk hinzu und tippe dann auf die Stelle im Modell, wo es hin soll. Der Cutter teilt das Modell in Teile, die verbunden gedruckt werden und beweglich bleiben.",
+  "es": "Añade una articulación y toca el modelo donde debe ir. El cortador divide el modelo en piezas que se imprimen unidas y siguen siendo móviles.",
+  "fi": "Lisää nivel ja napauta sitten mallia kohdasta, johon se tulee. Leikkuri jakaa mallin osiin, jotka tulostuvat yhdessä ja pysyvät liikkuvina.",
+  "fr": "Ajoutez une articulation, puis touchez le modèle à l'endroit voulu. Le découpeur divise le modèle en pièces imprimées liées qui restent mobiles.",
+  "hu": "Adjon hozzá egy csuklót, majd koppintson a modellen arra a helyre, ahová kerül. A vágó összekapcsolva nyomtatott, mozgatható részekre osztja a modellt.",
+  "it": "Aggiungi uno snodo, poi tocca il modello nel punto in cui va. La taglierina divide il modello in parti stampate collegate che restano mobili.",
+  "ja": "関節を追加し、配置したいモデルの位置をタップしてください。カッターはモデルを、つながったまま印刷されて動かせる部品に分割します。",
+  "nb": "Legg til et ledd, og trykk deretter på modellen der det skal være. Kutteren deler modellen i deler som skrives ut sammenkoblet og forblir bevegelige.",
+  "nl": "Voeg een scharnier toe en tik daarna op het model waar het moet komen. De snijder verdeelt het model in delen die verbonden worden geprint en beweeglijk blijven.",
+  "pl": "Dodaj przegub, a następnie dotknij modelu w miejscu, w którym ma się znaleźć. Przecinak dzieli model na części drukowane razem, które pozostają ruchome.",
+  "pt": "Adicione uma articulação e toque no modelo onde ela deve ficar. O cortador divide o modelo em partes que são impressas unidas e continuam móveis.",
+  "ru": "Добавьте шарнир, затем коснитесь модели там, где он должен быть. Резак делит модель на части, которые печатаются соединёнными и остаются подвижными.",
+  "sv": "Lägg till en led och tryck sedan på modellen där den ska sitta. Skäraren delar modellen i delar som skrivs ut sammankopplade och förblir rörliga.",
+  "uk": "Додайте шарнір, а потім торкніться моделі там, де він має бути. Різак розділяє модель на частини, які друкуються з'єднаними й залишаються рухомими.",
+  "zh_CN": "添加一个关节，然后点击模型上要放置的位置。切割器会把模型分成相互连接打印、并且可以活动的部分。",
+  "zh_TW": "新增一個關節，然後點選模型上要放置的位置。切割器會把模型分成相互連接列印、並且可以活動的部分。"
+ },
+ "Add a model": {
+  "cs": "Přidat model",
+  "da": "Tilføj en model",
+  "de": "Modell hinzufügen",
+  "es": "Añadir un modelo",
+  "fi": "Lisää malli",
+  "fr": "Ajouter un modèle",
+  "hu": "Modell hozzáadása",
+  "it": "Aggiungi un modello",
+  "ja": "モデルを追加",
+  "nb": "Legg til en modell",
+  "nl": "Model toevoegen",
+  "pl": "Dodaj model",
+  "pt": "Adicionar um modelo",
+  "ru": "Добавить модель",
+  "sv": "Lägg till en modell",
+  "uk": "Додати модель",
+  "zh_CN": "添加模型",
+  "zh_TW": "新增模型"
+ },
+ "Arrange": {
+  "da": "Arranger",
+  "fi": "Järjestä",
+  "nb": "Ordne"
+ },
+ "Bambu Connect not found": {
+  "cs": "Bambu Connect nebyl nalezen",
+  "da": "Bambu Connect blev ikke fundet",
+  "de": "Bambu Connect nicht gefunden",
+  "es": "No se encontró Bambu Connect",
+  "fi": "Bambu Connectia ei löytynyt",
+  "fr": "Bambu Connect introuvable",
+  "hu": "A Bambu Connect nem található",
+  "it": "Bambu Connect non trovato",
+  "ja": "Bambu Connect が見つかりません",
+  "nb": "Fant ikke Bambu Connect",
+  "nl": "Bambu Connect niet gevonden",
+  "pl": "Nie znaleziono Bambu Connect",
+  "pt": "Bambu Connect não encontrado",
+  "ru": "Bambu Connect не найден",
+  "sv": "Bambu Connect hittades inte",
+  "uk": "Bambu Connect не знайдено",
+  "zh_CN": "未找到 Bambu Connect",
+  "zh_TW": "找不到 Bambu Connect"
+ },
+ "Bambu Connect runs on Windows and macOS only.": {
+  "cs": "Bambu Connect běží pouze ve Windows a macOS.",
+  "da": "Bambu Connect kører kun på Windows og macOS.",
+  "de": "Bambu Connect gibt es nur für Windows und macOS.",
+  "es": "Bambu Connect solo funciona en Windows y macOS.",
+  "fi": "Bambu Connect toimii vain Windowsissa ja macOS:ssä.",
+  "fr": "Bambu Connect fonctionne uniquement sous Windows et macOS.",
+  "hu": "A Bambu Connect csak Windowson és macOS-en fut.",
+  "it": "Bambu Connect funziona solo su Windows e macOS.",
+  "ja": "Bambu Connect は Windows と macOS でのみ動作します。",
+  "nb": "Bambu Connect kjører bare på Windows og macOS.",
+  "nl": "Bambu Connect werkt alleen op Windows en macOS.",
+  "pl": "Bambu Connect działa tylko w systemach Windows i macOS.",
+  "pt": "O Bambu Connect funciona apenas no Windows e no macOS.",
+  "ru": "Bambu Connect работает только в Windows и macOS.",
+  "sv": "Bambu Connect finns bara för Windows och macOS.",
+  "uk": "Bambu Connect працює лише у Windows і macOS.",
+  "zh_CN": "Bambu Connect 仅支持 Windows 和 macOS。",
+  "zh_TW": "Bambu Connect 僅支援 Windows 和 macOS。"
+ },
+ "Basic information": {
+  "da": "Grundlæggende oplysninger",
+  "fi": "Perustiedot",
+  "nb": "Grunnleggende informasjon"
+ },
+ "Bed adhesion": {
+  "da": "Vedhæftning til pladen",
+  "fi": "Tarttuvuus alustaan",
+  "nb": "Feste til platen"
+ },
+ "Bed temperature": {
+  "da": "Pladetemperatur",
+  "fi": "Alustan lämpötila",
+  "nb": "Platetemperatur"
+ },
+ "Block supports": {
+  "da": "Bloker support",
+  "fi": "Estä tuet",
+  "nb": "Blokker støtte"
+ },
+ "Blue": {
+  "da": "Blå",
+  "fi": "Sininen",
+  "nb": "Blå"
+ },
+ "Bottom shell layers": {
+  "da": "Bundlag",
+  "fi": "Pohjakerrokset",
+  "nb": "Bunnlag"
+ },
+ "Bottom surface": {
+  "da": "Bundflade",
+  "fi": "Pohjapinta",
+  "nb": "Bunnflate"
+ },
+ "Brim": {
+  "da": "Brim",
+  "fi": "Reunus",
+  "nb": "Brim"
+ },
+ "Brim type": {
+  "da": "Brim-type",
+  "fi": "Reunuksen tyyppi",
+  "nb": "Brim-type"
+ },
+ "Brim width": {
+  "da": "Brim-bredde",
+  "fi": "Reunuksen leveys",
+  "nb": "Brim-bredde"
+ },
+ "Brush size": {
+  "da": "Penselstørrelse",
+  "fi": "Siveltimen koko",
+  "nb": "Penselstørrelse"
+ },
+ "Button color": {
+  "cs": "Barva tlačítek",
+  "da": "Knapfarve",
+  "de": "Knopffarbe",
+  "es": "Color de los botones",
+  "fi": "Painikkeiden väri",
+  "fr": "Couleur des boutons",
+  "hu": "Gombszín",
+  "it": "Colore dei pulsanti",
+  "ja": "ボタンの色",
+  "nb": "Knappefarge",
+  "nl": "Knopkleur",
+  "pl": "Kolor przycisków",
+  "pt": "Cor dos botões",
+  "ru": "Цвет кнопок",
+  "sv": "Knappfärg",
+  "uk": "Колір кнопок",
+  "zh_CN": "按钮颜色",
+  "zh_TW": "按鈕顏色"
+ },
+ "Cancel": {
+  "da": "Annuller",
+  "fi": "Peruuta",
+  "nb": "Avbryt"
+ },
+ "Close": {
+  "da": "Luk",
+  "fi": "Sulje",
+  "nb": "Lukk"
+ },
+ "Color": {
+  "da": "Farve",
+  "fi": "Väri",
+  "nb": "Farge"
+ },
+ "Cooling": {
+  "da": "Køling",
+  "fi": "Jäähdytys",
+  "nb": "Kjøling"
+ },
+ "Cooling for specific layer": {
+  "da": "Køling for bestemte lag",
+  "fi": "Jäähdytys tietyille kerroksille",
+  "nb": "Kjøling for bestemte lag"
+ },
+ "Could not import: %1%": {
+  "cs": "Import se nezdařil: %1%",
+  "da": "Kunne ikke importere: %1%",
+  "de": "Import fehlgeschlagen: %1%",
+  "es": "No se pudo importar: %1%",
+  "fi": "Tuonti epäonnistui: %1%",
+  "fr": "Importation impossible : %1%",
+  "hu": "Az importálás sikertelen: %1%",
+  "it": "Impossibile importare: %1%",
+  "ja": "インポートできませんでした: %1%",
+  "nb": "Kunne ikke importere: %1%",
+  "nl": "Importeren mislukt: %1%",
+  "pl": "Nie można zaimportować: %1%",
+  "pt": "Não foi possível importar: %1%",
+  "ru": "Не удалось импортировать: %1%",
+  "sv": "Kunde inte importera: %1%",
+  "uk": "Не вдалося імпортувати: %1%",
+  "zh_CN": "无法导入：%1%",
+  "zh_TW": "無法匯入：%1%"
+ },
+ "Could not open %1%: %2%": {
+  "cs": "Nelze otevřít %1%: %2%",
+  "da": "Kunne ikke åbne %1%: %2%",
+  "de": "%1% konnte nicht geöffnet werden: %2%",
+  "es": "No se pudo abrir %1%: %2%",
+  "fi": "Tiedostoa %1% ei voitu avata: %2%",
+  "fr": "Impossible d'ouvrir %1% : %2%",
+  "hu": "Nem sikerült megnyitni: %1%: %2%",
+  "it": "Impossibile aprire %1%: %2%",
+  "ja": "%1% を開けませんでした: %2%",
+  "nb": "Kunne ikke åpne %1%: %2%",
+  "nl": "Kan %1% niet openen: %2%",
+  "pl": "Nie można otworzyć %1%: %2%",
+  "pt": "Não foi possível abrir %1%: %2%",
+  "ru": "Не удалось открыть %1%: %2%",
+  "sv": "Kunde inte öppna %1%: %2%",
+  "uk": "Не вдалося відкрити %1%: %2%",
+  "zh_CN": "无法打开 %1%：%2%",
+  "zh_TW": "無法開啟 %1%：%2%"
+ },
+ "Could not save: the browser storage is full or disabled.": {
+  "cs": "Nelze uložit: úložiště prohlížeče je plné nebo zakázané.",
+  "da": "Kunne ikke gemme: browserens lager er fuldt eller deaktiveret.",
+  "de": "Speichern fehlgeschlagen: Der Browserspeicher ist voll oder deaktiviert.",
+  "es": "No se pudo guardar: el almacenamiento del navegador está lleno o desactivado.",
+  "fi": "Tallennus epäonnistui: selaimen tallennustila on täynnä tai poistettu käytöstä.",
+  "fr": "Enregistrement impossible : le stockage du navigateur est plein ou désactivé.",
+  "hu": "A mentés sikertelen: a böngésző tárhelye megtelt vagy le van tiltva.",
+  "it": "Impossibile salvare: la memoria del browser è piena o disattivata.",
+  "ja": "保存できませんでした: ブラウザのストレージがいっぱいか、無効になっています。",
+  "nb": "Kunne ikke lagre: nettleserlagringen er full eller deaktivert.",
+  "nl": "Opslaan mislukt: de browseropslag is vol of uitgeschakeld.",
+  "pl": "Nie można zapisać: pamięć przeglądarki jest pełna lub wyłączona.",
+  "pt": "Não foi possível salvar: o armazenamento do navegador está cheio ou desativado.",
+  "ru": "Не удалось сохранить: хранилище браузера заполнено или отключено.",
+  "sv": "Kunde inte spara: webbläsarens lagring är full eller avstängd.",
+  "uk": "Не вдалося зберегти: сховище браузера заповнене або вимкнене.",
+  "zh_CN": "无法保存：浏览器存储已满或已禁用。",
+  "zh_TW": "無法儲存：瀏覽器儲存空間已滿或已停用。"
+ },
+ "Could not send: %1%": {
+  "cs": "Odeslání se nezdařilo: %1%",
+  "da": "Kunne ikke sende: %1%",
+  "de": "Senden fehlgeschlagen: %1%",
+  "es": "No se pudo enviar: %1%",
+  "fi": "Lähetys epäonnistui: %1%",
+  "fr": "Envoi impossible : %1%",
+  "hu": "A küldés sikertelen: %1%",
+  "it": "Impossibile inviare: %1%",
+  "ja": "送信できませんでした: %1%",
+  "nb": "Kunne ikke sende: %1%",
+  "nl": "Verzenden mislukt: %1%",
+  "pl": "Nie można wysłać: %1%",
+  "pt": "Não foi possível enviar: %1%",
+  "ru": "Не удалось отправить: %1%",
+  "sv": "Kunde inte skicka: %1%",
+  "uk": "Не вдалося надіслати: %1%",
+  "zh_CN": "无法发送：%1%",
+  "zh_TW": "無法傳送：%1%"
+ },
+ "Custom": {
+  "da": "Brugerdefineret",
+  "fi": "Mukautettu",
+  "nb": "Egendefinert"
+ },
+ "Delete": {
+  "da": "Slet",
+  "fi": "Poista",
+  "nb": "Slett"
+ },
+ "Delete preset": {
+  "da": "Slet forudindstilling",
+  "fi": "Poista esiasetus",
+  "nb": "Slett forhåndsinnstilling"
+ },
+ "Density": {
+  "da": "Densitet",
+  "fi": "Tiheys",
+  "nb": "Tetthet"
+ },
+ "Diameter": {
+  "da": "Diameter",
+  "fi": "Halkaisija",
+  "nb": "Diameter"
+ },
+ "Done": {
+  "da": "Færdig",
+  "fi": "Valmis",
+  "nb": "Ferdig"
+ },
+ "Draw with a pen or one finger; two fingers turn and zoom the view.": {
+  "cs": "Kreslete perem nebo jedním prstem; dvěma prsty otáčíte a přibližujete pohled.",
+  "da": "Tegn med en pen eller én finger; to fingre drejer og zoomer visningen.",
+  "de": "Mit Stift oder einem Finger malen; mit zwei Fingern die Ansicht drehen und zoomen.",
+  "es": "Dibuja con un lápiz o un dedo; con dos dedos giras y haces zoom en la vista.",
+  "fi": "Piirrä kynällä tai yhdellä sormella; kahdella sormella käännät ja zoomaat näkymää.",
+  "fr": "Dessinez avec un stylet ou un doigt ; deux doigts font pivoter et zoomer la vue.",
+  "hu": "Rajzoljon tollal vagy egy ujjal; két ujjal forgathatja és nagyíthatja a nézetet.",
+  "it": "Disegna con una penna o con un dito; con due dita ruoti e ingrandisci la vista.",
+  "ja": "ペンまたは指1本で描画し、指2本でビューを回転・ズームします。",
+  "nb": "Tegn med en penn eller én finger; to fingre roterer og zoomer visningen.",
+  "nl": "Teken met een pen of één vinger; met twee vingers draai en zoom je de weergave.",
+  "pl": "Rysuj rysikiem lub jednym palcem; dwoma palcami obracasz i powiększasz widok.",
+  "pt": "Desenhe com uma caneta ou um dedo; dois dedos giram e ampliam a visualização.",
+  "ru": "Рисуйте пером или одним пальцем; двумя пальцами вращайте и масштабируйте вид.",
+  "sv": "Rita med en penna eller ett finger; två fingrar vrider och zoomar vyn.",
+  "uk": "Малюйте пером або одним пальцем; двома пальцями обертайте й масштабуйте вигляд.",
+  "zh_CN": "用触控笔或一根手指绘制；用两根手指旋转和缩放视图。",
+  "zh_TW": "用觸控筆或一根手指繪製；用兩根手指旋轉和縮放視圖。"
+ },
+ "Draw with the pen; fingers turn and zoom the view.": {
+  "cs": "Kreslete perem; prsty otáčíte a přibližujete pohled.",
+  "da": "Tegn med pennen; fingrene drejer og zoomer visningen.",
+  "de": "Mit dem Stift malen; mit den Fingern die Ansicht drehen und zoomen.",
+  "es": "Dibuja con el lápiz; con los dedos giras y haces zoom en la vista.",
+  "fi": "Piirrä kynällä; sormilla käännät ja zoomaat näkymää.",
+  "fr": "Dessinez avec le stylet ; les doigts font pivoter et zoomer la vue.",
+  "hu": "Rajzoljon a tollal; ujjaival forgathatja és nagyíthatja a nézetet.",
+  "it": "Disegna con la penna; con le dita ruoti e ingrandisci la vista.",
+  "ja": "ペンで描画し、指でビューを回転・ズームします。",
+  "nb": "Tegn med pennen; fingrene roterer og zoomer visningen.",
+  "nl": "Teken met de pen; met je vingers draai en zoom je de weergave.",
+  "pl": "Rysuj rysikiem; palcami obracasz i powiększasz widok.",
+  "pt": "Desenhe com a caneta; os dedos giram e ampliam a visualização.",
+  "ru": "Рисуйте пером; пальцами вращайте и масштабируйте вид.",
+  "sv": "Rita med pennan; fingrarna vrider och zoomar vyn.",
+  "uk": "Малюйте пером; пальцями обертайте й масштабуйте вигляд.",
+  "zh_CN": "用触控笔绘制；用手指旋转和缩放视图。",
+  "zh_TW": "用觸控筆繪製；用手指旋轉和縮放視圖。"
+ },
+ "Edit preset": {
+  "da": "Rediger forudindstilling",
+  "fi": "Muokkaa esiasetusta",
+  "nb": "Rediger forhåndsinnstilling"
+ },
+ "Enable support": {
+  "da": "Aktivér support",
+  "fi": "Ota tuki käyttöön",
+  "nb": "Aktiver støtte"
+ },
+ "Enforce supports": {
+  "da": "Gennemtving support",
+  "fi": "Pakota tuet",
+  "nb": "Tving støtte"
+ },
+ "Engineering Plate": {
+  "da": "Engineering-plade",
+  "fi": "Engineering-alusta",
+  "nb": "Engineering-plate"
+ },
+ "Erase": {
+  "da": "Visk ud",
+  "fi": "Pyyhi",
+  "nb": "Visk ut"
+ },
+ "Erase all": {
+  "da": "Visk alt ud",
+  "fi": "Pyyhi kaikki",
+  "nb": "Visk ut alt"
+ },
+ "Export": {
+  "da": "Eksportér",
+  "fi": "Vie",
+  "nb": "Eksporter"
+ },
+ "Export G-code file": {
+  "da": "Eksportér G-kodefil",
+  "fi": "Vie G-code-tiedosto",
+  "nb": "Eksporter G-kodefil"
+ },
+ "Export Presets": {
+  "da": "Eksportér forudindstillinger",
+  "fi": "Vie esiasetukset",
+  "nb": "Eksporter forhåndsinnstillinger"
+ },
+ "Export plate sliced file": {
+  "da": "Eksportér slicet fil for pladen",
+  "fi": "Vie alustan viipaloitu tiedosto",
+  "nb": "Eksporter slicet fil for platen"
+ },
+ "Filament": {
+  "da": "Filament",
+  "fi": "Filamentti",
+  "nb": "Filament"
+ },
+ "Filament settings": {
+  "da": "Filamentindstillinger",
+  "fi": "Filamenttiasetukset",
+  "nb": "Filamentinnstillinger"
+ },
+ "First layer": {
+  "da": "Første lag",
+  "fi": "Ensimmäinen kerros",
+  "nb": "Første lag"
+ },
+ "First layer bed temperature": {
+  "da": "Pladetemperatur første lag",
+  "fi": "Alustan lämpötila, ensimmäinen kerros",
+  "nb": "Platetemperatur første lag"
+ },
+ "First layer height": {
+  "da": "Højde første lag",
+  "fi": "Ensimmäisen kerroksen korkeus",
+  "nb": "Høyde første lag"
+ },
+ "First layer infill": {
+  "da": "Fyld første lag",
+  "fi": "Ensimmäisen kerroksen täyttö",
+  "nb": "Fyll første lag"
+ },
+ "First layer nozzle temperature": {
+  "da": "Dysetemperatur første lag",
+  "fi": "Suuttimen lämpötila, ensimmäinen kerros",
+  "nb": "Dysetemperatur første lag"
+ },
+ "First layer speed": {
+  "da": "Hastighed første lag",
+  "fi": "Ensimmäisen kerroksen nopeus",
+  "nb": "Hastighet første lag"
+ },
+ "Flexi cutter": {
+  "cs": "Flexi řezačka",
+  "da": "Flexi-skærer",
+  "de": "Flexi-Cutter",
+  "es": "Cortador flexi",
+  "fi": "Flexi-leikkuri",
+  "fr": "Découpeur flexi",
+  "hu": "Flexi vágó",
+  "it": "Taglierina flexi",
+  "ja": "フレキシカッター",
+  "nb": "Flexi-kutter",
+  "nl": "Flexi-snijder",
+  "pl": "Przecinak flexi",
+  "pt": "Cortador flexi",
+  "ru": "Флекси-резак",
+  "sv": "Flexi-skärare",
+  "uk": "Флексі-різак",
+  "zh_CN": "Flexi 切割器",
+  "zh_TW": "Flexi 切割器"
+ },
+ "Flow ratio": {
+  "da": "Flowforhold",
+  "fi": "Virtaussuhde",
+  "nb": "Flytforhold"
+ },
+ "General": {
+  "da": "Generelt",
+  "fi": "Yleiset",
+  "nb": "Generelt"
+ },
+ "Global": {
+  "da": "Global",
+  "fi": "Yleinen",
+  "nb": "Global"
+ },
+ "Import Configs": {
+  "da": "Importér konfigurationer",
+  "fi": "Tuo asetukset",
+  "nb": "Importer konfigurasjoner"
+ },
+ "Inner wall": {
+  "da": "Indre væg",
+  "fi": "Sisäseinä",
+  "nb": "Indre vegg"
+ },
+ "Internal solid infill": {
+  "da": "Indre massiv fyldning",
+  "fi": "Sisäinen kiinteä täyttö",
+  "nb": "Indre massivt fyll"
+ },
+ "Joint %1%": {
+  "cs": "Kloub %1%",
+  "da": "Led %1%",
+  "de": "Gelenk %1%",
+  "es": "Articulación %1%",
+  "fi": "Nivel %1%",
+  "fr": "Articulation %1%",
+  "hu": "%1%. csukló",
+  "it": "Snodo %1%",
+  "ja": "関節 %1%",
+  "nb": "Ledd %1%",
+  "nl": "Scharnier %1%",
+  "pl": "Przegub %1%",
+  "pt": "Articulação %1%",
+  "ru": "Шарнир %1%",
+  "sv": "Led %1%",
+  "uk": "Шарнір %1%",
+  "zh_CN": "关节 %1%",
+  "zh_TW": "關節 %1%"
+ },
+ "Language": {
+  "da": "Sprog",
+  "fi": "Kieli",
+  "nb": "Språk"
+ },
+ "Layer height": {
+  "da": "Laghøjde",
+  "fi": "Kerroskorkeus",
+  "nb": "Lagtykkelse"
+ },
+ "Layer time": {
+  "da": "Lagtid",
+  "fi": "Kerrosaika",
+  "nb": "Lagtid"
+ },
+ "Layers": {
+  "da": "Lag",
+  "fi": "Kerrokset",
+  "nb": "Lag"
+ },
+ "Layout, icons and settings come from OrcaSlicer. Not affiliated with Bambu Lab or OrcaSlicer.": {
+  "cs": "Rozvržení, ikony a nastavení pocházejí z OrcaSliceru. Bez vazby na Bambu Lab či OrcaSlicer.",
+  "da": "Layout, ikoner og indstillinger stammer fra OrcaSlicer. Ikke tilknyttet Bambu Lab eller OrcaSlicer.",
+  "de": "Aufbau, Symbole und Einstellungen stammen aus OrcaSlicer. Keine Verbindung zu Bambu Lab oder OrcaSlicer.",
+  "es": "El diseño, los iconos y los ajustes proceden de OrcaSlicer. Sin relación con Bambu Lab ni con OrcaSlicer.",
+  "fi": "Asettelu, kuvakkeet ja asetukset ovat peräisin OrcaSlicerista. Ei yhteydessä Bambu Labiin tai OrcaSliceriin.",
+  "fr": "La disposition, les icônes et les réglages proviennent d'OrcaSlicer. Sans lien avec Bambu Lab ni OrcaSlicer.",
+  "hu": "Az elrendezés, az ikonok és a beállítások az OrcaSlicerből származnak. Nem kapcsolódik a Bambu Labhez vagy az OrcaSlicerhez.",
+  "it": "Layout, icone e impostazioni provengono da OrcaSlicer. Non affiliato a Bambu Lab né a OrcaSlicer.",
+  "ja": "レイアウト、アイコン、設定は OrcaSlicer に由来します。Bambu Lab および OrcaSlicer とは関係ありません。",
+  "nb": "Oppsett, ikoner og innstillinger kommer fra OrcaSlicer. Ikke tilknyttet Bambu Lab eller OrcaSlicer.",
+  "nl": "Indeling, pictogrammen en instellingen komen uit OrcaSlicer. Niet verbonden aan Bambu Lab of OrcaSlicer.",
+  "pl": "Układ, ikony i ustawienia pochodzą z OrcaSlicer. Brak powiązań z Bambu Lab ani OrcaSlicer.",
+  "pt": "O layout, os ícones e as configurações vêm do OrcaSlicer. Sem afiliação com a Bambu Lab ou o OrcaSlicer.",
+  "ru": "Интерфейс, значки и настройки взяты из OrcaSlicer. Не связано с Bambu Lab или OrcaSlicer.",
+  "sv": "Layout, ikoner och inställningar kommer från OrcaSlicer. Inte knutet till Bambu Lab eller OrcaSlicer.",
+  "uk": "Макет, значки й налаштування взято з OrcaSlicer. Не пов’язано з Bambu Lab чи OrcaSlicer.",
+  "zh_CN": "布局、图标和设置来自 OrcaSlicer。与 Bambu Lab 或 OrcaSlicer 无关联。",
+  "zh_TW": "版面、圖示和設定來自 OrcaSlicer。與 Bambu Lab 或 OrcaSlicer 無關聯。"
+ },
+ "Licences and notices": {
+  "cs": "Licence a upozornění",
+  "da": "Licenser og meddelelser",
+  "de": "Lizenzen und Hinweise",
+  "es": "Licencias y avisos",
+  "fi": "Lisenssit ja huomautukset",
+  "fr": "Licences et mentions",
+  "hu": "Licencek és közlemények",
+  "it": "Licenze e avvisi",
+  "ja": "ライセンスと告知",
+  "nb": "Lisenser og merknader",
+  "nl": "Licenties en vermeldingen",
+  "pl": "Licencje i informacje",
+  "pt": "Licenças e avisos",
+  "ru": "Лицензии и уведомления",
+  "sv": "Licenser och meddelanden",
+  "uk": "Ліцензії та примітки",
+  "zh_CN": "许可证与声明",
+  "zh_TW": "授權與聲明"
+ },
+ "Line Type": {
+  "da": "Linjetype",
+  "fi": "Viivatyyppi",
+  "nb": "Linjetype"
+ },
+ "Max fan speed": {
+  "cs": "Max. rychlost ventilátoru",
+  "da": "Maks. blæserhastighed",
+  "de": "Max. Lüftergeschwindigkeit",
+  "es": "Velocidad máxima del ventilador",
+  "fi": "Tuulettimen maksiminopeus",
+  "fr": "Vitesse maximale du ventilateur",
+  "hu": "Max. ventilátor-fordulatszám",
+  "it": "Velocità massima ventola",
+  "ja": "最大ファン速度",
+  "nb": "Maks. viftehastighet",
+  "nl": "Maximale ventilatorsnelheid",
+  "pl": "Maks. prędkość wentylatora",
+  "pt": "Velocidade máxima da ventoinha",
+  "ru": "Макс. скорость вентилятора",
+  "sv": "Max fläkthastighet",
+  "uk": "Макс. швидкість вентилятора",
+  "zh_CN": "最大风扇速度",
+  "zh_TW": "最大風扇速度"
+ },
+ "Max volumetric speed": {
+  "da": "Maks. volumetrisk hastighed",
+  "fi": "Suurin tilavuusnopeus",
+  "nb": "Maks. volumetrisk hastighet"
+ },
+ "Min fan speed": {
+  "cs": "Min. rychlost ventilátoru",
+  "da": "Min. blæserhastighed",
+  "de": "Min. Lüftergeschwindigkeit",
+  "es": "Velocidad mínima del ventilador",
+  "fi": "Tuulettimen miniminopeus",
+  "fr": "Vitesse minimale du ventilateur",
+  "hu": "Min. ventilátor-fordulatszám",
+  "it": "Velocità minima ventola",
+  "ja": "最小ファン速度",
+  "nb": "Min. viftehastighet",
+  "nl": "Minimale ventilatorsnelheid",
+  "pl": "Min. prędkość wentylatora",
+  "pt": "Velocidade mínima da ventoinha",
+  "ru": "Мин. скорость вентилятора",
+  "sv": "Min fläkthastighet",
+  "uk": "Мін. швидкість вентилятора",
+  "zh_CN": "最小风扇速度",
+  "zh_TW": "最小風扇速度"
+ },
+ "Min print speed": {
+  "da": "Min. printhastighed",
+  "fi": "Pienin tulostusnopeus",
+  "nb": "Min. utskriftshastighet"
+ },
+ "Minislicer Mobile %1% is free software under the": {
+  "cs": "Minislicer Mobile %1% je svobodný software pod licencí",
+  "da": "Minislicer Mobile %1% er fri software under",
+  "de": "Minislicer Mobile %1% ist freie Software unter der",
+  "es": "Minislicer Mobile %1% es software libre bajo la",
+  "fi": "Minislicer Mobile %1% on vapaa ohjelmisto, lisenssi:",
+  "fr": "Minislicer Mobile %1% est un logiciel libre sous",
+  "hu": "A Minislicer Mobile %1% szabad szoftver, licenc:",
+  "it": "Minislicer Mobile %1% è software libero sotto la",
+  "ja": "Minislicer Mobile %1% はフリーソフトウェアです。ライセンス:",
+  "nb": "Minislicer Mobile %1% er fri programvare under",
+  "nl": "Minislicer Mobile %1% is vrije software onder de",
+  "pl": "Minislicer Mobile %1% to wolne oprogramowanie na licencji",
+  "pt": "O Minislicer Mobile %1% é software livre sob a",
+  "ru": "Minislicer Mobile %1% — свободное ПО по лицензии",
+  "sv": "Minislicer Mobile %1% är fri programvara under",
+  "uk": "Minislicer Mobile %1% — вільне програмне забезпечення за ліцензією",
+  "zh_CN": "Minislicer Mobile %1% 是自由软件，许可证：",
+  "zh_TW": "Minislicer Mobile %1% 是自由軟體，授權："
+ },
+ "Model printing time": {
+  "da": "Printtid for modellen",
+  "fi": "Mallin tulostusaika",
+  "nb": "Utskriftstid for modellen"
+ },
+ "Module %1%": {
+  "cs": "Modul %1%",
+  "da": "Modul %1%",
+  "de": "Modul %1%",
+  "es": "Módulo %1%",
+  "fi": "Moduuli %1%",
+  "fr": "Module %1%",
+  "hu": "%1%. modul",
+  "it": "Modulo %1%",
+  "ja": "モジュール %1%",
+  "nb": "Modul %1%",
+  "nl": "Module %1%",
+  "pl": "Moduł %1%",
+  "pt": "Módulo %1%",
+  "ru": "Модуль %1%",
+  "sv": "Modul %1%",
+  "uk": "Модуль %1%",
+  "zh_CN": "模块 %1%",
+  "zh_TW": "模組 %1%"
+ },
+ "Moves": {
+  "cs": "Pohyby",
+  "da": "Bevægelser",
+  "de": "Bewegungen",
+  "es": "Movimientos",
+  "fi": "Liikkeet",
+  "fr": "Déplacements",
+  "hu": "Mozgások",
+  "it": "Movimenti",
+  "ja": "移動",
+  "nb": "Bevegelser",
+  "nl": "Bewegingen",
+  "pl": "Ruchy",
+  "pt": "Movimentos",
+  "ru": "Перемещения",
+  "sv": "Förflyttningar",
+  "uk": "Переміщення",
+  "zh_CN": "移动",
+  "zh_TW": "移動"
+ },
+ "Name": {
+  "da": "Navn",
+  "fi": "Nimi",
+  "nb": "Navn"
+ },
+ "No cooling for the first": {
+  "da": "Ingen køling for de første",
+  "fi": "Ei jäähdytystä ensimmäisille",
+  "nb": "Ingen kjøling for de første"
+ },
+ "No paired runner: use the arrow next to Print plate to export the file, or start the Minislicer Runner and scan its QR code.": {
+  "cs": "Žádný spárovaný runner: soubor exportujte šipkou vedle „Tisková deska“, nebo spusťte Minislicer Runner a naskenujte jeho QR kód.",
+  "da": "Ingen parret runner: brug pilen ved siden af \"Udskriv plade\" for at eksportere filen, eller start Minislicer Runner og scan dens QR-kode.",
+  "de": "Kein gekoppelter Runner: Exportieren Sie die Datei über den Pfeil neben „Aktuelle Platte drucken“, oder starten Sie den Minislicer Runner und scannen Sie seinen QR-Code.",
+  "es": "No hay runner emparejado: usa la flecha junto a «Imprimir cama» para exportar el archivo, o inicia Minislicer Runner y escanea su código QR.",
+  "fi": "Ei yhdistettyä runneria: vie tiedosto Tulosta alusta -painikkeen vieressä olevasta nuolesta tai käynnistä Minislicer Runner ja skannaa sen QR-koodi.",
+  "fr": "Aucun runner appairé : utilisez la flèche à côté de « Imprimer la plaque » pour exporter le fichier, ou lancez Minislicer Runner et scannez son QR code.",
+  "hu": "Nincs párosított runner: a fájlt a „Nyomtatótálca” melletti nyíllal exportálhatja, vagy indítsa el a Minislicer Runnert, és olvassa be a QR-kódját.",
+  "it": "Nessun runner associato: usa la freccia accanto a «Piatto di stampa» per esportare il file, oppure avvia Minislicer Runner e scansiona il suo codice QR.",
+  "ja": "ペアリング済みの Runner がありません:「造形開始」の横の矢印からファイルをエクスポートするか、Minislicer Runner を起動して QR コードを読み取ってください。",
+  "nb": "Ingen sammenkoblet runner: bruk pilen ved siden av «Skriv ut plate» for å eksportere filen, eller start Minislicer Runner og skann QR-koden.",
+  "nl": "Geen gekoppelde runner: gebruik de pijl naast \"Printplaat\" om het bestand te exporteren, of start Minislicer Runner en scan de QR-code.",
+  "pl": "Brak sparowanego runnera: użyj strzałki obok „Drukuj aktualną płytę”, aby wyeksportować plik, lub uruchom Minislicer Runner i zeskanuj jego kod QR.",
+  "pt": "Nenhum runner pareado: use a seta ao lado de \"Imprimir placa\" para exportar o arquivo, ou inicie o Minislicer Runner e leia o código QR.",
+  "ru": "Нет сопряжённого runner: экспортируйте файл стрелкой рядом с «Распечатать стол» или запустите Minislicer Runner и отсканируйте его QR-код.",
+  "sv": "Ingen parkopplad runner: använd pilen bredvid \"Skriv ut byggplattan\" för att exportera filen, eller starta Minislicer Runner och skanna dess QR-kod.",
+  "uk": "Немає спареного runner: експортуйте файл стрілкою поруч із «Друкувати пластину» або запустіть Minislicer Runner і відскануйте його QR-код.",
+  "zh_CN": "未配对 Runner：请使用“打印单盘”旁的箭头导出文件，或启动 Minislicer Runner 并扫描其二维码。",
+  "zh_TW": "未配對 Runner：請使用「列印單一列印板」旁的箭頭匯出檔案，或啟動 Minislicer Runner 並掃描其 QR 碼。"
+ },
+ "No runner - export only": {
+  "cs": "Žádný runner – pouze export",
+  "da": "Ingen runner – kun eksport",
+  "de": "Kein Runner – nur Export",
+  "es": "Sin runner: solo exportar",
+  "fi": "Ei runneria – vain vienti",
+  "fr": "Pas de runner – export uniquement",
+  "hu": "Nincs runner – csak exportálás",
+  "it": "Nessun runner – solo esportazione",
+  "ja": "Runner なし – エクスポートのみ",
+  "nb": "Ingen runner – kun eksport",
+  "nl": "Geen runner – alleen exporteren",
+  "pl": "Brak runnera – tylko eksport",
+  "pt": "Sem runner – somente exportar",
+  "ru": "Нет runner – только экспорт",
+  "sv": "Ingen runner – endast export",
+  "uk": "Немає runner – лише експорт",
+  "zh_CN": "无 Runner – 仅导出",
+  "zh_TW": "無 Runner – 僅匯出"
+ },
+ "No-brim": {
+  "da": "Ingen brim",
+  "fi": "Ei reunusta",
+  "nb": "Ingen brim"
+ },
+ "Nozzle %1% mm": {
+  "cs": "Tryska %1% mm",
+  "da": "Dyse %1% mm",
+  "de": "Düse %1% mm",
+  "es": "Boquilla %1% mm",
+  "fi": "Suutin %1% mm",
+  "fr": "Buse %1% mm",
+  "hu": "Fúvóka %1% mm",
+  "it": "Ugello %1% mm",
+  "ja": "ノズル %1% mm",
+  "nb": "Dyse %1% mm",
+  "nl": "Mondstuk %1% mm",
+  "pl": "Dysza %1% mm",
+  "pt": "Bico %1% mm",
+  "ru": "Сопло %1% мм",
+  "sv": "Nozzel %1% mm",
+  "uk": "Сопло %1% мм",
+  "zh_CN": "喷嘴 %1% mm",
+  "zh_TW": "噴嘴 %1% mm"
+ },
+ "Nozzle %1% mm, prints with the right nozzle": {
+  "cs": "Tryska %1% mm, tiskne pravou tryskou",
+  "da": "Dyse %1% mm, printer med højre dyse",
+  "de": "Düse %1% mm, druckt mit der rechten Düse",
+  "es": "Boquilla %1% mm, imprime con la boquilla derecha",
+  "fi": "Suutin %1% mm, tulostaa oikealla suuttimella",
+  "fr": "Buse %1% mm, impression avec la buse droite",
+  "hu": "Fúvóka %1% mm, a jobb fúvókával nyomtat",
+  "it": "Ugello %1% mm, stampa con l'ugello destro",
+  "ja": "ノズル %1% mm、右ノズルで造形",
+  "nb": "Dyse %1% mm, skriver ut med høyre dyse",
+  "nl": "Mondstuk %1% mm, print met het rechter mondstuk",
+  "pl": "Dysza %1% mm, druk prawą dyszą",
+  "pt": "Bico %1% mm, imprime com o bico direito",
+  "ru": "Сопло %1% мм, печать правым соплом",
+  "sv": "Nozzel %1% mm, skriver ut med höger nozzel",
+  "uk": "Сопло %1% мм, друк правим соплом",
+  "zh_CN": "喷嘴 %1% mm，使用右侧喷嘴打印",
+  "zh_TW": "噴嘴 %1% mm，使用右側噴嘴列印"
+ },
+ "Nozzle temperature": {
+  "da": "Dysetemperatur",
+  "fi": "Suuttimen lämpötila",
+  "nb": "Dysetemperatur"
+ },
+ "Objects": {
+  "da": "Objekter",
+  "fi": "Kappaleet",
+  "nb": "Objekter"
+ },
+ "Opened in Bambu Connect on your computer. Choose the printer there and press Print.": {
+  "cs": "Otevřeno v Bambu Connect na vašem počítači. Vyberte tam tiskárnu a stiskněte Tisk.",
+  "da": "Åbnet i Bambu Connect på din computer. Vælg printeren der, og tryk på Udskriv.",
+  "de": "In Bambu Connect auf Ihrem Computer geöffnet. Wählen Sie dort den Drucker und drücken Sie auf Drucken.",
+  "es": "Abierto en Bambu Connect en tu ordenador. Elige allí la impresora y pulsa Imprimir.",
+  "fi": "Avattu tietokoneesi Bambu Connectissa. Valitse siellä tulostin ja paina Tulosta.",
+  "fr": "Ouvert dans Bambu Connect sur votre ordinateur. Choisissez-y l'imprimante et appuyez sur Imprimer.",
+  "hu": "Megnyitva a számítógépen futó Bambu Connectben. Ott válassza ki a nyomtatót, és nyomja meg a Nyomtatás gombot.",
+  "it": "Aperto in Bambu Connect sul computer. Scegli lì la stampante e premi Stampa.",
+  "ja": "コンピューターの Bambu Connect で開きました。そこでプリンターを選んで印刷を押してください。",
+  "nb": "Åpnet i Bambu Connect på datamaskinen. Velg skriveren der og trykk på Skriv ut.",
+  "nl": "Geopend in Bambu Connect op je computer. Kies daar de printer en druk op Printen.",
+  "pl": "Otwarto w Bambu Connect na komputerze. Wybierz tam drukarkę i naciśnij Drukuj.",
+  "pt": "Aberto no Bambu Connect no seu computador. Escolha a impressora lá e toque em Imprimir.",
+  "ru": "Открыто в Bambu Connect на вашем компьютере. Выберите там принтер и нажмите «Печать».",
+  "sv": "Öppnad i Bambu Connect på din dator. Välj skrivaren där och tryck på Skriv ut.",
+  "uk": "Відкрито в Bambu Connect на вашому комп’ютері. Виберіть там принтер і натисніть «Друк».",
+  "zh_CN": "已在电脑上的 Bambu Connect 中打开。请在其中选择打印机并点击打印。",
+  "zh_TW": "已在電腦上的 Bambu Connect 中開啟。請在其中選擇印表機並按下列印。"
+ },
+ "Orange": {
+  "cs": "Oranžová",
+  "da": "Orange",
+  "de": "Orange",
+  "es": "Naranja",
+  "fi": "Oranssi",
+  "fr": "Orange",
+  "hu": "Narancs",
+  "it": "Arancione",
+  "ja": "オレンジ",
+  "nb": "Oransje",
+  "nl": "Oranje",
+  "pl": "Pomarańczowy",
+  "pt": "Laranja",
+  "ru": "Оранжевый",
+  "sv": "Orange",
+  "uk": "Помаранчевий",
+  "zh_CN": "橙色",
+  "zh_TW": "橙色"
+ },
+ "Other layers speed": {
+  "da": "Hastighed øvrige lag",
+  "fi": "Muiden kerrosten nopeus",
+  "nb": "Hastighet øvrige lag"
+ },
+ "Others": {
+  "da": "Andet",
+  "fi": "Muut",
+  "nb": "Annet"
+ },
+ "Outer brim only": {
+  "da": "Kun ydre brim",
+  "fi": "Vain ulkoreunus",
+  "nb": "Kun ytre brim"
+ },
+ "Outer wall": {
+  "da": "Ydre væg",
+  "fi": "Ulkoseinä",
+  "nb": "Ytre vegg"
+ },
+ "Painted supports only take effect when support is enabled.": {
+  "cs": "Namalované podpěry se projeví, jen když jsou podpěry zapnuté.",
+  "da": "Malede supports virker kun, når support er slået til.",
+  "de": "Aufgemalte Stützen wirken nur, wenn Stützen aktiviert sind.",
+  "es": "Los soportes pintados solo se aplican si los soportes están activados.",
+  "fi": "Maalatut tuet vaikuttavat vain, kun tuki on käytössä.",
+  "fr": "Les supports peints ne s'appliquent que si les supports sont activés.",
+  "hu": "A festett támaszok csak akkor érvényesek, ha a támaszok be vannak kapcsolva.",
+  "it": "I supporti dipinti hanno effetto solo se i supporti sono attivati.",
+  "ja": "ペイントしたサポートは、サポートが有効なときだけ反映されます。",
+  "nb": "Malte støtter virker bare når støtte er slått på.",
+  "nl": "Geschilderde ondersteuning werkt alleen als ondersteuning is ingeschakeld.",
+  "pl": "Namalowane podpory działają tylko wtedy, gdy podpory są włączone.",
+  "pt": "Os suportes pintados só têm efeito quando os suportes estão ativados.",
+  "ru": "Нарисованные поддержки действуют, только когда поддержки включены.",
+  "sv": "Målade supporter gäller bara när support är aktiverat.",
+  "uk": "Намальовані підтримки діють лише тоді, коли підтримки ввімкнено.",
+  "zh_CN": "绘制的支撑仅在启用支撑时生效。",
+  "zh_TW": "繪製的支撐僅在啟用支撐時生效。"
+ },
+ "Part cooling fan": {
+  "da": "Køleblæser for emnet",
+  "fi": "Kappaleen jäähdytystuuletin",
+  "nb": "Kjølevifte for delen"
+ },
+ "Plate": {
+  "da": "Plade",
+  "fi": "Alusta",
+  "nb": "Plate"
+ },
+ "Plate Type": {
+  "da": "Pladetype",
+  "fi": "Alustan tyyppi",
+  "nb": "Platetype"
+ },
+ "Position": {
+  "da": "Position",
+  "fi": "Sijainti",
+  "nb": "Posisjon"
+ },
+ "Preferences": {
+  "da": "Indstillinger",
+  "fi": "Asetukset",
+  "nb": "Innstillinger"
+ },
+ "Prepare": {
+  "da": "Forbered",
+  "fi": "Valmistele",
+  "nb": "Forbered"
+ },
+ "Preset \"%1%\" saved.": {
+  "cs": "Předvolba „%1%“ uložena.",
+  "da": "Forudindstillingen \"%1%\" er gemt.",
+  "de": "Profil „%1%“ gespeichert.",
+  "es": "Perfil «%1%» guardado.",
+  "fi": "Esiasetus \"%1%\" tallennettu.",
+  "fr": "Préréglage « %1% » enregistré.",
+  "hu": "A(z) „%1%” beállítás mentve.",
+  "it": "Profilo «%1%» salvato.",
+  "ja": "プリセット「%1%」を保存しました。",
+  "nb": "Forhåndsinnstillingen «%1%» er lagret.",
+  "nl": "Voorinstelling \"%1%\" opgeslagen.",
+  "pl": "Zapisano profil „%1%”.",
+  "pt": "Predefinição \"%1%\" salva.",
+  "ru": "Профиль «%1%» сохранён.",
+  "sv": "Förinställningen \"%1%\" sparad.",
+  "uk": "Пресет «%1%» збережено.",
+  "zh_CN": "预设“%1%”已保存。",
+  "zh_TW": "預設「%1%」已儲存。"
+ },
+ "Preview": {
+  "da": "Forhåndsvisning",
+  "fi": "Esikatselu",
+  "nb": "Forhåndsvisning"
+ },
+ "Print": {
+  "da": "Udskriv",
+  "de": "Drucken",
+  "fi": "Tulosta",
+  "nb": "Skriv ut"
+ },
+ "Print plate": {
+  "cs": "Tisknout desku",
+  "da": "Udskriv plade",
+  "fi": "Tulosta alusta",
+  "hu": "Tálca nyomtatása",
+  "it": "Stampa piatto",
+  "nb": "Skriv ut plate",
+  "nl": "Print printbed"
+ },
+ "Print plate then hands the sliced file to Bambu Connect, where you pick the printer and confirm.": {
+  "cs": "„Tisková deska“ pak předá slicovaný soubor do Bambu Connect, kde vyberete tiskárnu a potvrdíte.",
+  "da": "\"Udskriv plade\" sender derefter den slicede fil til Bambu Connect, hvor du vælger printeren og bekræfter.",
+  "de": "„Aktuelle Platte drucken“ übergibt die geslicte Datei dann an Bambu Connect, wo Sie den Drucker wählen und bestätigen.",
+  "es": "Después, «Imprimir cama» envía el archivo laminado a Bambu Connect, donde eliges la impresora y confirmas.",
+  "fi": "Tulosta alusta antaa sitten viipaloidun tiedoston Bambu Connectille, jossa valitset tulostimen ja vahvistat.",
+  "fr": "« Imprimer la plaque » transmet alors le fichier découpé à Bambu Connect, où vous choisissez l'imprimante et confirmez.",
+  "hu": "A „Nyomtatótálca” ezután átadja a szeletelt fájlt a Bambu Connectnek, ahol kiválasztja a nyomtatót és megerősíti.",
+  "it": "«Piatto di stampa» passa quindi il file elaborato a Bambu Connect, dove scegli la stampante e confermi.",
+  "ja": "すると「造形開始」でスライス済みファイルが Bambu Connect に渡され、そこでプリンターを選んで確定します。",
+  "nb": "«Skriv ut plate» sender deretter den slicede filen til Bambu Connect, der du velger skriver og bekrefter.",
+  "nl": "\"Printplaat\" geeft het geslicete bestand dan door aan Bambu Connect, waar je de printer kiest en bevestigt.",
+  "pl": "„Drukuj aktualną płytę” przekazuje wtedy pocięty plik do Bambu Connect, gdzie wybierasz drukarkę i potwierdzasz.",
+  "pt": "\"Imprimir placa\" então entrega o arquivo fatiado ao Bambu Connect, onde você escolhe a impressora e confirma.",
+  "ru": "«Распечатать стол» передаёт нарезанный файл в Bambu Connect, где вы выбираете принтер и подтверждаете печать.",
+  "sv": "\"Skriv ut byggplattan\" lämnar sedan över den beredda filen till Bambu Connect, där du väljer skrivare och bekräftar.",
+  "uk": "«Друкувати пластину» передає нарізаний файл у Bambu Connect, де ви вибираєте принтер і підтверджуєте.",
+  "zh_CN": "然后“打印单盘”会把切片文件交给 Bambu Connect，在那里选择打印机并确认。",
+  "zh_TW": "接著「列印單一列印板」會把切片檔交給 Bambu Connect，在那裡選擇印表機並確認。"
+ },
+ "Print temperature": {
+  "da": "Printtemperatur",
+  "fi": "Tulostuslämpötila",
+  "nb": "Utskriftstemperatur"
+ },
+ "Printer": {
+  "da": "Printer",
+  "fi": "Tulostin",
+  "nb": "Skriver"
+ },
+ "Process": {
+  "da": "Proces",
+  "fi": "Prosessi",
+  "nb": "Prosess"
+ },
+ "Purple": {
+  "cs": "Fialová",
+  "da": "Lilla",
+  "de": "Violett",
+  "es": "Morado",
+  "fi": "Violetti",
+  "fr": "Violet",
+  "hu": "Lila",
+  "it": "Viola",
+  "ja": "紫",
+  "nb": "Lilla",
+  "nl": "Paars",
+  "pl": "Fioletowy",
+  "pt": "Roxo",
+  "ru": "Фиолетовый",
+  "sv": "Lila",
+  "uk": "Фіолетовий",
+  "zh_CN": "紫色",
+  "zh_TW": "紫色"
+ },
+ "Quality": {
+  "da": "Kvalitet",
+  "fi": "Laatu",
+  "nb": "Kvalitet"
+ },
+ "Red": {
+  "da": "Rød",
+  "fi": "Punainen",
+  "nb": "Rød"
+ },
+ "Reset": {
+  "da": "Nulstil",
+  "fi": "Palauta",
+  "nb": "Tilbakestill"
+ },
+ "Rotate": {
+  "da": "Rotér",
+  "fi": "Kierrä",
+  "nb": "Roter"
+ },
+ "Rotation": {
+  "da": "Rotation",
+  "fi": "Kierto",
+  "nb": "Rotasjon",
+  "ru": "Поворот"
+ },
+ "Runner found - scan its QR code to pair": {
+  "cs": "Runner nalezen – naskenujte QR kód pro spárování",
+  "da": "Runner fundet – scan QR-koden for at parre",
+  "de": "Runner gefunden – QR-Code scannen zum Koppeln",
+  "es": "Runner encontrado: escanea su código QR para emparejar",
+  "fi": "Runner löytyi – yhdistä skannaamalla QR-koodi",
+  "fr": "Runner trouvé – scannez son QR code pour l'appairer",
+  "hu": "Runner megtalálva – a párosításhoz olvassa be a QR-kódot",
+  "it": "Runner trovato – scansiona il codice QR per associarlo",
+  "ja": "Runner を検出 – QR コードを読み取ってペアリング",
+  "nb": "Runner funnet – skann QR-koden for å koble til",
+  "nl": "Runner gevonden – scan de QR-code om te koppelen",
+  "pl": "Znaleziono runnera – zeskanuj kod QR, aby sparować",
+  "pt": "Runner encontrado – leia o código QR para parear",
+  "ru": "Runner найден – отсканируйте QR-код для сопряжения",
+  "sv": "Runner hittad – skanna QR-koden för att parkoppla",
+  "uk": "Runner знайдено – відскануйте QR-код для спарювання",
+  "zh_CN": "已找到 Runner – 扫描其二维码进行配对",
+  "zh_TW": "已找到 Runner – 掃描其 QR 碼進行配對"
+ },
+ "Runner on %1%": {
+  "cs": "Runner na %1%",
+  "da": "Runner på %1%",
+  "de": "Runner auf %1%",
+  "es": "Runner en %1%",
+  "fi": "Runner: %1%",
+  "fr": "Runner sur %1%",
+  "hu": "Runner: %1%",
+  "it": "Runner su %1%",
+  "ja": "Runner: %1%",
+  "nb": "Runner på %1%",
+  "nl": "Runner op %1%",
+  "pl": "Runner na %1%",
+  "pt": "Runner em %1%",
+  "ru": "Runner на %1%",
+  "sv": "Runner på %1%",
+  "uk": "Runner на %1%",
+  "zh_CN": "Runner 位于 %1%",
+  "zh_TW": "Runner 位於 %1%"
+ },
+ "Save": {
+  "da": "Gem",
+  "fi": "Tallenna",
+  "nb": "Lagre"
+ },
+ "Save as": {
+  "da": "Gem som",
+  "fi": "Tallenna nimellä",
+  "nb": "Lagre som"
+ },
+ "Save preset": {
+  "da": "Gem forudindstilling",
+  "fi": "Tallenna esiasetus",
+  "nb": "Lagre forhåndsinnstilling"
+ },
+ "Scale": {
+  "da": "Skalér",
+  "fi": "Skaalaa",
+  "nb": "Skaler"
+ },
+ "Sending to Bambu Connect…": {
+  "cs": "Odesílání do Bambu Connect…",
+  "da": "Sender til Bambu Connect…",
+  "de": "Wird an Bambu Connect gesendet…",
+  "es": "Enviando a Bambu Connect…",
+  "fi": "Lähetetään Bambu Connectiin…",
+  "fr": "Envoi vers Bambu Connect…",
+  "hu": "Küldés a Bambu Connectbe…",
+  "it": "Invio a Bambu Connect…",
+  "ja": "Bambu Connect に送信中…",
+  "nb": "Sender til Bambu Connect…",
+  "nl": "Verzenden naar Bambu Connect…",
+  "pl": "Wysyłanie do Bambu Connect…",
+  "pt": "Enviando para o Bambu Connect…",
+  "ru": "Отправка в Bambu Connect…",
+  "sv": "Skickar till Bambu Connect…",
+  "uk": "Надсилання в Bambu Connect…",
+  "zh_CN": "正在发送到 Bambu Connect…",
+  "zh_TW": "正在傳送到 Bambu Connect…"
+ },
+ "Size": {
+  "da": "Størrelse",
+  "fi": "Koko",
+  "nb": "Størrelse"
+ },
+ "Slice": {
+  "da": "Slice",
+  "fi": "Viipaloi",
+  "nb": "Slice"
+ },
+ "Slice plate": {
+  "da": "Slice plade",
+  "fi": "Viipaloi alusta",
+  "nb": "Slice plate"
+ },
+ "Slicing": {
+  "da": "Slicing",
+  "fi": "Viipalointi",
+  "nb": "Slicing"
+ },
+ "Slicing failed: %1%": {
+  "cs": "Slicování selhalo: %1%",
+  "da": "Slicing mislykkedes: %1%",
+  "de": "Slicen fehlgeschlagen: %1%",
+  "es": "Error al laminar: %1%",
+  "fi": "Viipalointi epäonnistui: %1%",
+  "fr": "Échec de la découpe : %1%",
+  "hu": "A szeletelés sikertelen: %1%",
+  "it": "Elaborazione non riuscita: %1%",
+  "ja": "スライスに失敗しました: %1%",
+  "nb": "Slicing mislyktes: %1%",
+  "nl": "Slicen mislukt: %1%",
+  "pl": "Cięcie nie powiodło się: %1%",
+  "pt": "Falha ao fatiar: %1%",
+  "ru": "Ошибка нарезки: %1%",
+  "sv": "Beredningen misslyckades: %1%",
+  "uk": "Помилка нарізки: %1%",
+  "zh_CN": "切片失败：%1%",
+  "zh_TW": "切片失敗：%1%"
+ },
+ "Smooth Cool Plate": {
+  "da": "Glat køleplade",
+  "fi": "Sileä viileä alusta",
+  "nb": "Glatt kjøleplate"
+ },
+ "Smooth High Temp Plate": {
+  "da": "Glat højtemperaturplade",
+  "fi": "Sileä korkean lämpötilan alusta",
+  "nb": "Glatt høytemperaturplate"
+ },
+ "Source code": {
+  "cs": "Zdrojový kód",
+  "da": "Kildekode",
+  "de": "Quellcode",
+  "es": "Código fuente",
+  "fi": "Lähdekoodi",
+  "fr": "Code source",
+  "hu": "Forráskód",
+  "it": "Codice sorgente",
+  "ja": "ソースコード",
+  "nb": "Kildekode",
+  "nl": "Broncode",
+  "pl": "Kod źródłowy",
+  "pt": "Código-fonte",
+  "ru": "Исходный код",
+  "sv": "Källkod",
+  "uk": "Вихідний код",
+  "zh_CN": "源代码",
+  "zh_TW": "原始碼"
+ },
+ "Sparse infill": {
+  "da": "Spredt fyldning",
+  "fi": "Harva täyttö",
+  "nb": "Glissent fyll"
+ },
+ "Sparse infill density": {
+  "da": "Tæthed for spredt fyldning",
+  "fi": "Harvan täytön tiheys",
+  "nb": "Tetthet for glissent fyll"
+ },
+ "Speed": {
+  "da": "Hastighed",
+  "fi": "Nopeus",
+  "nb": "Hastighet"
+ },
+ "Start the Minislicer Runner on the computer that has Bambu Connect and scan its QR code.": {
+  "cs": "Spusťte Minislicer Runner na počítači s Bambu Connect a naskenujte jeho QR kód.",
+  "da": "Start Minislicer Runner på computeren med Bambu Connect, og scan dens QR-kode.",
+  "de": "Starten Sie den Minislicer Runner auf dem Computer mit Bambu Connect und scannen Sie seinen QR-Code.",
+  "es": "Inicia Minislicer Runner en el ordenador que tiene Bambu Connect y escanea su código QR.",
+  "fi": "Käynnistä Minislicer Runner tietokoneella, jossa on Bambu Connect, ja skannaa sen QR-koodi.",
+  "fr": "Lancez Minislicer Runner sur l'ordinateur où se trouve Bambu Connect et scannez son QR code.",
+  "hu": "Indítsa el a Minislicer Runnert azon a számítógépen, amelyen a Bambu Connect fut, és olvassa be a QR-kódját.",
+  "it": "Avvia Minislicer Runner sul computer con Bambu Connect e scansiona il suo codice QR.",
+  "ja": "Bambu Connect が入っているコンピューターで Minislicer Runner を起動し、QR コードを読み取ってください。",
+  "nb": "Start Minislicer Runner på datamaskinen som har Bambu Connect, og skann QR-koden.",
+  "nl": "Start Minislicer Runner op de computer met Bambu Connect en scan de QR-code.",
+  "pl": "Uruchom Minislicer Runner na komputerze z Bambu Connect i zeskanuj jego kod QR.",
+  "pt": "Inicie o Minislicer Runner no computador que tem o Bambu Connect e leia o código QR.",
+  "ru": "Запустите Minislicer Runner на компьютере с Bambu Connect и отсканируйте его QR-код.",
+  "sv": "Starta Minislicer Runner på datorn som har Bambu Connect och skanna dess QR-kod.",
+  "uk": "Запустіть Minislicer Runner на комп’ютері з Bambu Connect і відскануйте його QR-код.",
+  "zh_CN": "在安装了 Bambu Connect 的电脑上启动 Minislicer Runner，并扫描其二维码。",
+  "zh_TW": "在安裝了 Bambu Connect 的電腦上啟動 Minislicer Runner，並掃描其 QR 碼。"
+ },
+ "Start-up failed: %1%": {
+  "cs": "Spuštění selhalo: %1%",
+  "da": "Opstarten mislykkedes: %1%",
+  "de": "Start fehlgeschlagen: %1%",
+  "es": "Error al iniciar: %1%",
+  "fi": "Käynnistys epäonnistui: %1%",
+  "fr": "Échec du démarrage : %1%",
+  "hu": "Az indítás sikertelen: %1%",
+  "it": "Avvio non riuscito: %1%",
+  "ja": "起動に失敗しました: %1%",
+  "nb": "Oppstarten mislyktes: %1%",
+  "nl": "Opstarten mislukt: %1%",
+  "pl": "Uruchomienie nie powiodło się: %1%",
+  "pt": "Falha ao iniciar: %1%",
+  "ru": "Ошибка запуска: %1%",
+  "sv": "Starten misslyckades: %1%",
+  "uk": "Помилка запуску: %1%",
+  "zh_CN": "启动失败：%1%",
+  "zh_TW": "啟動失敗：%1%"
+ },
+ "Strength": {
+  "da": "Styrke",
+  "fi": "Lujuus",
+  "nb": "Styrke"
+ },
+ "Support": {
+  "da": "Support",
+  "fi": "Tuki",
+  "nb": "Støtte"
+ },
+ "Support Painting": {
+  "da": "Mal support",
+  "fi": "Tukien maalaus",
+  "nb": "Mal støtte"
+ },
+ "Support interface": {
+  "da": "Supportgrænseflade",
+  "fi": "Tuen rajapinta",
+  "nb": "Støttegrensesnitt"
+ },
+ "System presets": {
+  "da": "Systemforudindstillinger",
+  "fi": "Järjestelmän esiasetukset",
+  "nb": "Systemforhåndsinnstillinger"
+ },
+ "Textured PEI Plate": {
+  "da": "Tekstureret PEI-plade",
+  "fi": "Teksturoitu PEI-alusta",
+  "nb": "Teksturert PEI-plate"
+ },
+ "The model (%1% x %2% mm) does not fit in the %3% x %4% mm area the right nozzle can reach.": {
+  "cs": "Model (%1% x %2% mm) se nevejde do oblasti %3% x %4% mm, kam dosáhne pravá tryska.",
+  "da": "Modellen (%1% x %2% mm) passer ikke i området på %3% x %4% mm, som højre dyse kan nå.",
+  "de": "Das Modell (%1% x %2% mm) passt nicht in den Bereich von %3% x %4% mm, den die rechte Düse erreicht.",
+  "es": "El modelo (%1% x %2% mm) no cabe en el área de %3% x %4% mm que alcanza la boquilla derecha.",
+  "fi": "Malli (%1% x %2% mm) ei mahdu oikean suuttimen ulottuvalle %3% x %4% mm:n alueelle.",
+  "fr": "Le modèle (%1% x %2% mm) ne tient pas dans la zone de %3% x %4% mm accessible à la buse droite.",
+  "hu": "A modell (%1% x %2% mm) nem fér el a jobb fúvóka által elérhető %3% x %4% mm-es területen.",
+  "it": "Il modello (%1% x %2% mm) non rientra nell'area di %3% x %4% mm raggiungibile dall'ugello destro.",
+  "ja": "モデル (%1% x %2% mm) が右ノズルの届く %3% x %4% mm の範囲に収まりません。",
+  "nb": "Modellen (%1% x %2% mm) får ikke plass i området på %3% x %4% mm som høyre dyse når.",
+  "nl": "Het model (%1% x %2% mm) past niet in het gebied van %3% x %4% mm dat het rechter mondstuk bereikt.",
+  "pl": "Model (%1% x %2% mm) nie mieści się w obszarze %3% x %4% mm dostępnym dla prawej dyszy.",
+  "pt": "O modelo (%1% x %2% mm) não cabe na área de %3% x %4% mm que o bico direito alcança.",
+  "ru": "Модель (%1% x %2% мм) не помещается в область %3% x %4% мм, доступную правому соплу.",
+  "sv": "Modellen (%1% x %2% mm) får inte plats i det %3% x %4% mm stora område som höger nozzel når.",
+  "uk": "Модель (%1% x %2% мм) не вміщується в область %3% x %4% мм, доступну правому соплу.",
+  "zh_CN": "模型（%1% x %2% mm）超出了右侧喷嘴可到达的 %3% x %4% mm 区域。",
+  "zh_TW": "模型（%1% x %2% mm）超出了右側噴嘴可到達的 %3% x %4% mm 區域。"
+ },
+ "The model (%1% x %2% mm) does not fit on the %3% x %4% mm bed.": {
+  "cs": "Model (%1% x %2% mm) se nevejde na podložku %3% x %4% mm.",
+  "da": "Modellen (%1% x %2% mm) passer ikke på pladen på %3% x %4% mm.",
+  "de": "Das Modell (%1% x %2% mm) passt nicht auf das Druckbett von %3% x %4% mm.",
+  "es": "El modelo (%1% x %2% mm) no cabe en la cama de %3% x %4% mm.",
+  "fi": "Malli (%1% x %2% mm) ei mahdu %3% x %4% mm:n alustalle.",
+  "fr": "Le modèle (%1% x %2% mm) ne tient pas sur le plateau de %3% x %4% mm.",
+  "hu": "A modell (%1% x %2% mm) nem fér el a %3% x %4% mm-es tálcán.",
+  "it": "Il modello (%1% x %2% mm) non entra nel piatto di %3% x %4% mm.",
+  "ja": "モデル (%1% x %2% mm) が %3% x %4% mm のベッドに収まりません。",
+  "nb": "Modellen (%1% x %2% mm) får ikke plass på platen på %3% x %4% mm.",
+  "nl": "Het model (%1% x %2% mm) past niet op het printbed van %3% x %4% mm.",
+  "pl": "Model (%1% x %2% mm) nie mieści się na stole %3% x %4% mm.",
+  "pt": "O modelo (%1% x %2% mm) não cabe na mesa de %3% x %4% mm.",
+  "ru": "Модель (%1% x %2% мм) не помещается на стол %3% x %4% мм.",
+  "sv": "Modellen (%1% x %2% mm) får inte plats på byggplattan på %3% x %4% mm.",
+  "uk": "Модель (%1% x %2% мм) не вміщується на стіл %3% x %4% мм.",
+  "zh_CN": "模型（%1% x %2% mm）超出了 %3% x %4% mm 的热床。",
+  "zh_TW": "模型（%1% x %2% mm）超出了 %3% x %4% mm 的熱床。"
+ },
+ "The model is %1% mm tall; the printer allows %2% mm.": {
+  "cs": "Model je vysoký %1% mm; tiskárna dovoluje %2% mm.",
+  "da": "Modellen er %1% mm høj; printeren tillader %2% mm.",
+  "de": "Das Modell ist %1% mm hoch; der Drucker erlaubt %2% mm.",
+  "es": "El modelo mide %1% mm de alto; la impresora admite %2% mm.",
+  "fi": "Malli on %1% mm korkea; tulostin sallii %2% mm.",
+  "fr": "Le modèle mesure %1% mm de haut ; l'imprimante accepte %2% mm.",
+  "hu": "A modell %1% mm magas; a nyomtató legfeljebb %2% mm-t enged.",
+  "it": "Il modello è alto %1% mm; la stampante consente %2% mm.",
+  "ja": "モデルの高さは %1% mm です。プリンターの上限は %2% mm です。",
+  "nb": "Modellen er %1% mm høy; skriveren tillater %2% mm.",
+  "nl": "Het model is %1% mm hoog; de printer staat %2% mm toe.",
+  "pl": "Model ma %1% mm wysokości; drukarka pozwala na %2% mm.",
+  "pt": "O modelo tem %1% mm de altura; a impressora permite %2% mm.",
+  "ru": "Высота модели %1% мм; принтер допускает %2% мм.",
+  "sv": "Modellen är %1% mm hög; skrivaren tillåter %2% mm.",
+  "uk": "Висота моделі %1% мм; принтер дозволяє %2% мм.",
+  "zh_CN": "模型高 %1% mm；打印机最多允许 %2% mm。",
+  "zh_TW": "模型高 %1% mm；印表機最多允許 %2% mm。"
+ },
+ "The model overlaps the excluded corner of the bed (front left).": {
+  "cs": "Model zasahuje do vyloučeného rohu podložky (vpředu vlevo).",
+  "da": "Modellen overlapper pladens udelukkede hjørne (forrest til venstre).",
+  "de": "Das Modell ragt in die gesperrte Ecke des Druckbetts (vorne links).",
+  "es": "El modelo invade la esquina excluida de la cama (delante a la izquierda).",
+  "fi": "Malli osuu alustan rajattuun kulmaan (edessä vasemmalla).",
+  "fr": "Le modèle empiète sur le coin exclu du plateau (avant gauche).",
+  "hu": "A modell belelóg a tálca kizárt sarkába (elöl balra).",
+  "it": "Il modello occupa l'angolo escluso del piatto (anteriore sinistro).",
+  "ja": "モデルがベッドの使用禁止エリア (左前) に重なっています。",
+  "nb": "Modellen overlapper det utelatte hjørnet av platen (foran til venstre).",
+  "nl": "Het model overlapt de uitgesloten hoek van het bed (linksvoor).",
+  "pl": "Model zachodzi na wyłączony narożnik stołu (z przodu po lewej).",
+  "pt": "O modelo sobrepõe o canto excluído da mesa (frente à esquerda).",
+  "ru": "Модель заходит на исключённый угол стола (спереди слева).",
+  "sv": "Modellen överlappar byggplattans undantagna hörn (fram till vänster).",
+  "uk": "Модель заходить на виключений кут столу (спереду ліворуч).",
+  "zh_CN": "模型与热床的禁用角落（左前）重叠。",
+  "zh_TW": "模型與熱床的禁用角落（左前）重疊。"
+ },
+ "The name cannot be the same as the system preset name.": {
+  "da": "Navnet må ikke være det samme som navnet på en systemforudindstilling.",
+  "fi": "Nimi ei voi olla sama kuin järjestelmän esiasetuksen nimi.",
+  "nb": "Navnet kan ikke være det samme som navnet på en systemforhåndsinnstilling."
+ },
+ "The name is the same as another existing preset name": {
+  "da": "Navnet er det samme som navnet på en anden forudindstilling",
+  "fi": "Nimi on sama kuin toisen esiasetuksen nimi",
+  "nb": "Navnet er det samme som navnet på en annen forhåndsinnstilling"
+ },
+ "The name is too long.": {
+  "cs": "Název je příliš dlouhý.",
+  "da": "Navnet er for langt.",
+  "de": "Der Name ist zu lang.",
+  "es": "El nombre es demasiado largo.",
+  "fi": "Nimi on liian pitkä.",
+  "fr": "Le nom est trop long.",
+  "hu": "A név túl hosszú.",
+  "it": "Il nome è troppo lungo.",
+  "ja": "名前が長すぎます。",
+  "nb": "Navnet er for langt.",
+  "nl": "De naam is te lang.",
+  "pl": "Nazwa jest za długa.",
+  "pt": "O nome é muito longo.",
+  "ru": "Название слишком длинное.",
+  "sv": "Namnet är för långt.",
+  "uk": "Назва задовга.",
+  "zh_CN": "名称过长。",
+  "zh_TW": "名稱過長。"
+ },
+ "The name may not be empty.": {
+  "cs": "Název nesmí být prázdný.",
+  "da": "Navnet må ikke være tomt.",
+  "de": "Der Name darf nicht leer sein.",
+  "es": "El nombre no puede estar vacío.",
+  "fi": "Nimi ei voi olla tyhjä.",
+  "fr": "Le nom ne peut pas être vide.",
+  "hu": "A név nem lehet üres.",
+  "it": "Il nome non può essere vuoto.",
+  "ja": "名前を空にすることはできません。",
+  "nb": "Navnet kan ikke være tomt.",
+  "nl": "De naam mag niet leeg zijn.",
+  "pl": "Nazwa nie może być pusta.",
+  "pt": "O nome não pode ficar vazio.",
+  "ru": "Название не может быть пустым.",
+  "sv": "Namnet får inte vara tomt.",
+  "uk": "Назва не може бути порожньою.",
+  "zh_CN": "名称不能为空。",
+  "zh_TW": "名稱不能為空。"
+ },
+ "Threshold angle": {
+  "da": "Tærskelvinkel",
+  "fi": "Kynnyskulma",
+  "nb": "Terskelvinkel"
+ },
+ "Toolpaths": {
+  "cs": "Dráhy nástroje",
+  "da": "Værktøjsbaner",
+  "de": "Werkzeugwege",
+  "es": "Trayectorias",
+  "fi": "Työkaluradat",
+  "fr": "Parcours d'outil",
+  "hu": "Szerszámpályák",
+  "it": "Percorsi utensile",
+  "ja": "ツールパス",
+  "nb": "Verktøybaner",
+  "nl": "Gereedschapspaden",
+  "pl": "Ścieżki narzędzia",
+  "pt": "Trajetórias",
+  "ru": "Траектории",
+  "sv": "Verktygsbanor",
+  "uk": "Траєкторії",
+  "zh_CN": "打印路径",
+  "zh_TW": "列印路徑"
+ },
+ "Top shell layers": {
+  "da": "Toplag",
+  "fi": "Yläkerrokset",
+  "nb": "Topplag"
+ },
+ "Top surface": {
+  "da": "Topflade",
+  "fi": "Yläpinta",
+  "nb": "Toppflate"
+ },
+ "Top/bottom shells": {
+  "da": "Top-/bundskaller",
+  "fi": "Ylä-/pohjakuoret",
+  "nb": "Topp-/bunnskall"
+ },
+ "Total Filament": {
+  "da": "Samlet filament",
+  "fi": "Filamenttia yhteensä",
+  "nb": "Totalt filament"
+ },
+ "Translations come from OrcaSlicer where it has the same text; the rest is machine-translated.": {
+  "cs": "Překlady pocházejí z OrcaSliceru, kde má stejný text; zbytek je strojově přeložen.",
+  "da": "Denne oversættelse er maskinoversat (OrcaSlicer har ingen dansk oversættelse).",
+  "de": "Die Übersetzungen stammen aus OrcaSlicer, wo es denselben Text gibt; der Rest ist maschinell übersetzt.",
+  "es": "Las traducciones proceden de OrcaSlicer cuando tiene el mismo texto; el resto es traducción automática.",
+  "fi": "Tämä käännös on konekäännös (OrcaSlicerissa ei ole suomenkielistä käännöstä).",
+  "fr": "Les traductions viennent d'OrcaSlicer lorsqu'il a le même texte ; le reste est traduit automatiquement.",
+  "hu": "A fordítások az OrcaSlicerből származnak, ahol ugyanaz a szöveg szerepel; a többi gépi fordítás.",
+  "it": "Le traduzioni provengono da OrcaSlicer quando ha lo stesso testo; il resto è tradotto automaticamente.",
+  "ja": "OrcaSlicer と同じ文言はその翻訳を使用し、それ以外は機械翻訳です。",
+  "nb": "Denne oversettelsen er maskinoversatt (OrcaSlicer har ingen norsk oversettelse).",
+  "nl": "Vertalingen komen uit OrcaSlicer waar die dezelfde tekst heeft; de rest is machinaal vertaald.",
+  "pl": "Tłumaczenia pochodzą z OrcaSlicer, jeśli ma ten sam tekst; reszta jest przetłumaczona maszynowo.",
+  "pt": "As traduções vêm do OrcaSlicer quando ele tem o mesmo texto; o restante é tradução automática.",
+  "ru": "Переводы взяты из OrcaSlicer, где совпадает текст; остальное переведено машинно.",
+  "sv": "Översättningarna kommer från OrcaSlicer där den har samma text; resten är maskinöversatt.",
+  "uk": "Переклади взято з OrcaSlicer, де текст збігається; решту перекладено машинно.",
+  "zh_CN": "与 OrcaSlicer 相同的文本使用其翻译，其余为机器翻译。",
+  "zh_TW": "與 OrcaSlicer 相同的文字使用其翻譯，其餘為機器翻譯。"
+ },
+ "Travel": {
+  "da": "Flytning",
+  "fi": "Siirtoliike",
+  "nb": "Forflytning"
+ },
+ "Travel speed": {
+  "da": "Flyttehastighed",
+  "fi": "Siirtonopeus",
+  "nb": "Forflytningshastighet"
+ },
+ "Type": {
+  "da": "Type",
+  "fi": "Tyyppi",
+  "nb": "Type"
+ },
+ "User presets": {
+  "da": "Brugerforudindstillinger",
+  "fi": "Käyttäjän esiasetukset",
+  "nb": "Brukerforhåndsinnstillinger"
+ },
+ "Volumetric speed limitation": {
+  "da": "Begrænsning af volumetrisk hastighed",
+  "fi": "Tilavuusnopeuden rajoitus",
+  "nb": "Begrensning av volumetrisk hastighet"
+ },
+ "Wall loops": {
+  "da": "Antal vægge",
+  "fi": "Seinien määrä",
+  "nb": "Antall vegger"
+ },
+ "Walls": {
+  "da": "Vægge",
+  "fi": "Seinät",
+  "nb": "Vegger"
+ },
+ "Without the runner, use the arrow next to Print plate to export the file.": {
+  "cs": "Bez runneru exportujte soubor šipkou vedle „Tisková deska“.",
+  "da": "Uden runner bruger du pilen ved siden af \"Udskriv plade\" for at eksportere filen.",
+  "de": "Ohne Runner exportieren Sie die Datei über den Pfeil neben „Aktuelle Platte drucken“.",
+  "es": "Sin el runner, usa la flecha junto a «Imprimir cama» para exportar el archivo.",
+  "fi": "Ilman runneria vie tiedosto Tulosta alusta -painikkeen vieressä olevasta nuolesta.",
+  "fr": "Sans le runner, utilisez la flèche à côté de « Imprimer la plaque » pour exporter le fichier.",
+  "hu": "Runner nélkül a fájlt a „Nyomtatótálca” melletti nyíllal exportálhatja.",
+  "it": "Senza il runner, usa la freccia accanto a «Piatto di stampa» per esportare il file.",
+  "ja": "Runner がない場合は、「造形開始」の横の矢印からファイルをエクスポートしてください。",
+  "nb": "Uten runner bruker du pilen ved siden av «Skriv ut plate» for å eksportere filen.",
+  "nl": "Zonder runner gebruik je de pijl naast \"Printplaat\" om het bestand te exporteren.",
+  "pl": "Bez runnera użyj strzałki obok „Drukuj aktualną płytę”, aby wyeksportować plik.",
+  "pt": "Sem o runner, use a seta ao lado de \"Imprimir placa\" para exportar o arquivo.",
+  "ru": "Без runner экспортируйте файл стрелкой рядом с «Распечатать стол».",
+  "sv": "Utan runner använder du pilen bredvid \"Skriv ut byggplattan\" för att exportera filen.",
+  "uk": "Без runner експортуйте файл стрілкою поруч із «Друкувати пластину».",
+  "zh_CN": "没有 Runner 时，请使用“打印单盘”旁的箭头导出文件。",
+  "zh_TW": "沒有 Runner 時，請使用「列印單一列印板」旁的箭頭匯出檔案。"
+ },
+ "layers": {
+  "da": "lag",
+  "fi": "kerrosta",
+  "nb": "lag"
+ }
+}

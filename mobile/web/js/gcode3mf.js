@@ -43,6 +43,10 @@ function model(title, date) {
 
 function sliceInfo(s, stats, objectName) {
   const f = s.filament;
+  const ext = s.extruders;
+  // One entry per extruder, space-separated, like OrcaSlicer's add_vector(); 0 = Direct Drive / Standard.
+  const perExtruder = (v) => Array(ext.count).fill(v).join(' ');
+  const nozzleGroup = ext.master; // filament_maps[0] - 1
   return `<?xml version="1.0" encoding="UTF-8"?>
 <config>
   <header>
@@ -52,10 +56,10 @@ function sliceInfo(s, stats, objectName) {
   </header>
   <plate>
     <metadata key="index" value="1"/>
-    <metadata key="extruder_type" value="0"/>
-    <metadata key="nozzle_volume_type" value="0"/>
+    <metadata key="extruder_type" value="${perExtruder(0)}"/>
+    <metadata key="nozzle_volume_type" value="${perExtruder(0)}"/>
     <metadata key="printer_model_id" value="${xml(s.modelId)}"/>
-    <metadata key="nozzle_diameters" value="${s.nozzle}"/>
+    <metadata key="nozzle_diameters" value="${ext.nozzle_diameters.join(',')}"/>
     <metadata key="timelapse_type" value="0"/>
     <metadata key="prediction" value="${Math.round(stats.time)}"/>
     <metadata key="weight" value="${stats.weight.toFixed(2)}"/>
@@ -65,10 +69,10 @@ function sliceInfo(s, stats, objectName) {
     <metadata key="label_object_enabled" value="false"/>
     <metadata key="enable_filament_dynamic_map" value="false"/>
     <metadata key="has_filament_switcher" value="false"/>
-    <metadata key="filament_maps" value="1"/>
+    <metadata key="filament_maps" value="${ext.master + 1}"/>
     <object identify_id="1" name="${xml(objectName)}" skipped="false" />
-    <filament id="1" tray_info_idx="${xml(f.trayInfoIdx)}" type="${xml(f.type)}" color="${xml(f.color)}" used_m="${(stats.filamentMM / 1000).toFixed(2)}" used_g="${stats.weight.toFixed(2)}" group_id="0" nozzle_diameter="${s.nozzle}" volume_type="Standard" used_for_object="true" used_for_support="${s.support.enabled}"/>
-    <nozzle id="0" extruder_id="1" nozzle_diameter="${s.nozzle}" volume_type="Standard"/>
+    <filament id="1" tray_info_idx="${xml(f.trayInfoIdx)}" type="${xml(f.type)}" color="${xml(f.color)}" used_m="${(stats.filamentMM / 1000).toFixed(2)}" used_g="${stats.weight.toFixed(2)}" group_id="${nozzleGroup}" nozzle_diameter="${s.nozzle}" volume_type="Standard" used_for_object="true" used_for_support="${s.support.enabled}"/>
+    <nozzle id="${nozzleGroup}" extruder_id="${ext.master + 1}" nozzle_diameter="${s.nozzle}" volume_type="Standard"/>
   </plate>
 </config>
 `;
@@ -99,7 +103,7 @@ function projectSettings(s) {
     print_settings_id: s.processName,
     filament_settings_id: [s.filamentName],
     curr_bed_type: s.bedType,
-    nozzle_diameter: [str(s.nozzle)],
+    nozzle_diameter: s.extruders.nozzle_diameters.map(str),
     printable_area: [`${s.bed.minX}x${s.bed.minY}`, `${s.bed.maxX}x${s.bed.minY}`, `${s.bed.maxX}x${s.bed.maxY}`, `${s.bed.minX}x${s.bed.maxY}`],
     printable_height: str(s.maxHeight),
     layer_height: str(s.layerHeight),

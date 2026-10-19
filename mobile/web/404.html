@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found - Minislicer</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<style>
+  body { display: block; }
+  .pair { max-width: 720px; margin: 0 auto; padding: 24px 16px; display: flex; flex-direction: column; gap: 16px; }
+  h1 { margin: 0; font-size: 24px; }
+  a { color: var(--orca); }
+</style>
+</head>
+<body>
+<!-- Static hosts serve this for unknown paths. On Cloudflare Pages its presence also turns off the
+     single-page fallback, so a missing file or the runner-only api/* answers 404 instead of index.html. -->
+<div class="pair">
+  <h1>Not found</h1>
+  <p><a href="/">Open Minislicer</a></p>
+</div>
+</body>
+</html>

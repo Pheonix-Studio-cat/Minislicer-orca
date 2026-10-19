@@ -142,8 +142,8 @@ Bundled third-party code, with full licence texts in `web/vendor/LICENSES/` and 
 | Component | Licence |
 | --- | --- |
 | three.js r180 (`three.*.min.js`, `OrbitControls.js`) | MIT |
-| clipper-lib 6.4.2 (`clipper.mjs`), including Tom Wu's JSBN | Boost Software License 1.0; JSBN licence |
-| qrcode-generator 2.0.4 (`qrcode.mjs`) | MIT |
+| clipper-lib 6.4.2 (`clipper.js`), including Tom Wu's JSBN | Boost Software License 1.0; JSBN licence |
+| qrcode-generator 2.0.4 (`qrcode.js`) | MIT |
 | Go standard library and runtime (inside the runner binaries) | BSD 3-Clause |
 | Flexi cutter modules (`flexi/*.stl`), MakerWorld model 2246181 | CC0 1.0 according to the project owner, not independently verified (`flexi/SOURCE.txt`) |
 

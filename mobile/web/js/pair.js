@@ -1,5 +1,5 @@
 // Pairing page, served by the runner on this computer only.
-import qrcode from '../vendor/qrcode.mjs';
+import qrcode from '../vendor/qrcode.js';
 
 const codes = document.getElementById('codes');
 const info = document.getElementById('info');

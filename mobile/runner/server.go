@@ -292,7 +292,6 @@ func (s *server) print(w http.ResponseWriter, r *http.Request) {
 
 func init() {
 	// Some systems lack these in their MIME tables.
-	_ = mime.AddExtensionType(".mjs", "text/javascript")
 	_ = mime.AddExtensionType(".js", "text/javascript")
 	_ = mime.AddExtensionType(".webmanifest", "application/manifest+json")
 	_ = mime.AddExtensionType(".svg", "image/svg+xml")

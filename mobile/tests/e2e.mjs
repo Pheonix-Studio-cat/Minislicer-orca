@@ -11,6 +11,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import http from 'node:http';
 
 const require = createRequire(import.meta.url);
 const { chromium, devices } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
@@ -291,6 +292,64 @@ try {
   const whole = await weightOf();
   check(whole.sent.negatives === 0 && cut.weight < whole.weight - 0.05, `the joint removes material (${whole.weight.toFixed(2)} g -> ${cut.weight.toFixed(2)} g)`);
   await pad.close();
+
+  // 8. On a static host such as Cloudflare Pages: no runner, content types by file extension with
+  //    `nosniff` (module scripts must be JavaScript), unknown paths answered by 404.html with 404.
+  const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
+    '.svg': 'image/svg+xml', '.png': 'image/png', '.txt': 'text/plain; charset=utf-8', '.webmanifest': 'application/manifest+json' };
+  const webDir = path.join(mobileDir, 'web');
+  const missing = [];
+  const host = http.createServer((req, res) => {
+    const p = decodeURIComponent(new URL(req.url, 'http://host').pathname);
+    let f = path.join(webDir, p.endsWith('/') ? p + 'index.html' : p);
+    const found = f.startsWith(webDir + path.sep) && fs.existsSync(f) && fs.statSync(f).isFile();
+    if (!found) { missing.push(p); f = path.join(webDir, '404.html'); }
+    res.writeHead(found ? 200 : 404, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' });
+    fs.createReadStream(f).pipe(res);
+  });
+  await new Promise((r) => host.listen(0, '127.0.0.1', r));
+  const site = `http://127.0.0.1:${host.address().port}/`;
+  try {
+    const st = await browser.newContext({ ...devices['iPad Pro 11'], acceptDownloads: true });
+    await st.addInitScript(() => {
+      const post = Worker.prototype.postMessage;
+      Worker.prototype.postMessage = function (m, ...rest) {
+        if (m && m.extra) window.__sent = { negatives: m.extra.negatives.length };
+        return post.call(this, m, ...rest);
+      };
+    });
+    const sp2 = await st.newPage();
+    sp2.on('pageerror', (e) => errors.push(e.message));
+    await sp2.goto(site);
+    await sp2.waitForFunction(() => document.getElementById('runnertext').textContent === 'No runner - export only', null, { timeout: 10000 });
+    check(true, 'static host: the app starts without a runner and says so');
+    await sp2.click('#prefs');
+    await sp2.selectOption('#lang', 'de');
+    await sp2.waitForFunction(() => document.querySelector('#slice .lbl-long').textContent === 'Aktuelle Platte slicen');
+    await sp2.selectOption('#lang', 'en');
+    await sp2.click('#dlg-prefs .dlg-actions .btn.primary');
+    await sp2.setInputFiles('#file', model);
+    await sp2.waitForFunction(() => !document.getElementById('slice').disabled, null, { timeout: 10000 });
+    await sp2.click('#tool-flexi');
+    await sp2.click('#modules button[data-module="2"]');
+    await sp2.click('#flexidone');
+    await sp2.click('#slice');
+    await sp2.waitForFunction(() => window.__ms.result, null, { timeout: 120000 });
+    check(await sp2.evaluate(() => window.__sent.negatives > 0), 'static host: languages, slicing worker, the slicer modules and the flexi cutter load');
+    await sp2.click('#printmenu');
+    const [dl] = await Promise.all([sp2.waitForEvent('download'), sp2.click('#dl3mf')]);
+    const file = path.join(tmp, dl.suggestedFilename());
+    await dl.saveAs(file);
+    check(file.endsWith('.gcode.3mf') && fs.readFileSync(file).subarray(0, 2).toString() === 'PK', `static host: the sliced file downloads (${path.basename(file)})`);
+    const unexpected = missing.filter((p) => p !== '/api/status');
+    check(missing.includes('/api/status') && unexpected.length === 0, `static host: only the runner's api/status is missing${unexpected.length ? ': ' + unexpected.join(', ') : ''}`);
+    const nf = await sp2.goto(site + 'no/such/page');
+    check(nf.status() === 404 && (await sp2.title()).startsWith('Not found'), 'static host: unknown paths get the 404 page');
+    if (shots) await sp2.screenshot({ path: path.join(shots, 'static-404.png') });
+    await st.close();
+  } finally {
+    host.close();
+  }
 
   check(errors.length === 0, `no page errors${errors.length ? ': ' + errors.join(' | ') : ''}`);
   await browser.close();

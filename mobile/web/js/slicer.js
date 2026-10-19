@@ -10,7 +10,7 @@
 // What it does not do (yet): gap fill, bridges detection, arachne variable width, ironing,
 // multi-material.
 
-import ClipperLib from '../vendor/clipper.mjs';
+import ClipperLib from '../vendor/clipper.js';
 
 export const SCALE = 1000;
 const { Clipper, ClipperOffset, ClipType, PolyType, PolyFillType, JoinType, EndType, PolyTree } = ClipperLib;

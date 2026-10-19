@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import ClipperLib from '../web/vendor/clipper.mjs';
+import ClipperLib from '../web/vendor/clipper.js';
 import { parseSTL, bounds } from '../web/js/mesh.js';
 import { slice, intersect } from '../web/js/slicer.js';
 import { resolveSettings } from '../web/js/gcode.js';

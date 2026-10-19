@@ -58,7 +58,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 -------------------------------------------------------------------------------
-clipper-lib 6.4.2 (clipper.mjs) - Boost Software License 1.0
+clipper-lib 6.4.2 (clipper.js) - Boost Software License 1.0
 https://www.npmjs.com/package/clipper-lib
 -------------------------------------------------------------------------------
 /*******************************************************************************
@@ -141,7 +141,7 @@ Address all questions regarding this license to:
   tjw@cs.Stanford.EDU
 
 -------------------------------------------------------------------------------
-QR Code Generator for JavaScript 2.0.4 (qrcode.mjs) - MIT License
+QR Code Generator for JavaScript 2.0.4 (qrcode.js) - MIT License
 https://github.com/kazuhikoarase/qrcode-generator
 The word "QR Code" is registered trademark of DENSO WAVE INCORPORATED.
 -------------------------------------------------------------------------------
